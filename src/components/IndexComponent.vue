@@ -40,6 +40,19 @@
             </ul>
           </li>
 
+          <li>
+            <a href="#">
+              <i class="fa fa-sitemap"></i>
+              <span class="nav-label">订单管理</span>
+              <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a class="J_menuItem" href="user" @click="goHref('/admin/order')">订单查询</a>
+              </li>
+            </ul>
+          </li>
+
         </ul>
       </div>
     </nav>

@@ -17,6 +17,8 @@ let routes = new Router({
         { path: 'roleDetails/:id', name: 'role', component: COMPONENTS.RoleDetailsComponent },  // 角色详情
         { path: 'user', name: 'user', component: COMPONENTS.UserComponent },  // 用户管理
         { path: 'user/:id', component: COMPONENTS.UserDetailsComponent },  // 用户详情
+
+        { path: 'order', name: 'user', component: COMPONENTS.OrderComponent },  // 订单管理
       ]
     },
     {
@@ -59,9 +61,9 @@ routes.beforeEach((to, from, next) => {
       } else {
         next()
       }
-    } else if (to.path == '/admin/order') { // 特殊处理
+    } else if (to.path == '/admin/Order') { // 特殊处理
       console.log('特殊处理')
-      // order: 所有订单 to_do_order: 待审核订单 unusual_order_cancel: 异常订单取消 unusual_order_refund: 异常订单退款
+      // Order: 所有订单 to_do_order: 待审核订单 unusual_order_cancel: 异常订单取消 unusual_order_refund: 异常订单退款
       console.log('order')
       next()
     } else {

@@ -138,6 +138,6 @@ ul, li {
 
 .layer-date {
   width: 100px;
-  margin-bottom: 5px;
+  margin-top: -8px;
 }
 </style>

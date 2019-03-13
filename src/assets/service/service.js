@@ -16,7 +16,8 @@ function createService (url) {
 }
 /******************************/
 const User = createService('user.json')
+const Order = createService('order.json')
 
 export default {
-  User
+  User, Order
 }

@@ -5,4 +5,6 @@ export const COMPONENTS = {
 
   UserComponent: resolve => require(['@/components/User/User'], resolve),
   UserDetailsComponent: resolve => require(['@/components/User/UserDetails'], resolve),
+
+  OrderComponent: resolve => require(['@/components/Order/Order'], resolve),
 }

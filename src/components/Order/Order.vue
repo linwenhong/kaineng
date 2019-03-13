@@ -5,17 +5,29 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>用户管理</h5>
+        <h5>订单管理</h5>
       </div>
 
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
-            <label class="control-label">登录名</label>
-            <input type="text" class="form-control" v-model.trim="condition['username']">
 
-            <label class="control-label">姓名</label>
-            <input type="text" class="form-control" v-model.trim="condition['name']">
+          </div>
+
+          <div class="form-group">
+            <label class="control-label">商户名</label>
+            <input type="text" class="form-control" v-model.trim="condition['merchant_name']">
+
+            <date-time text="下单时间"></date-time>
+
+            <label class="control-label">支付类型</label>
+            <select class="form-control" v-model="condition['pay_type']">
+              <option value="9">微信</option>
+              <option value="10">支付宝</option>
+            </select>
+
+            <label class="control-label">订单号</label>
+            <input type="text" class="form-control" v-model.trim="condition['coding']">
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -24,19 +36,18 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th></th>
+              <th>ID</th>
+              <th>订单号</th>
+              <th>商户名</th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>
-              <div class="checkbox i-checks">
-                <label>
-                  <input name="select" type="checkbox" :value="index"><i></i></label>
-              </div>
-            </td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.coding }}</td>
+            <td>{{ item.merchant.name }}</td>
             <td v-for="option of tableOptions">
               <template v-if="option.template">
                   <div v-html="getHtml(option)"></div>
@@ -145,17 +156,15 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'User',
+  name: 'Order',
   data () {
     return {
       tableOptions: [
-        { key: "id", title: "ID" },
-        { key: "username", title: "用户名" },
-        { key: "name", title: "姓名" },
-        { key: "phone", title: "手机号码" },
-        { key: "email", title: "邮箱" },
-        { key: "ip", title: "登录ip" },
-        { key: "login_time", title: "登录时间" }
+        { key: "status", title: "订单状态" },
+        { key: "number", title: "商品数量" },
+        { key: "total", title: "订单金额" },
+        { key: "pay_type", title: "支付类型" },
+        { key: "time", title: "下单时间" }
       ],
       items: [],
       total: 0,
@@ -182,7 +191,7 @@ export default {
         }
       }
 
-      this.$Service.User.get(condition).then(response => {
+      this.$Service.Order.get(condition).then(response => {
         if (response.code == 200) {
           this.items = response.data
           this.total = response.total
@@ -232,7 +241,7 @@ export default {
 
       if (this.form.id) { // 修改
         const id = this.form.id
-        this.$Service.User.edit(id, request).then(response => {
+        this.$Service.Order.edit(id, request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
             toastr.success('新增成功')
@@ -242,7 +251,7 @@ export default {
           }
         })
       } else {  // 新增
-        this.$Service.User.add(request).then(response => {
+        this.$Service.Order.add(request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
             toastr.success('修改成功')
@@ -265,7 +274,7 @@ export default {
       }
     },
     del (item) {
-      this.$Service.User.del(item.id).then(response => {
+      this.$Service.Order.del(item.id).then(response => {
         if (response.code == 200) {
           toastr.success('删除成功')
           this.getDataTables()
