@@ -1,8 +1,7 @@
 <template>
   <div class="wrapper wrapper-content">
-    <div class="text-right">
-      <button type="button" class="btn btn-w-m btn-primary" data-toggle="modal" data-target="#Modal" @click="add()">新建用户</button>
-    </div>
+
+    <page-header-button @add="add"></page-header-button>
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
@@ -47,7 +46,7 @@
             </td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <button type="button" class="btn btn-sm btn-danger" @click="del(item)">删除</button>
+              <info-confirm @confirm="del" :data="item">删除</info-confirm>
             </td>
           </tr>
           </tbody>
@@ -63,7 +62,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">新增用户</h4>
+            <h4 class="modal-title">{{ form.id ? '修改用户信息' : '新增用户' }}</h4>
           </div>
           <div class="modal-body">
             <form id="form" class="form-horizontal" @submit.prevent="submit">
@@ -98,19 +97,36 @@
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">初始密码</label>
-                  <div class="col-sm-8">
-                    <input type="password" class="form-control" required="" aria-required="true" name="password" v-model="form.password">
+                <template v-if="form.id">
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">初始密码</label>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" name="password" v-model="form.password">
+                    </div>
                   </div>
-                </div>
 
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">确认密码</label>
-                  <div class="col-sm-8">
-                    <input type="password" class="form-control" required="" aria-required="true" name="confirmPassword" v-model="form.confirmPassword">
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">确认密码</label>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" name="confirmPassword" v-model="form.confirmPassword">
+                    </div>
                   </div>
-                </div>
+                </template>
+                <template v-else>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">初始密码</label>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" required="" aria-required="true" name="password" v-model="form.password">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">确认密码</label>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" required="" aria-required="true" name="confirmPassword" v-model="form.confirmPassword">
+                    </div>
+                  </div>
+                </template>
 
               </div>
             </form>
@@ -192,7 +208,7 @@ export default {
         return false
       }
       if (form.password != form.confirmPassword) {
-        toastr.info('两次输入的密码不一致!')
+        toastr.info('输入的密码不一致!')
         return false
       }
       return true
@@ -235,6 +251,7 @@ export default {
 
     },
     edit (item) {
+      this.clear()
       this.form = {
         id: item.id,
         email: item.email,
