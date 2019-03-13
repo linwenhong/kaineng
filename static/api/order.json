@@ -1,6 +1,6 @@
 {
   "code": 200,
-  "total": 200,
+  "total": 2,
   "data": [
     {
       "id": 1,
@@ -41,7 +41,7 @@
           "refund_status": 0
         },
         {
-          "id": 1,
+          "id": 2,
           "good": {
             "id": 2,
             "coding": "S002",
@@ -60,7 +60,7 @@
         }
       ],
       "refund_number": 2,
-      "refund_total": 15,
+      "refund_total": 6.5,
       "refund_status": 1,
       "refund_time": "2019-03-07 18:03:20",
       "enable_status": 0,
@@ -87,7 +87,7 @@
       "time": "2019-03-07 15:03:20",
       "goods": [
         {
-          "id": 1,
+          "id": 3,
           "good": {
             "id": 1,
             "coding": "S001",
@@ -105,7 +105,7 @@
           "refund_status": 0
         },
         {
-          "id": 1,
+          "id": 4,
           "good": {
             "id": 2,
             "coding": "S002",
@@ -123,8 +123,8 @@
           "refund_status": 0
         }
       ],
-      "refund_number": 2,
-      "refund_total": 15,
+      "refund_number": 1,
+      "refund_total": 4,
       "refund_status": 1,
       "refund_time": "2019-03-07 18:03:20",
       "enable_status": 0,

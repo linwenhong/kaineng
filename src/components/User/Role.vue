@@ -62,7 +62,7 @@ export default {
       const condition = {}
 //      condition['page'] = page
       for (const key in this.condition) {
-        if (this.condition[key] || this.condition[key] === 0) {
+        if (this.condition[key]) {
           condition[key] = this.condition[key]
         }
       }

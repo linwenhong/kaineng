@@ -15,9 +15,18 @@ function createService (url) {
   }
 }
 /******************************/
-const User = createService('user.json')
+const Device = createService('device.json')
+const Manufacturer = createService('good.json')
+const Good = createService('good.json')
+const Merchant = createService('merchant.json')
 const Order = createService('order.json')
+const User = createService('user.json')
 
 export default {
-  User, Order
+  Device,
+  Manufacturer,
+  Good,
+  Merchant,
+  Order,
+  User
 }

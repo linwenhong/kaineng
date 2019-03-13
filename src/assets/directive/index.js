@@ -8,7 +8,7 @@ export default (Vue)=>{
       }
     }
   })
-  // 时间指令-结束
+  // 时间-开始
   Vue.directive('my-start-time', {
     bind: function (el) {
       el.onclick = () => {
@@ -22,7 +22,7 @@ export default (Vue)=>{
       }
     }
   })
-  // 时间指令-结束
+  // 时间-结束
   Vue.directive('my-end-time', {
     bind: function (el) {
       el.onclick = () => {

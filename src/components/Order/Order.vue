@@ -1,8 +1,6 @@
 <template>
   <div class="wrapper wrapper-content">
 
-    <page-header-button @add="add"></page-header-button>
-
     <div class="ibox float-e-margins">
       <div class="ibox-title">
         <h5>订单管理</h5>
@@ -10,9 +8,6 @@
 
       <div class="ibox-content">
         <div class="search-page">
-          <div class="form-group">
-
-          </div>
 
           <div class="form-group">
             <label class="control-label">商户名</label>
@@ -22,6 +17,7 @@
 
             <label class="control-label">支付类型</label>
             <select class="form-control" v-model="condition['pay_type']">
+              <option value="">全部</option>
               <option value="9">微信</option>
               <option value="10">支付宝</option>
             </select>
@@ -40,6 +36,11 @@
               <th>订单号</th>
               <th>商户名</th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
+
+              <template v-if="pageType == 2">
+                <th v-for="option of tableOptions2">{{ option.title }}</th>
+              </template>
+
               <th>操作</th>
             </tr>
           </thead>
@@ -48,15 +49,15 @@
             <td>{{ item.id }}</td>
             <td>{{ item.coding }}</td>
             <td>{{ item.merchant.name }}</td>
-            <td v-for="option of tableOptions">
-              <template v-if="option.template">
-                  <div v-html="getHtml(option)"></div>
-              </template>
-              <template v-else>{{ item[option.key] }}</template>
-            </td>
+            <td v-for="option of tableOptions">{{ item[option.key] }}</td>
+
+            <template v-if="pageType == 2">
+              <td v-for="option of tableOptions2">{{ item[option.key] }}</td>
+            </template>
+
             <td>
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <info-confirm @confirm="del" :data="item">删除</info-confirm>
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="details(item)">编辑</button>
+              <info-confirm @confirm="del" :data="item"></info-confirm>
             </td>
           </tr>
           </tbody>
@@ -72,79 +73,49 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">{{ form.id ? '修改用户信息' : '新增用户' }}</h4>
+            <h4 class="modal-title">订单详情</h4>
           </div>
           <div class="modal-body">
-            <form id="form" class="form-horizontal" @submit.prevent="submit">
-              <div class="row">
+            <table class="table table-bordered text-center">
+              <thead>
+              <tr>
+                <th>商品编号</th>
+                <th>商品名称</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>小计金额</th>
 
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">登录名</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="username" v-model.trim="form.username">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">姓名</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="name" v-model.trim="form.name">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">手机号码</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="phone" v-model="form.phone"
-                           maxlength="11" oninput="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">邮箱</label>
-                  <div class="col-sm-8">
-                    <input type="email" class="form-control" required="" aria-required="true" name="email" v-model.trim="form.email">
-                  </div>
-                </div>
-
-                <template v-if="form.id">
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">初始密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" name="password" v-model="form.password">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">确认密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" name="confirmPassword" v-model="form.confirmPassword">
-                    </div>
-                  </div>
+                <template v-if="pageType == 2">
+                  <th>退款状态</th>
+                  <th>操作</th>
                 </template>
-                <template v-else>
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">初始密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="password" v-model="form.password">
-                    </div>
-                  </div>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="(item, index) of order.goods" :key="item.id">
+                <td>{{ item.good.coding }}</td>
+                <td>{{ item.good.name }}</td>
+                <td>{{ item.number }}</td>
+                <td>¥{{ item.price.toFixed(2) }}</td>
+                <td>¥{{ (item.number * item.price).toFixed(2) }}</td>
 
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">确认密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="confirmPassword" v-model="form.confirmPassword">
-                    </div>
-                  </div>
+                <template v-if="pageType == 2">
+                  <td>{{ order.refund_status }}</td>
+                  <td>
+                    <info-confirm @confirm="refund" :data="item" title="确定要进行退款吗" text="退款"></info-confirm>
+                  </td>
                 </template>
-
-              </div>
-            </form>
+              </tr>
+              <tr v-if="pageType == 1">
+                <td colspan="4"></td>
+                <td>合计：¥{{ order.total }}</td>
+              </tr>
+              </tbody>
+            </table>
           </div>
 
           <div class="modal-footer">
             <b class="btn btn-white" data-dismiss="modal">关闭</b>
-            <button type="submit" class="btn btn-primary" @click="submit()">提交</button>
           </div>
         </div>
       </div>
@@ -159,6 +130,7 @@ export default {
   name: 'Order',
   data () {
     return {
+      pageType: 1, // 1: 订单查询, 2: 异常订单
       tableOptions: [
         { key: "status", title: "订单状态" },
         { key: "number", title: "商品数量" },
@@ -166,18 +138,41 @@ export default {
         { key: "pay_type", title: "支付类型" },
         { key: "time", title: "下单时间" }
       ],
+      tableOptions2: [
+        { key: "refund_number", title: "退款商品数量" },
+        { key: "refund_total", title: "退款金额" },
+        { key: "refund_status", title: "退款状态" },
+        { key: "refund_time", title: "退款时间" }
+      ],
       items: [],
       total: 0,
       page: 1,
       pageSize: this.$Config.page_size,
-      condition: {},
-      form: {},
-      validate: null,
+      condition: {
+        pay_type: ''
+      },
+      order: {},
       isSubmit: false
+    }
+  },
+  watch: {
+    $route (to, from) {
+      this.pageInit()
     }
   },
   methods: {
     getDataTables (page = 1) {
+      const startTime = $('#startTime').val()
+      const endTime = $('#endTime').val()
+      if (!startTime && endTime) {
+        toastr.info('请选择开始时间!')
+        return
+      }
+      if (startTime && !endTime) {
+        toastr.info('请选择结束时间!')
+        return
+      }
+
       this.items = []
       this.total = 0
       const condition = {
@@ -186,9 +181,14 @@ export default {
       }
 
       for (const key in this.condition) {
-        if (this.condition[key] || this.condition[key] === 0) {
+        if (this.condition[key]) {
           condition[key] = this.condition[key]
         }
+      }
+
+      if (startTime && endTime) {
+        condition['start_time'] = startTime
+        condition['end_time'] = endTime
       }
 
       this.$Service.Order.get(condition).then(response => {
@@ -204,74 +204,8 @@ export default {
     pageChange (page) {
       this.getDataTables(page)
     },
-    clear () {
-      this.$H5UI.reset(this.validate)
-      this.form = {}
-      this.isSubmit = false
-      $('#Modal').modal('hide')
-    },
-    add () {
-      this.clear()
-    },
-    checkForm (form) {
-      if (form.phone.length != 11) {
-        toastr.info('请输入11位数的电话号码!')
-        return false
-      }
-      if (form.password != form.confirmPassword) {
-        toastr.info('输入的密码不一致!')
-        return false
-      }
-      return true
-    },
-    submit () {
-      if (this.isSubmit) return;  // 防止多次提交
-      if (!$('#form').valid()) return;  // 必填验证
-      if (!this.checkForm(this.form)) return;  // 表单验证
-      this.isSubmit = true
-
-      console.log(this.form)
-      const request = {
-        email: this.form.email,
-        name: this.form.name,
-        password: this.form.password,
-        phone: this.form.phone,
-        username: this.form.username
-      }
-
-      if (this.form.id) { // 修改
-        const id = this.form.id
-        this.$Service.Order.edit(id, request).then(response => {
-          this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('新增成功')
-            this.getDataTables(this.page)
-          } else {
-            toastr.error(response.msg)
-          }
-        })
-      } else {  // 新增
-        this.$Service.Order.add(request).then(response => {
-          this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('修改成功')
-            this.getDataTables()
-          } else {
-            toastr.error(response.msg)
-          }
-        })
-      }
-
-    },
-    edit (item) {
-      this.clear()
-      this.form = {
-        id: item.id,
-        email: item.email,
-        name: item.name,
-        phone: item.phone.toString(),
-        username: item.username
-      }
+    details (item) {
+      this.order = item
     },
     del (item) {
       this.$Service.Order.del(item.id).then(response => {
@@ -282,14 +216,19 @@ export default {
           toastr.error(response.msg)
         }
       })
+    },
+    refund (item) {
+      console.log(item)
+    },
+    pageInit () {
+      this.pageType = this.$route.query['pageType'] || 1
+      this.getDataTables()
     }
   },
   created () {
-    this.getDataTables()
-//  {"id": 1, "name": "zhangsan"}
+    this.pageInit()
   },
   mounted () {
-    this.validate = this.$H5UI.validate('#form')  //  添加表单验证
   }
 }
 </script>

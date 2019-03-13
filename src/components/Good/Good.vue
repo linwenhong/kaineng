@@ -5,17 +5,20 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>用户管理</h5>
+        <h5>商品管理</h5>
       </div>
 
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
-            <label class="control-label">登录名</label>
-            <input type="text" class="form-control" v-model.trim="condition['username']">
-
-            <label class="control-label">姓名</label>
+            <label class="control-label">商品名称</label>
             <input type="text" class="form-control" v-model.trim="condition['name']">
+
+            <label class="control-label">商品分类</label>
+            <select class="form-control" v-model="condition['type_id']">
+              <option value="">全部</option>
+              <option value="1">汽水</option>
+            </select>
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -37,7 +40,12 @@
                   <input name="select" type="checkbox" :value="index"><i></i></label>
               </div>
             </td>
-            <td v-for="option of tableOptions">{{ item[option.key] }}</td>
+            <td v-for="option of tableOptions">
+              <template v-if="option.key == 'type'">
+                {{ item['type'].id }}
+              </template>
+              <template v-else>{{ item[option.key] }}</template>
+            </td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
@@ -56,73 +64,47 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">{{ form.id ? '修改用户信息' : '新增用户' }}</h4>
+            <h4 class="modal-title">{{ form.id ? '修改商品信息' : '新增商品' }}</h4>
           </div>
-
 
           <form id="form" class="form-horizontal" @submit.prevent="submit">
             <div class="modal-body">
               <div class="row">
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">登录名</label>
+                  <label class="col-sm-3 control-label">商品编码</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="username" v-model.trim="form.username">
+                    <input type="text" class="form-control" required="" aria-required="true" name="coding" v-model.trim="form.coding">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">姓名</label>
+                  <label class="col-sm-3 control-label">商品名称</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" required="" aria-required="true" name="name" v-model.trim="form.name">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">手机号码</label>
+                  <label class="col-sm-3 control-label">商品类型</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="phone" v-model="form.phone"
-                           maxlength="11" oninput="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                    <input type="text" class="form-control" required="" aria-required="true" name="type" v-model.trim="form.type">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">邮箱</label>
+                  <label class="col-sm-3 control-label">商品规格</label>
                   <div class="col-sm-8">
-                    <input type="email" class="form-control" required="" aria-required="true" name="email" v-model.trim="form.email">
+                    <input type="text" class="form-control" required="" aria-required="true" name="specification" v-model.trim="form.specification">
                   </div>
                 </div>
 
-                <template v-if="form.id">
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">初始密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" name="password" v-model="form.password">
-                    </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">备注</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="remark" v-model.trim="form.remark">
                   </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">确认密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" name="confirmPassword" v-model="form.confirmPassword">
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">初始密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="password" v-model="form.password">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">确认密码</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="confirmPassword" v-model="form.confirmPassword">
-                    </div>
-                  </div>
-                </template>
+                </div>
 
               </div>
             </div>
@@ -148,18 +130,19 @@ export default {
     return {
       tableOptions: [
         { key: "id", title: "ID" },
-        { key: "username", title: "用户名" },
-        { key: "name", title: "姓名" },
-        { key: "phone", title: "手机号码" },
-        { key: "email", title: "邮箱" },
-        { key: "ip", title: "登录ip" },
-        { key: "login_time", title: "登录时间" }
+        { key: "coding", title: "商品编码" },
+        { key: "name", title: "商品名称" },
+        { key: "type", title: "商品类型" },
+        { key: "specification", title: "商品规格" },
+        { key: "remark", title: "备注" }
       ],
       items: [],
       total: 0,
       page: 1,
       pageSize: this.$Config.page_size,
-      condition: {},
+      condition: {
+        type_id: ''
+      },
       form: {},
       validate: null,
       isSubmit: false
@@ -180,7 +163,7 @@ export default {
         }
       }
 
-      this.$Service.User.get(condition).then(response => {
+      this.$Service.Good.get(condition).then(response => {
         if (response.code == 200) {
           this.items = response.data
           this.total = response.total
@@ -203,14 +186,6 @@ export default {
       this.clear()
     },
     checkForm (form) {
-      if (form.phone.length != 11) {
-        toastr.info('请输入11位数的电话号码!')
-        return false
-      }
-      if (form.password != form.confirmPassword) {
-        toastr.info('输入的密码不一致!')
-        return false
-      }
       return true
     },
     submit () {
@@ -221,16 +196,16 @@ export default {
 
       console.log(this.form)
       const request = {
-        email: this.form.email,
+        coding: this.form.coding,
         name: this.form.name,
-        password: this.form.password,
-        phone: this.form.phone,
-        username: this.form.username
+        type: this.form.type,
+        specification: this.form.specification,
+        remark: this.form.remark
       }
 
       if (this.form.id) { // 修改
         const id = this.form.id
-        this.$Service.User.edit(id, request).then(response => {
+        this.$Service.Good.edit(id, request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
             toastr.success('新增成功')
@@ -240,7 +215,7 @@ export default {
           }
         })
       } else {  // 新增
-        this.$Service.User.add(request).then(response => {
+        this.$Service.Good.add(request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
             toastr.success('修改成功')
@@ -256,14 +231,15 @@ export default {
       this.clear()
       this.form = {
         id: item.id,
-        email: item.email,
+        coding: item.coding,
         name: item.name,
-        phone: item.phone.toString(),
-        username: item.username
+        type: item.type.id,
+        specification: item.specification,
+        remark: item.remark
       }
     },
     del (item) {
-      this.$Service.User.del(item.id).then(response => {
+      this.$Service.Good.del(item.id).then(response => {
         if (response.code == 200) {
           toastr.success('删除成功')
           this.getDataTables()

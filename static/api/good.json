@@ -1,0 +1,31 @@
+{
+  "code": 200,
+  "total": 2,
+  "data": [
+    {
+      "id": 1,
+      "coding": "S001",
+      "name": "可乐",
+      "type": {
+        "id": 1,
+        "name": "汽水",
+        "parent_id": 0
+      },
+      "specification": "500ml",
+      "remark": "瓶装"
+    },
+    {
+      "id": 2,
+      "coding": "S002",
+      "name": "雪碧",
+      "type": {
+        "id": 1,
+        "name": "汽水",
+        "parent_id": 0
+      },
+      "specification": "330ml",
+      "remark": "罐装"
+    }
+  ]
+}
+

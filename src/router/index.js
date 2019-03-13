@@ -18,6 +18,10 @@ let routes = new Router({
         { path: 'user', name: 'user', component: COMPONENTS.UserComponent },  // 用户管理
         { path: 'user/:id', component: COMPONENTS.UserDetailsComponent },  // 用户详情
 
+        { path: 'device', name: 'user', component: COMPONENTS.DeviceComponent },  // 设备管理
+        { path: 'manufacturer', name: 'user', component: COMPONENTS.ManufacturerComponent },  // 制造商管理
+        { path: 'good', name: 'user', component: COMPONENTS.GoodComponent },  // 商品管理
+        { path: 'merchant', name: 'user', component: COMPONENTS.MerchantComponent },  // 商户管理
         { path: 'order', name: 'user', component: COMPONENTS.OrderComponent },  // 订单管理
       ]
     },

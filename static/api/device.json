@@ -1,0 +1,39 @@
+{
+  "code": 200,
+  "total": 2,
+  "data": [
+    {
+      "id": 1,
+      "sn": "sn5467889756465789",
+      "manufacturer": {
+        "id": "1",
+        "name": "苏宁"
+      },
+      "display": 1,
+      "merchant": {
+        "id": 1,
+        "type": 2,
+        "coding": "SH001",
+        "name": "苏宁",
+        "admin_name": "张三",
+        "admin_phone": 18354665258,
+        "bank_user_name": "李四",
+        "bank_id": "61727737748565",
+        "bank": "中国银行"
+      },
+      "status": 1,
+      "position": "中大地铁站",
+      "staff": "张三",
+      "phone": 18562114452,
+      "last_check_time": "2019-03-07 15:03:20",
+      "relation_time": "2019-03-07 15:03:20",
+      "import_time": "2019-03-07 15:03:20",
+
+      "temperature": 40,
+      "door_collision": 0,
+      "drop_status": 1,
+      "camera": "损坏"
+    }
+  ]
+}
+
