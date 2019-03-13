@@ -233,6 +233,7 @@ export default {
         this.$Service.User.edit(id, request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
+            toastr.success('新增成功')
             this.getDataTables(this.page)
           } else {
             toastr.error(response.msg)
@@ -242,6 +243,7 @@ export default {
         this.$Service.User.add(request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
+            toastr.success('修改成功')
             this.getDataTables()
           } else {
             toastr.error(response.msg)
@@ -261,7 +263,14 @@ export default {
       }
     },
     del (item) {
-      console.log(item)
+      this.$Service.User.del(item.id).then(response => {
+        if (response.code == 200) {
+          toastr.success('删除成功')
+          this.getDataTables()
+        } else {
+          toastr.error(response.msg)
+        }
+      })
     }
   },
   created () {
