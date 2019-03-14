@@ -15,12 +15,12 @@ function createService (url) {
   }
 }
 /******************************/
-const Device = createService('device.json')
-const Manufacturer = createService('good.json')
-const Good = createService('good.json')
-const Merchant = createService('merchant.json')
-const Order = createService('order.json')
-const User = createService('user.json')
+const Device = createService('device')
+const Manufacturer = createService('manufacturer')
+const Good = createService('good')
+const Merchant = createService('merchant')
+const Order = createService('order')
+const User = createService('user')
 
 export default {
   Device,

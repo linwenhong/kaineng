@@ -6,7 +6,7 @@ const Config = {
 
 switch (env) {
   case 'local':
-    Config.api_url = '../static/api/'
+    Config.api_url = 'http://localhost:3000/'
     Config.base_url = 'http://localhost:8086/'
     break
   case 'test':
