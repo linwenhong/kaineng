@@ -69,31 +69,27 @@
             <table class="table table-bordered text-center">
               <tbody>
                 <tr>
-                  <td><b>商户名</b></td><td></td>
-                  <td><b>商户账号</b></td><td></td>
+                  <td><b>商户名</b></td><td>{{ settlementOrderDetails.name }}</td>
+                  <td><b>商户账号</b></td><td>{{ settlementOrderDetails.name }}</td>
                 </tr>
                 <tr>
-                  <td><b>结算开始时间</b></td><td></td>
-                  <td><b>结算结束时间</b></td><td></td>
+                  <td><b>结算开始时间</b></td><td>{{ settlementOrderDetails.start_time }}</td>
+                  <td><b>结算结束时间</b></td><td>{{ settlementOrderDetails.end_time }}</td>
                 </tr>
                 <tr>
-                  <td><b>结算订单数</b></td><td></td>
-                  <td><b>订单总金额</b></td><td></td>
+                  <td><b>结算订单数</b></td><td>{{ settlementOrderDetails.number }}</td>
+                  <td><b>订单总金额</b></td><td>{{ settlementOrderDetails.test }}</td>
                 </tr>
                 <tr>
-                  <td><b>结算方式</b></td><td></td>
-                  <td><b>订单金额</b></td><td></td>
+                  <td><b>结算方式</b></td><td>{{ settlementOrderDetails.test }}</td>
+                  <td><b>订单金额</b></td><td>{{ settlementOrderDetails.test }}</td>
                 </tr>
                 <tr>
-                  <td><b>结算方式</b></td><td></td>
-                  <td><b>订单金额</b></td><td></td>
+                  <td><b>结算账号</b></td><td>{{ settlementOrderDetails.name }}</td>
+                  <td><b>结算户名</b></td><td>{{ settlementOrderDetails.name }}</td>
                 </tr>
                 <tr>
-                  <td><b>结算账号</b></td><td></td>
-                  <td><b>结算户名</b></td><td></td>
-                </tr>
-                <tr>
-                  <td><b>操作人</b></td><td></td>
+                  <td><b>操作人</b></td><td>{{ settlementOrderDetails.name }}</td>
                   <td></td><td></td>
                 </tr>
               </tbody>
@@ -229,6 +225,8 @@ export default {
         start_time: this.lastCondition.start_time,
         end_time: this.lastCondition.end_time,
       }
+      console.log(this.lastCondition)
+      console.log(this.settlementOrderDetails)
     },
     pageInit () {
       this.getDataTables()
