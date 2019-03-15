@@ -5,20 +5,14 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>商品管理</h5>
+        <h5>商品分类管理</h5>
       </div>
 
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
-            <label class="control-label">商品名称</label>
+            <label class="control-label">分类名称</label>
             <input type="text" class="form-control" v-model.trim="condition['name']">
-
-            <label class="control-label">商品分类</label>
-            <select class="form-control" v-model="condition['type_id']">
-              <option value="">全部</option>
-              <option value="1">汽水</option>
-            </select>
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -64,7 +58,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">{{ form.id ? '修改商品信息' : '新增商品' }}</h4>
+            <h4 class="modal-title">{{ form.id ? '修改商品分类' : '新增商品分类' }}</h4>
           </div>
 
           <form id="form" class="form-horizontal" @submit.prevent="submit">
@@ -72,37 +66,16 @@
               <div class="row">
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">商品编码</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="coding" v-model.trim="form.coding">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">商品名称</label>
+                  <label class="col-sm-3 control-label">分类名称</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" required="" aria-required="true" name="name" v-model.trim="form.name">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">商品类型</label>
+                  <label class="col-sm-3 control-label">父级分类</label>
                   <div class="col-sm-8">
-                    <treeselect :multiple="false" :options="options" v-model="form.type"/></treeselect>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">商品规格</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="specification" v-model.trim="form.specification">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">备注</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="remark" v-model.trim="form.remark">
+                    <treeselect :multiple="false" :options="options" v-model="form.parent_id"/></treeselect>
                   </div>
                 </div>
 
@@ -126,17 +99,14 @@
 <script type="text/ecmascript-6">
 import Treeselect from '@riophae/vue-treeselect'
 export default {
-  name: 'Good',
+  name: 'GoodType',
   components: { Treeselect },
   data () {
     return {
       tableOptions: [
         { key: "id", title: "ID" },
-        { key: "coding", title: "商品编码" },
-        { key: "name", title: "商品名称" },
-        { key: "type", title: "商品类型" },
-        { key: "specification", title: "商品规格" },
-        { key: "remark", title: "备注" }
+        { key: "name", title: "分类名称" },
+        { key: "parent_id", title: "父级分类" },
       ],
       items: [],
       total: 0,
@@ -167,7 +137,7 @@ export default {
         }
       }
 
-      this.$Service.Good.get(condition).then(response => {
+      this.$Service.GoodType.get(condition).then(response => {
         if (response.code == 200) {
           this.items = response.data
           this.total = response.total
@@ -190,10 +160,6 @@ export default {
       this.clear()
     },
     checkForm (form) {
-      if (!form.type) {
-        toastr.info('请选择商品分类')
-        return false
-      }
       return true
     },
     submit () {
@@ -204,16 +170,13 @@ export default {
 
       console.log(this.form)
       const request = {
-        coding: this.form.coding,
         name: this.form.name,
-        type: this.form.type,
-        specification: this.form.specification,
-        remark: this.form.remark
+        parent_id: this.form.parent_id
       }
 
       if (this.form.id) { // 修改
         const id = this.form.id
-        this.$Service.Good.edit(id, request).then(response => {
+        this.$Service.GoodType.edit(id, request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
             toastr.success('新增成功')
@@ -223,7 +186,7 @@ export default {
           }
         })
       } else {  // 新增
-        this.$Service.Good.add(request).then(response => {
+        this.$Service.GoodType.add(request).then(response => {
           this.isSubmit = false
           if (response.code == 200) {
             toastr.success('修改成功')
@@ -239,15 +202,12 @@ export default {
       this.clear()
       this.form = {
         id: item.id,
-        coding: item.coding,
         name: item.name,
-        type: item.type.id,
-        specification: item.specification,
-        remark: item.remark
+        parent_id: item.parent_id
       }
     },
     del (item) {
-      this.$Service.Good.del(item.id).then(response => {
+      this.$Service.GoodType.del(item.id).then(response => {
         if (response.code == 200) {
           toastr.success('删除成功')
           this.getDataTables()

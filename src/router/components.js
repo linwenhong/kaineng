@@ -9,6 +9,9 @@ export const COMPONENTS = {
   DeviceComponent: resolve => require(['@/components/Device/Device'], resolve),
   ManufacturerComponent: resolve => require(['@/components/Device/Manufacturer'], resolve),
   GoodComponent: resolve => require(['@/components/Good/Good'], resolve),
+  GoodTypeComponent: resolve => require(['@/components/Good/GoodType'], resolve),
+  GoodTypeTreeComponent: resolve => require(['@/components/Good/GoodTypeTree'], resolve),
   MerchantComponent: resolve => require(['@/components/Merchant/Merchant'], resolve),
   OrderComponent: resolve => require(['@/components/Order/Order'], resolve),
+  OrderSettlementComponent: resolve => require(['@/components/Order/OrderSettlement'], resolve),
 }

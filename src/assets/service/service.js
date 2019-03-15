@@ -18,6 +18,7 @@ function createService (url) {
 const Device = createService('device')
 const Manufacturer = createService('manufacturer')
 const Good = createService('good')
+const GoodType = createService('good_type')
 const Merchant = createService('merchant')
 const Order = createService('order')
 const User = createService('user')
@@ -26,6 +27,7 @@ export default {
   Device,
   Manufacturer,
   Good,
+  GoodType,
   Merchant,
   Order,
   User

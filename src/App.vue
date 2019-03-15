@@ -27,6 +27,9 @@ export default {
 @import "../static/css/plugins/simditor/simditor.css";
 @import "../static/css/plugins/toastr/toastr.min.css";
 
+@import "../node_modules/@riophae/vue-treeselect/dist/vue-treeselect.min.css";
+.vue-treeselect { width: 200px; }
+
 #content-main {
   height: calc(100% - 79px);
 }
@@ -140,4 +143,25 @@ ul, li {
   width: 100px;
   margin-top: -8px;
 }
+
+#nestable .dd-handle {
+  cursor: move;
+}
+#nestable .dd-item .label-primary {
+  position: absolute;
+  right: 50px;
+  top: 6px;
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+}
+#nestable .dd-item .label-danger {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+}
+
 </style>

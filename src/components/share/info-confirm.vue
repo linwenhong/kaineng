@@ -22,7 +22,7 @@ export default {
     }, // 按钮文本
     title: {
       type: String,
-      default: '确定删除吗'
+      default: '确定删除吗?'
     }, // 提示文本
     enlarge: {
       type: Boolean,
@@ -35,7 +35,7 @@ export default {
   methods: {
     confirm () {
       const options = {
-        title: this.title ? this.title : '确定删除吗',
+        title: this.title,
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#DD6B55',

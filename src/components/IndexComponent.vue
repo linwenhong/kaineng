@@ -35,7 +35,7 @@
             </a>
             <ul class="nav nav-second-level">
               <li>
-                <a class="J_menuItem" href="user" @click="goHref('/admin/user')">用户管理</a>
+                <a class="J_menuItem" @click="goHref('/admin/user')">用户管理</a>
               </li>
             </ul>
           </li>
@@ -48,10 +48,23 @@
             </a>
             <ul class="nav nav-second-level">
               <li>
-                <a class="J_menuItem" href="user" @click="goHref('/admin/order?pageType=1')">订单查询</a>
+                <a class="J_menuItem" @click="goHref('/admin/order?pageType=1')">订单查询</a>
               </li>
               <li>
-                <a class="J_menuItem" href="user" @click="goHref('/admin/order?pageType=2')">异常订单</a>
+                <a class="J_menuItem" @click="goHref('/admin/order?pageType=2')">异常订单</a>
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <a href="#">
+              <i class="fa fa-sitemap"></i>
+              <span class="nav-label">财务管理</span>
+              <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/order-settlement')">待结算订单</a>
               </li>
             </ul>
           </li>
@@ -64,7 +77,7 @@
             </a>
             <ul class="nav nav-second-level">
               <li>
-                <a class="J_menuItem" href="user" @click="goHref('/admin/merchant')">商户管理</a>
+                <a class="J_menuItem" @click="goHref('/admin/merchant')">商户管理</a>
               </li>
             </ul>
           </li>
@@ -77,7 +90,13 @@
             </a>
             <ul class="nav nav-second-level">
               <li>
-                <a class="J_menuItem" href="user" @click="goHref('/admin/good')">商品管理</a>
+                <a class="J_menuItem" @click="goHref('/admin/good-type')">商品分类管理</a>
+              </li>
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/good-type-tree')">商品分类管理(树)</a>
+              </li>
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/good')">商品管理</a>
               </li>
             </ul>
           </li>
@@ -90,10 +109,10 @@
             </a>
             <ul class="nav nav-second-level">
               <li>
-                <a class="J_menuItem" href="user" @click="goHref('/admin/manufacturer')">制造商管理</a>
+                <a class="J_menuItem" @click="goHref('/admin/manufacturer')">制造商管理</a>
               </li>
               <li>
-                <a class="J_menuItem" href="user" @click="goHref('/admin/device')">设备管理</a>
+                <a class="J_menuItem" @click="goHref('/admin/device')">设备管理</a>
               </li>
             </ul>
           </li>

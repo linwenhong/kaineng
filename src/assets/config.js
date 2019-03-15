@@ -21,4 +21,22 @@ switch (env) {
     console.error('Config error')
 }
 
+Config.test = [ {
+  id: '1',
+  label: 'a',
+  children: [ {
+    id: '2',
+    label: 'aa',
+  }, {
+    id: '3',
+    label: 'ab',
+  } ],
+}, {
+  id: '4',
+  label: 'b',
+}, {
+  id: '5',
+  label: 'c',
+} ]
+
 module.exports = Config
