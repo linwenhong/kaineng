@@ -11,27 +11,21 @@
 
           <div class="form-group">
             <label class="control-label">商户名</label>
-            <input type="text" class="form-control" v-model.trim="condition['merchant_name']">
+            <div class="searchOption">
+              <search-select :data="merchantList"></search-select>
+            </div>
 
             <date-time text="下单时间"></date-time>
 
-            <label class="control-label">支付类型</label>
-            <select class="form-control" v-model="condition['pay_type']">
-              <option value="">全部</option>
-              <option value="9">微信</option>
-              <option value="10">支付宝</option>
-            </select>
-
-            <label class="control-label">订单号</label>
-            <input type="text" class="form-control" v-model.trim="condition['coding']">
-
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
+            <button type="button" class="btn btn-warning search" @click="settlement()">结算</button>
           </div>
         </div>
 
         <table class="table table-bordered text-center">
           <thead>
             <tr>
+              <th></th>
               <th>ID</th>
               <th>订单号</th>
               <th>商户名</th>
@@ -41,6 +35,12 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
+            <td>
+              <div class="checkbox i-checks">
+                <label>
+                  <input name="select" type="checkbox" :value="item.id"><i></i></label>
+              </div>
+            </td>
             <td>{{ item.id }}</td>
             <td>{{ item.coding }}</td>
             <td>{{ item.merchant.name }}</td>
@@ -67,39 +67,35 @@
           </div>
           <div class="modal-body">
             <table class="table table-bordered text-center">
-              <thead>
-              <tr>
-                <th>商品编号</th>
-                <th>商品名称</th>
-                <th>数量</th>
-                <th>单价</th>
-                <th>小计金额</th>
-
-                <template v-if="pageType == 2">
-                  <th>退款状态</th>
-                  <th>操作</th>
-                </template>
-              </tr>
-              </thead>
               <tbody>
-              <tr v-for="(item, index) of order.goods" :key="item.id">
-                <td>{{ item.good.coding }}</td>
-                <td>{{ item.good.name }}</td>
-                <td>{{ item.number }}</td>
-                <td>¥{{ item.price.toFixed(2) }}</td>
-                <td>¥{{ (item.number * item.price).toFixed(2) }}</td>
-
-                <template v-if="pageType == 2">
-                  <td>{{ order.refund_status }}</td>
-                  <td>
-                    <info-confirm @confirm="refund" :data="item" title="确定要进行退款吗" text="退款"></info-confirm>
-                  </td>
-                </template>
-              </tr>
-              <tr v-if="pageType == 1">
-                <td colspan="4"></td>
-                <td>合计：¥{{ order.total }}</td>
-              </tr>
+                <tr>
+                  <td><b>商户名</b></td><td></td>
+                  <td><b>商户账号</b></td><td></td>
+                </tr>
+                <tr>
+                  <td><b>结算开始时间</b></td><td></td>
+                  <td><b>结算结束时间</b></td><td></td>
+                </tr>
+                <tr>
+                  <td><b>结算订单数</b></td><td></td>
+                  <td><b>订单总金额</b></td><td></td>
+                </tr>
+                <tr>
+                  <td><b>结算方式</b></td><td></td>
+                  <td><b>订单金额</b></td><td></td>
+                </tr>
+                <tr>
+                  <td><b>结算方式</b></td><td></td>
+                  <td><b>订单金额</b></td><td></td>
+                </tr>
+                <tr>
+                  <td><b>结算账号</b></td><td></td>
+                  <td><b>结算户名</b></td><td></td>
+                </tr>
+                <tr>
+                  <td><b>操作人</b></td><td></td>
+                  <td></td><td></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -120,7 +116,6 @@ export default {
   name: 'Order',
   data () {
     return {
-      pageType: 1, // 1: 订单查询, 2: 异常订单
       tableOptions: [
         { key: "total", title: "订单金额" },
         { key: "pay_type", title: "支付类型" },
@@ -135,10 +130,10 @@ export default {
       total: 0,
       page: 1,
       pageSize: this.$Config.page_size,
-      condition: {
-        pay_type: ''
-      },
-      order: {},
+      condition: {},
+      lastCondition: {},
+      merchantList: [{id: 1,name: '张三'}, {id: 2,name: '李四'}],
+      settlementOrderDetails: {},
       isSubmit: false
     }
   },
@@ -151,6 +146,8 @@ export default {
     getDataTables (page = 1) {
       const startTime = $('#startTime').val()
       const endTime = $('#endTime').val()
+      const name = $('#searchSelect').attr('data-id')
+
       if (!startTime && endTime) {
         toastr.info('请选择开始时间!')
         return
@@ -170,12 +167,27 @@ export default {
       for (const key in this.condition) {
         if (this.condition[key]) {
           condition[key] = this.condition[key]
+          this.lastCondition[key] = this.condition[key]
+        } else {
+          delete this.lastCondition[key]
         }
       }
 
       if (startTime && endTime) {
         condition['start_time'] = startTime
         condition['end_time'] = endTime
+        this.lastCondition['start_time'] = startTime
+        this.lastCondition['end_time'] = endTime
+      } else {
+        delete this.lastCondition['start_time']
+        delete this.lastCondition['end_time']
+      }
+
+      if (name) {
+        condition['name'] = name
+        this.lastCondition['name'] = name
+      } else {
+        delete this.lastCondition['name']
       }
 
       this.$Service.Order.get(condition).then(response => {
@@ -204,11 +216,21 @@ export default {
         }
       })
     },
-    refund (item) {
-      console.log(item)
+    settlement (item) {
+      if (JSON.stringify(this.lastCondition) == "{}") {
+        toastr.info('请查询后结算!')
+        return
+      }
+      const select = this.$H5UI.getChecked('select')
+      this.settlementOrderDetails = {
+        ids: select,
+        number: select.length,
+        name: this.lastCondition.name,
+        start_time: this.lastCondition.start_time,
+        end_time: this.lastCondition.end_time,
+      }
     },
     pageInit () {
-      this.pageType = this.$route.query['pageType'] || 1
       this.getDataTables()
     }
   },
@@ -216,6 +238,7 @@ export default {
     this.pageInit()
   },
   mounted () {
+
   }
 }
 </script>

@@ -128,7 +128,7 @@ ul, li {
   text-align: right;
   display: inline-block;
 }
-.search-page label, .search-page input, .search-page select {
+.search-page label, .search-page input, .search-page select, .search-page .searchOption {
   display: inline-block;
 }
 .search-page input, .search-page select {
@@ -137,6 +137,12 @@ ul, li {
 .search-page label {
   margin-left: 10px;
   margin-right: 5px;
+}
+.search-page .searchOption {
+  width: 200px;
+}
+.search-page .searchOption .searchSelect {
+  top: 16px;
 }
 
 .layer-date {
