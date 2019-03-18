@@ -152,6 +152,7 @@ export default {
         { key: "name", title: "姓名" },
         { key: "phone", title: "手机号码" },
         { key: "email", title: "邮箱" },
+        { key: "status", title: "用户状态" },
         { key: "ip", title: "登录ip" },
         { key: "login_time", title: "登录时间" }
       ],

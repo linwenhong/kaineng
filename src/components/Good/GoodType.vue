@@ -21,19 +21,12 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th></th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>
-              <div class="checkbox i-checks">
-                <label>
-                  <input name="select" type="checkbox" :value="index"><i></i></label>
-              </div>
-            </td>
             <td v-for="option of tableOptions">
               <template v-if="option.key == 'type'">
                 {{ item['type'].id }}

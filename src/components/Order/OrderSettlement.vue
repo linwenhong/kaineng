@@ -46,8 +46,7 @@
             <td>{{ item.merchant.name }}</td>
             <td v-for="option of tableOptions">{{ item[option.key] }}</td>
             <td>
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="details(item)">编辑</button>
-              <info-confirm @confirm="del" :data="item"></info-confirm>
+              <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal" @click="details(item)">结算</button>
             </td>
           </tr>
           </tbody>
@@ -114,7 +113,7 @@ export default {
     return {
       tableOptions: [
         { key: "total", title: "订单金额" },
-        { key: "pay_type", title: "支付类型" },
+//        { key: "pay_type", title: "支付类型" },
         { key: "status", title: "订单状态" },
         { key: "enable_status", title: "是否冻结" },
         { key: "settlement_status", title: "结算状态" },

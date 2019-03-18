@@ -98,6 +98,9 @@
               <li>
                 <a class="J_menuItem" @click="goHref('/admin/good')">商品管理</a>
               </li>
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/good-upper-shelf')">商品上架</a>
+              </li>
             </ul>
           </li>
 
@@ -113,6 +116,9 @@
               </li>
               <li>
                 <a class="J_menuItem" @click="goHref('/admin/device')">设备管理</a>
+              </li>
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/device-monitoring')">设备状态监测</a>
               </li>
             </ul>
           </li>

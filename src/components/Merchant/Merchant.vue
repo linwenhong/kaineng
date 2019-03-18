@@ -141,14 +141,16 @@ export default {
     return {
       tableOptions: [
         { key: "id", title: "ID" },
-        { key: "type", title: "账户类型" },
-        { key: "coding", title: "商户号" },
+        { key: "admin_name", title: "管理员名称" },
+        { key: "admin_phone", title: "管理员电话" },
+        { key: "status", title: "商户状态" },
         { key: "name", title: "商户名称" },
-        { key: "admin_name", title: "商户管理员" },
-        { key: "admin_phone", title: "联系电话" },
-        { key: "bank_user_name", title: "结算户名" },
-        { key: "bank_id", title: "结算账户" },
-        { key: "bank", title: "结算银行" }
+        { key: "phone", title: "商户联系电话" },
+        { key: "type", title: "账户类型" },
+        { key: "bank_user_name", title: "账户姓名" },
+        { key: "bank_id", title: "账户号" },
+//        { key: "coding", title: "商户号" },
+//        { key: "bank", title: "结算银行" }
       ],
       items: [],
       total: 0,

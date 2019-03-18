@@ -2,7 +2,7 @@
   <div>
     <div class="text-center animated fadeInDown login">
       <div class="row mt">
-        <h1>PMD健康中心<small> (后台管理系统)</small></h1>
+        <h1>自动售货机<small> (后台管理系统)</small></h1>
         <div class="m-t form-horizontal middle-box">
           <form class="form-horizontal" @submit.prevent="login">
             <div class="form-group">

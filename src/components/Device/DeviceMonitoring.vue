@@ -5,12 +5,26 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>设备管理</h5>
+        <h5>设备状态监测</h5>
       </div>
 
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
+            <label class="control-label">告警日期</label>
+            <button type="button" class="btn" :class="dateOption == 1 ? 'btn-info' : 'btn-default'"
+                    @click="selectDateOption(1)">今天</button>
+            <button type="button" class="btn" :class="dateOption == 3 ? 'btn-info' : 'btn-default'"
+                    @click="selectDateOption(3)">3天内</button>
+            <button type="button" class="btn" :class="dateOption == 7 ? 'btn-info' : 'btn-default'"
+                    @click="selectDateOption(7)">7天内</button>
+
+            <date-time text="自定义时间"></date-time>
+          </div>
+          <div class="form-group">
+            <label class="control-label">商户名称</label>
+            <input type="text" class="form-control" v-model.trim="condition['merchant']">
+
             <label class="control-label">设备sn</label>
             <input type="text" class="form-control" v-model.trim="condition['sn']">
 
@@ -31,7 +45,6 @@
             <tr>
               <th></th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -46,10 +59,6 @@
               <template v-if="option.key == 'manufacturer'">{{ item['manufacturer'].name }}</template>
               <template v-else-if="option.key == 'merchant'">{{ item['merchant'].name }}</template>
               <template v-else>{{ item[option.key] }}</template>
-            </td>
-            <td>
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <info-confirm @confirm="del" :data="item"></info-confirm>
             </td>
           </tr>
           </tbody>
@@ -168,29 +177,27 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'Device',
+  name: 'DeviceMonitoring',
   data () {
     return {
       tableOptions: [
         { key: "id", title: "ID" },
-        { key: "name", title: "设备名称" },
-        { key: "merchant", title: "所属商户" },
-        { key: "display", title: "设备状态" },
         { key: "sn", title: "设备sn" },
-        { key: "manufacturer", title: "所属制造商" },
-//        { key: "status", title: "设备运行状态" },
-        { key: "position", title: "布防地点" },
+        { key: "name", title: "设备名称" },
+        { key: "master_slave", title: "设备主从编号" },
+        { key: "merchant", title: "所属商户" },
+        { key: "error_source", title: "告警源" },
+        { key: "error_code", title: "告警编码" },
+        { key: "error_content", title: "告警内容" },
+        { key: "error_time", title: "告警时间" },
         { key: "staff", title: "维护人员" },
-        { key: "phone", title: "联系电话" },
-        { key: "last_abnormal_time", title: "最后异常时间" },
-        { key: "last_check_time", title: "最后检测时间" },
-        { key: "relation_time", title: "关联商户时间" },
-        { key: "import_time", title: "导入时间" }
+        { key: "phone", title: "联系电话" }
       ],
       items: [],
       total: 0,
       page: 1,
       pageSize: this.$Config.page_size,
+      dateOption: 0,
       condition: {},
       form: {},
       validate: null,
@@ -211,6 +218,17 @@ export default {
           condition[key] = this.condition[key]
         }
       }
+
+      if (this.dateOption > 0) {
+        condition['start_time'] = this.$Method.formatDate(new Date().getTime() - (1000*60*60*24*(this.dateOption - 1)), 'yyyy-MM-dd')
+        condition['end_time'] = this.$Method.formatDate(new Date().getTime() + 1000*60*60*24, 'yyyy-MM-dd')
+      } else {
+        if ($('#startTime').val() && $('#endTime').val()) {
+          condition['start_time'] = $('#startTime').val()
+          condition['end_time'] = $('#endTime').val()
+        }
+      }
+
 
       this.$Service.Device.get(condition).then(response => {
         if (response.code == 200) {
@@ -312,6 +330,9 @@ export default {
           toastr.error(response.msg)
         }
       })
+    },
+    selectDateOption (value) {
+      this.dateOption = this.dateOption == value ? 0 : value
     }
   },
   created () {
