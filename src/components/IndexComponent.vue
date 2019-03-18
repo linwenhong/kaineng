@@ -37,6 +37,9 @@
               <li>
                 <a class="J_menuItem" @click="goHref('/admin/user')">用户管理</a>
               </li>
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/merchant-details')">商户信息</a>
+              </li>
             </ul>
           </li>
 

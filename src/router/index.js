@@ -26,6 +26,7 @@ let routes = new Router({
         { path: 'good-type-tree', name: 'user', component: COMPONENTS.GoodTypeTreeComponent },  // 商品分类管理(树结构)
         { path: 'good-upper-shelf', name: 'user', component: COMPONENTS.GoodUpperShelfComponent },  // 商品上架
         { path: 'merchant', name: 'user', component: COMPONENTS.MerchantComponent },  // 商户管理
+        { path: 'merchant-details', name: 'user', component: COMPONENTS.MerchantDetailsComponent },  // 商户信息
         { path: 'order', name: 'user', component: COMPONENTS.OrderComponent },  // 订单管理
         { path: 'order-settlement', name: 'user', component: COMPONENTS.OrderSettlementComponent },  // 订单结算
       ]

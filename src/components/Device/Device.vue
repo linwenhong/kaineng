@@ -29,19 +29,12 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th></th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>
-              <div class="checkbox i-checks">
-                <label>
-                  <input name="select" type="checkbox" :value="index"><i></i></label>
-              </div>
-            </td>
             <td v-for="option of tableOptions">
               <template v-if="option.key == 'manufacturer'">{{ item['manufacturer'].name }}</template>
               <template v-else-if="option.key == 'merchant'">{{ item['merchant'].name }}</template>
@@ -72,84 +65,91 @@
             <div class="modal-body">
               <div class="row">
 
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">设备sn</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="sn" v-model.trim="form.sn">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">所属制造商</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="manufacturer" v-model.trim="form.manufacturer">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">设备状态</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="display" v-model.trim="form.display">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">所属商户</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="merchant" v-model.trim="form.merchant">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">设备运行状态</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="status" v-model.trim="form.status">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">布防地点</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="position" v-model.trim="form.position">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">维护人员</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="staff" v-model.trim="form.staff">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">联系电话</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="phone" v-model="form.phone"
-                             maxlength="11" oninput="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">最后检测时间</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="last_check_time" v-model.trim="form.last_check_time">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">关联商户时间</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="relation_time" v-model.trim="form.relation_time">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">导入时间</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" required="" aria-required="true" name="import_time" v-model.trim="form.import_time">
-                    </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">设备名称</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="name" v-model.trim="form.name">
                   </div>
                 </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">所属商户</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="merchant" v-model.trim="form.merchant">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">设备状态</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="display" v-model.trim="form.display">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">设备sn</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="sn" v-model.trim="form.sn">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">所属制造商</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="manufacturer" v-model.trim="form.manufacturer">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">布防地点</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="position" v-model.trim="form.position">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">维护人员</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="staff" v-model.trim="form.staff">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">联系电话</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="phone" v-model="form.phone"
+                           maxlength="11" oninput="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">最后异常时间</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="last_abnormal_time" v-model.trim="form.last_abnormal_time">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">最后检测时间</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="last_check_time" v-model.trim="form.last_check_time">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">关联商户时间</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="relation_time" v-model.trim="form.relation_time">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">导入时间</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="import_time" v-model.trim="form.import_time">
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="modal-footer">
@@ -178,7 +178,6 @@ export default {
         { key: "display", title: "设备状态" },
         { key: "sn", title: "设备sn" },
         { key: "manufacturer", title: "所属制造商" },
-//        { key: "status", title: "设备运行状态" },
         { key: "position", title: "布防地点" },
         { key: "staff", title: "维护人员" },
         { key: "phone", title: "联系电话" },
@@ -249,14 +248,15 @@ export default {
 
       console.log(this.form)
       const request = {
+        name: this.form.name,
+        merchant: this.form.merchant,
+        display: this.form.display,
         sn: this.form.sn,
         manufacturer: this.form.manufacturer,
-        display: this.form.display,
-        merchant: this.form.merchant,
-        status: this.form.status,
         position: this.form.position,
         staff: this.form.staff,
         phone: this.form.phone,
+        last_abnormal_time: this.form.last_abnormal_time,
         last_check_time: this.form.last_check_time,
         relation_time: this.form.relation_time,
         import_time: this.form.import_time
@@ -290,14 +290,15 @@ export default {
       this.clear()
       this.form = {
         id: item.id,
+        name: item.name,
+        merchant: item.merchant.id,
+        display: item.display,
         sn: item.sn,
         manufacturer: item.manufacturer.id,
-        display: item.display,
-        merchant: item.merchant.id,
-        status: item.status,
         position: item.position,
         staff: item.staff,
         phone: item.phone.toString(),
+        last_abnormal_time: item.last_abnormal_time,
         last_check_time: item.last_check_time,
         relation_time: item.relation_time,
         import_time: item.import_time

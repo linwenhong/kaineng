@@ -87,9 +87,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">邮箱</label>
+                  <label class="col-sm-3 control-label">账号状态</label>
                   <div class="col-sm-8">
-                    <input type="email" class="form-control" required="" aria-required="true" name="email" v-model.trim="form.email">
+                    <input type="email" class="form-control" required="" aria-required="true" name="status" v-model.trim="form.status">
                   </div>
                 </div>
 
@@ -151,7 +151,7 @@ export default {
         { key: "username", title: "用户名" },
         { key: "name", title: "姓名" },
         { key: "phone", title: "手机号码" },
-        { key: "email", title: "邮箱" },
+//        { key: "email", title: "邮箱" },
         { key: "status", title: "用户状态" },
         { key: "ip", title: "登录ip" },
         { key: "login_time", title: "登录时间" }
@@ -222,7 +222,7 @@ export default {
 
       console.log(this.form)
       const request = {
-        email: this.form.email,
+        status: this.form.status,
         name: this.form.name,
         password: this.form.password,
         phone: this.form.phone,
@@ -257,7 +257,7 @@ export default {
       this.clear()
       this.form = {
         id: item.id,
-        email: item.email,
+        status: item.status,
         name: item.name,
         phone: item.phone.toString(),
         username: item.username
