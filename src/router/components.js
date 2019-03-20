@@ -17,4 +17,5 @@ export const COMPONENTS = {
   MerchantDetailsComponent: resolve => require(['@/components/Merchant/MerchantDetails'], resolve),
   OrderComponent: resolve => require(['@/components/Order/Order'], resolve),
   OrderSettlementComponent: resolve => require(['@/components/Order/OrderSettlement'], resolve),
+  OrderSettlementLogsComponent: resolve => require(['@/components/Order/OrderSettlementLogs'], resolve),
 }

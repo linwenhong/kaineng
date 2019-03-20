@@ -170,8 +170,20 @@ ul, li {
   cursor: pointer;
 }
 
-  .ibox {
-    display: inline-block;
-    min-width: 100%;
-  }
+
+#page-wrapper {
+  overflow-y: auto;
+}
+.border-bottom {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+.wrapper-content {
+  padding-top: 55px;
+}
+.ibox {
+  display: inline-block;
+  min-width: 100%;
+}
 </style>

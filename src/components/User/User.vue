@@ -24,20 +24,19 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th></th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>
-              <div class="checkbox i-checks">
-                <label>
-                  <input name="select" type="checkbox" :value="index"><i></i></label>
-              </div>
-            </td>
-            <td v-for="option of tableOptions">{{ item[option.key] }}</td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.username }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.ip }}</td>
+            <td>{{ item.login_time }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
@@ -81,15 +80,15 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">手机号码</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="phone" v-model="form.phone"
-                           maxlength="11" oninput="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                    <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
+                           oninput="numberFormat(this)" name="phone" v-model="form.phone">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">账号状态</label>
                   <div class="col-sm-8">
-                    <input type="email" class="form-control" required="" aria-required="true" name="status" v-model.trim="form.status">
+                    <input type="text" class="form-control" required="" aria-required="true" name="status" v-model.trim="form.status">
                   </div>
                 </div>
 
@@ -151,7 +150,6 @@ export default {
         { key: "username", title: "用户名" },
         { key: "name", title: "姓名" },
         { key: "phone", title: "手机号码" },
-//        { key: "email", title: "邮箱" },
         { key: "status", title: "用户状态" },
         { key: "ip", title: "登录ip" },
         { key: "login_time", title: "登录时间" }

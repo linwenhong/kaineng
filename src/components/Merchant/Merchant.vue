@@ -21,20 +21,21 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th></th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>
-              <div class="checkbox i-checks">
-                <label>
-                  <input name="select" type="checkbox" :value="index"><i></i></label>
-              </div>
-            </td>
-            <td v-for="option of tableOptions">{{ item[option.key] }}</td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.admin_name }}</td>
+            <td>{{ item.admin_phone }}</td>
+            <td>{{ item.admin_phone }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.account_name }}</td>
+            <td>{{ item.account_id }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
@@ -61,16 +62,17 @@
               <div class="row">
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">账户类型</label>
+                  <label class="col-sm-3 control-label">管理员名称</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="type" v-model.trim="form.type">
+                    <input type="text" class="form-control" required="" aria-required="true" name="admin_name" v-model.trim="form.admin_name">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">商户号</label>
+                  <label class="col-sm-3 control-label">管理员电话</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="coding" v-model.trim="form.coding">
+                    <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
+                           oninput="numberFormat(this)" name="admin_phone" v-model="form.admin_phone">
                   </div>
                 </div>
 
@@ -82,38 +84,24 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">商户管理员</label>
+                  <label class="col-sm-3 control-label">商户联系电话</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="admin_name" v-model.trim="form.admin_name">
+                    <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
+                           oninput="numberFormat(this)" name="phone" v-model="form.phone">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">联系电话</label>
+                  <label class="col-sm-3 control-label">账户姓名</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="admin_phone" v-model="form.admin_phone"
-                           maxlength="11" oninput="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                    <input type="text" class="form-control" required="" aria-required="true" name="account_name" v-model.trim="form.account_name">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">结算户名</label>
+                  <label class="col-sm-3 control-label">账户号</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="bank_user_name" v-model.trim="form.bank_user_name">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">结算账户</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="bank_id" v-model.trim="form.bank_id">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">结算银行</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="bank" v-model.trim="form.bank">
+                    <input type="text" class="form-control" required="" aria-required="true" name="account_id" v-model.trim="form.account_id">
                   </div>
                 </div>
 
@@ -202,6 +190,10 @@ export default {
         toastr.info('请输入11位数的电话号码!')
         return false
       }
+      if (form.phone.length != 11) {
+        toastr.info('请输入11位数的电话号码!')
+        return false
+      }
       return true
     },
     submit () {
@@ -210,17 +202,15 @@ export default {
       if (!this.checkForm(this.form)) return;  // 表单验证
       this.isSubmit = true
 
-      console.log(this.form)
       const request = {
-        type: this.form.type,
-        coding: this.form.coding,
-        name: this.form.name,
         admin_name: this.form.admin_name,
         admin_phone: this.form.admin_phone,
-        bank_user_name: this.form.bank_user_name,
-        bank_id: this.form.bank_id,
-        bank: this.form.bank
+        name: this.form.name,
+        phone: this.form.phone,
+        account_name: this.form.account_name,
+        account_id: this.form.account_id
       }
+      console.log(request);this.isSubmit = false;return;
 
       if (this.form.id) { // 修改
         const id = this.form.id
@@ -250,14 +240,14 @@ export default {
       this.clear()
       this.form = {
         id: item.id,
-        type: item.type,
-        coding: item.coding,
-        name: item.name,
         admin_name: item.admin_name,
         admin_phone: item.admin_phone.toString(),
-        bank_user_name: item.bank_user_name,
-        bank_id: item.bank_id,
-        bank: item.bank
+        status: item.status,
+        name: item.name,
+        phone: item.phone.toString(),
+        type: item.type,
+        account_name: item.account_name,
+        account_id: item.account_id
       }
     },
     del (item) {

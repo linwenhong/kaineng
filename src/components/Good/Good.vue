@@ -33,12 +33,13 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td v-for="option of tableOptions">
-              <template v-if="option.key == 'type'">
-                {{ item['type'].id }}
-              </template>
-              <template v-else>{{ item[option.key] }}</template>
-            </td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.coding }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.type.name }}</td>
+            <td>{{ item.specification }}</td>
+            <td>¥ {{ item.reference_price }}</td>
+            <td>{{ item.remark }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
@@ -67,14 +68,16 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">商品编码</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="coding" v-model.trim="form.coding">
+                    <input type="text" class="form-control" required="" aria-required="true"
+                           name="coding" v-model.trim="form.coding">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">商品名称</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="name" v-model.trim="form.name">
+                    <input type="text" class="form-control" required="" aria-required="true"
+                           name="name" v-model.trim="form.name">
                   </div>
                 </div>
 
@@ -88,14 +91,24 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">商品规格</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="specification" v-model.trim="form.specification">
+                    <input type="text" class="form-control" required="" aria-required="true"
+                           name="specification" v-model.trim="form.specification">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">参考价格</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true"
+                           oninput="moneyFormat(this)" name="reference_price" v-model.trim="form.reference_price">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">备注</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="remark" v-model.trim="form.remark">
+                    <input type="text" class="form-control"
+                           name="remark" v-model.trim="form.remark">
                   </div>
                 </div>
 
@@ -196,14 +209,15 @@ export default {
       if (!this.checkForm(this.form)) return;  // 表单验证
       this.isSubmit = true
 
-      console.log(this.form)
       const request = {
         coding: this.form.coding,
         name: this.form.name,
         type: this.form.type,
         specification: this.form.specification,
+        reference_price: this.form.reference_price,
         remark: this.form.remark
       }
+      console.log(request);this.isSubmit = false;return;
 
       if (this.form.id) { // 修改
         const id = this.form.id
@@ -237,6 +251,7 @@ export default {
         name: item.name,
         type: item.type.id,
         specification: item.specification,
+        reference_price: item.reference_price,
         remark: item.remark
       }
     },

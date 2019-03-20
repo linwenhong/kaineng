@@ -27,12 +27,9 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td v-for="option of tableOptions">
-              <template v-if="option.key == 'type'">
-                {{ item['type'].id }}
-              </template>
-              <template v-else>{{ item[option.key] }}</template>
-            </td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.parent_id }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
@@ -99,7 +96,7 @@ export default {
       tableOptions: [
         { key: "id", title: "ID" },
         { key: "name", title: "分类名称" },
-        { key: "parent_id", title: "父级分类" },
+        { key: "parent_id", title: "父级分类" }
       ],
       items: [],
       total: 0,

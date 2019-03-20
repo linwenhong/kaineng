@@ -3,7 +3,7 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>订单管理</h5>
+        <h5>待结算订单</h5>
       </div>
 
       <div class="ibox-content">
@@ -108,7 +108,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'Order',
+  name: 'OrderSettlement',
   data () {
     return {
       tableOptions: [

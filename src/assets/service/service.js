@@ -23,6 +23,7 @@ const GoodType = createService('good_type')
 const GoodUpperShelf = createService('good_upper_shelf')
 const Merchant = createService('merchant')
 const Order = createService('order')
+const SettlementLogs = createService('settlement_logs')
 const User = createService('user')
 
 export default {
@@ -34,5 +35,6 @@ export default {
   GoodUpperShelf,
   Merchant,
   Order,
+  SettlementLogs,
   User
 }

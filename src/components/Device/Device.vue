@@ -117,8 +117,8 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">联系电话</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="phone" v-model="form.phone"
-                           maxlength="11" oninput="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                    <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
+                           oninput="numberFormat(this)" name="phone" v-model="form.phone">
                   </div>
                 </div>
 

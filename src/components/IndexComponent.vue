@@ -69,6 +69,9 @@
               <li>
                 <a class="J_menuItem" @click="goHref('/admin/order-settlement')">待结算订单</a>
               </li>
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/order-settlement-logs')">商户结算记录</a>
+              </li>
             </ul>
           </li>
 
@@ -172,7 +175,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#page-wrapper {
-  overflow-y: auto;
-}
+
 </style>
