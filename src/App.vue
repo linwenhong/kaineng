@@ -170,4 +170,8 @@ ul, li {
   cursor: pointer;
 }
 
+  .ibox {
+    display: inline-block;
+    min-width: 100%;
+  }
 </style>

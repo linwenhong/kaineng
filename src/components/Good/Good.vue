@@ -129,7 +129,7 @@ export default {
         { key: "name", title: "商品名称" },
         { key: "type", title: "商品类型" },
         { key: "specification", title: "商品规格" },
-        { key: "price", title: "参考价格" },//商户端
+        { key: "reference_price", title: "参考价格" },
         { key: "remark", title: "备注" }
       ],
       items: [],

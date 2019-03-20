@@ -146,7 +146,9 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">导入时间</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="import_time" v-model.trim="form.import_time">
+                    <!--<input type="text" class="form-control" required="" aria-required="true" name="import_time" v-model.trim="form.import_time">-->
+                    <input readonly class="form-control layer-date" id="import_time" placeholder="请选择时间"
+                           onclick="laydate({ elem: '#import_time' })">
                   </div>
                 </div>
               </div>
@@ -175,7 +177,7 @@ export default {
         { key: "id", title: "ID" },
         { key: "name", title: "设备名称" },
         { key: "merchant", title: "所属商户" },
-        { key: "display", title: "设备状态" },
+        { key: "status", title: "设备状态" },
         { key: "sn", title: "设备sn" },
         { key: "manufacturer", title: "所属制造商" },
         { key: "position", title: "布防地点" },

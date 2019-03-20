@@ -147,10 +147,8 @@ export default {
         { key: "name", title: "商户名称" },
         { key: "phone", title: "商户联系电话" },
         { key: "type", title: "账户类型" },
-        { key: "bank_user_name", title: "账户姓名" },
-        { key: "bank_id", title: "账户号" },
-//        { key: "coding", title: "商户号" },
-//        { key: "bank", title: "结算银行" }
+        { key: "account_name", title: "账户姓名" },
+        { key: "account_id", title: "账户号" }
       ],
       items: [],
       total: 0,

@@ -1,8 +1,6 @@
 <template>
   <div class="wrapper wrapper-content">
 
-    <page-header-button @add="add"></page-header-button>
-
     <div class="ibox float-e-margins">
       <div class="ibox-title">
         <h5>设备状态监测</h5>
@@ -48,11 +46,16 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td v-for="option of tableOptions">
-              <template v-if="option.key == 'manufacturer'">{{ item['manufacturer'].name }}</template>
-              <template v-else-if="option.key == 'merchant'">{{ item['merchant'].name }}</template>
-              <template v-else>{{ item[option.key] }}</template>
-            </td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.device.sn }}</td>
+            <td>{{ item.device.name }}</td>
+            <td>{{ item.coding }}</td>
+            <td>{{ item.device.merchant.name }}</td>
+            <td>{{ item.error_source }}</td>
+            <td>{{ item.error_content }}</td>
+            <td>{{ item.error_time }}</td>
+            <td>{{ item.device.staff }}</td>
+            <td>{{ item.device.phone }}</td>
           </tr>
           </tbody>
         </table>
@@ -73,10 +76,9 @@ export default {
         { key: "id", title: "ID" },
         { key: "sn", title: "设备sn" },
         { key: "name", title: "设备名称" },
-        { key: "master_slave", title: "设备主从编号" },
-        { key: "merchant", title: "所属商户" },
-        { key: "error_source", title: "告警源" },
-        { key: "error_code", title: "告警编码" },
+        { key: "coding", title: "设备柜体编号" },
+        { key: "merchant", title: "商户名称" },
+        { key: "error_source", title: "告警源类型" },
         { key: "error_content", title: "告警内容" },
         { key: "error_time", title: "告警时间" },
         { key: "staff", title: "维护人员" },
@@ -118,7 +120,7 @@ export default {
       }
 
 
-      this.$Service.Device.get(condition).then(response => {
+      this.$Service.SubDevice.get(condition).then(response => {
         if (response.code == 200) {
           this.items = response.data
           this.total = response.total
