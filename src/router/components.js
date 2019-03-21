@@ -1,6 +1,7 @@
 export const COMPONENTS = {
-  Login: resolve => require(['@/components/login/login'], resolve),
-  ModifyPassword: resolve => require(['@/components/login/modifyPassword'], resolve),
+  LoginComponent: resolve => require(['@/components/auth/login'], resolve),
+  RegisterComponent: resolve => require(['@/components/auth/register'], resolve),
+  ModifyPasswordComponent: resolve => require(['@/components/auth/modifyPassword'], resolve),
   IndexComponent: resolve => require(['@/components/IndexComponent'], resolve),
 
   UserComponent: resolve => require(['@/components/User/User'], resolve),

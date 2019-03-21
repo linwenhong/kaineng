@@ -8,45 +8,20 @@
 
       <div class="device-list">
         <div class="search-page device-search">
-          <input type="text" class="form-control" v-model.trim="condition['name']">
+          <input type="text" class="form-control" v-model.trim="deviceName">
           <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
         </div>
         <ul>
-          <li>
-            <p>1.DX001售货机</p>
-            <p>地址: 广州市天河区万菱汇A</p>
-            <p>联系人: 张三 18565478954</p>
-          </li>
-          <li>
-            <p>1.DX001售货机</p>
-            <p>地址: 广州市天河区万菱汇A</p>
-            <p>联系人: 张三 18565478954</p>
-          </li>
-          <li>
-            <p>1.DX001售货机</p>
-            <p>地址: 广州市天河区万菱汇A</p>
-            <p>联系人: 张三 18565478954</p>
-          </li>
-          <li>
-            <p>1.DX001售货机</p>
-            <p>地址: 广州市天河区万菱汇A</p>
-            <p>联系人: 张三 18565478954</p>
-          </li>
-          <li>
-            <p>1.DX001售货机</p>
-            <p>地址: 广州市天河区万菱汇A</p>
-            <p>联系人: 张三 18565478954</p>
-          </li>
-          <li>
-            <p>1.DX001售货机</p>
-            <p>地址: 广州市天河区万菱汇A</p>
-            <p>联系人: 张三 18565478954</p>
+          <li v-for="(device, index) of MerchantDevice" @click="selectMerchantDevice(device)">
+            <p>{{ index + 1 }}.{{ device.name }}</p>
+            <p>地址: {{ device.position }}</p>
+            <p>联系人: {{ device.staff }} {{ device.phone }}</p>
           </li>
         </ul>
       </div>
 
       <div class="ibox-content">
-        <div class="form-group">
+        <div class="form-group device">
           <template v-for="(details, index) of SubDevices">
             <button type="button" class="btn" :class="selectOption == index ? 'btn-info' : 'btn-default'"
                     @click="selectDeviceOption(index)">{{ details.name }}</button>
@@ -54,9 +29,16 @@
         </div>
 
         <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>货架层</th>
+              <th colspan="3">货物通道信息</th>
+            </tr>
+          </thead>
           <tbody>
             <tr v-for="(shelf_layer, index) of DeviceGood">
               <td>{{ DeviceGood.length - index }}</td>
+              <!--<td>{{ shelf_layer.name }}</td>-->
               <td v-for="passageway of shelf_layer.passageways">
                 <template v-if="passageway.status == 3">
                   被合并
@@ -96,10 +78,11 @@
 
 
           <div class="modal-body">
+            <p class="passageway-number">当前货道号: <font color="red">{{ passageway.id }}</font></p>
             <form id="form" class="form-horizontal" @submit.prevent="getGoodTables">
               <div class="search-page">
                 <div class="form-group">
-                  <input type="text" class="form-control search-name" placeholder="输入商品名称，回车查询" v-model.trim="condition['name']">
+                  <input type="text" class="form-control search-name" placeholder="输入商品名称，回车查询" v-model.trim="goodName">
 
                   <div class="checkbox i-checks">
                     <label>
@@ -115,8 +98,6 @@
                 <th>ID</th>
                 <th>商品名称</th>
                 <th>规格</th>
-                <th>价格</th>
-                <th>定价说明</th>
                 <th>商品来源</th>
               </tr>
               </thead>
@@ -125,29 +106,19 @@
                 <td>{{ good.id }}</td>
                 <td>{{ good.name }}</td>
                 <td>{{ good.specification }}</td>
-                <td>¥ {{ good.reference_price }}</td>
-                <td>{{ good.remark }}</td>
                 <td>系统</td>
               </tr>
               </tbody>
             </table>
 
-            <form id="form2" class="form-horizontal" @submit.prevent="submit">
-              <div class="search-page">
-                <div class="form-group">
-                  <label class="control-label">重新定价: </label>
-                  <input type="text" class="form-control" v-model.trim="form['price']">
-                </div>
-                <div class="form-group">
-                  <label class="control-label">定价说明: </label>
-                  <input type="text" class="form-control search-name" v-model.trim="form['remark']">
-                </div>
-                <p>注意：商品价格变化时，同一售货机同一商品的所有货道价格全部调整一致</p>
+            <div class="form-group" v-if="selectGoodId > 0">
+              <p>请选择商品价格</p>
+              <div class="radio i-checks" v-for="option of goodPrices">
+                <label>
+                  <input type="radio" :value="option.price" name="price"/>¥ {{ option.price }}
+                </label>
               </div>
-              <button type="submit" class="btn btn-primary" style="display: none">提交</button>
-            </form>
-
-
+            </div>
           </div>
 
           <div class="modal-footer">
@@ -169,50 +140,92 @@ export default {
   data () {
     return {
       goods: [],
-      selectGoodId: 0,
+      selectOption: 0, // 选择的子设备(柜体)下标
+      selectGoodId: 0, // 选中定价的商品id, 用于获取当前商品所有定价
+      goodPrices: [], // 商品所有定价
+      passageway: {},  // 当前货物通道
       condition: {},
-      form: {},
-      SubDevices: {},
-      DeviceGood: {},
-      selectOption: 0,
+      deviceName: '',
+      goodName: '',
+      MerchantDevice: [], // 商户设备列表
+      SubDevices: {}, // 选中的设备 子设备(柜体)列表
+      DeviceGood: [], // 选中的子设备(柜体) 货物层列表
       validate: null,
       isSubmit: false
     }
   },
   methods: {
     getDataTables () {
+      const request= {}
+      if (this.deviceName) {
+        request.name = this.deviceName
+      }
+      this.$Service.Device.get(request).then(response => {
+        if (response.code == 200) {
+          this.MerchantDevice = response.data
+        }
+      })
+    },
+    selectMerchantDevice (device) {
+      console.log('device', device)
       this.$Service.GoodUpperShelf.get().then(response => {
         this.SubDevices = response.data.sub_device
-        this.DeviceGood = this.SubDevices[0].shelf_layer
+        this.selectDeviceOption(0)
       })
     },
     selectDeviceOption (index) {
       this.selectOption = index
       this.DeviceGood = this.SubDevices[index].shelf_layer
-      console.log(this.SubDevices[index])
+      console.log('sub_device', this.SubDevices[index])
     },
-    edit (good) {
-      console.log(good)
+    edit (passageway) {
+      console.log('passageway', passageway)
+      this.passageway = passageway
       this.getGoodTables()
       $('#Modal').modal('show')
     },
     getGoodTables () {
-      console.log(this.$H5UI.getChecked('select'))
+      const request = {}
+      if (this.goodName) {
+        request.name = this.goodName
+      }
+      if (this.$H5UI.getChecked('select')[0]) {
+        request.all = 1
+      }
       this.selectGoodId = 0
-      this.$Service.Good.get(this.condition).then(response => {
+      this.$Service.Good.get(request).then(response => {
         this.goods = response.data
       })
     },
     selectGood (good) {
+      this.$Service.GoodPrice.get().then(response => {
+        if (response.code == 200) {
+          this.goodPrices = response.data
+          this.$nextTick(() => {
+            this.$H5UI.iCheck()
+            this.$H5UI.clearRadio()
+            this.$H5UI.setRadioVal('price', this.goodPrices[0].price)
+          })
+        }
+      })
       this.selectGoodId = good.id
-      this.form.selectGoodId = good.id
     },
     submit () {
       if (this.selectGoodId == 0) {
         toastr.info('请先选择商品')
         return
       }
-      console.log(this.form)
+      const price = this.$H5UI.getRadioVal('price')
+      if (!price) {
+        toastr.info('请选择商品价格')
+        return
+      }
+      const request = {
+        passageway_id: this.passageway.id,
+        good_id: this.selectGoodId,
+        price: price
+      }
+      console.log(request)
     }
   },
   created () {
@@ -287,5 +300,11 @@ export default {
   }
   .i-checks {
     display: inline-block;
+  }
+  .device button {
+    margin-right: 10px;
+  }
+  p.passageway-number {
+    margin-bottom: 0;
   }
 </style>

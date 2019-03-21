@@ -122,6 +122,9 @@ ul, li {
 .text-center {
   text-align: center;
 }
+.MustFill {
+  color: red;
+}
 
 .search-page label {
   line-height: 34px;

@@ -43,3 +43,6 @@ function moneyFormat(obj){
 function numberFormat(obj){
   obj.value = obj.value.replace(/[^\d]+/g,'');
 }
+function NonSpecialSymbolsFormat(obj){ // 非特殊符号
+  obj.value = obj.value.replace(/[^0-9a-zA-Z]/g,'');
+}

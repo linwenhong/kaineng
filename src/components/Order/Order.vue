@@ -49,7 +49,11 @@
             <td>{{ item.id }}</td>
             <td>{{ item.coding }}</td>
             <td>{{ item.merchant.name }}</td>
-            <td v-for="option of tableOptions">{{ item[option.key] }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.number }}</td>
+            <td>{{ item.total }}</td>
+            <td>{{ item.pay_type | PayType }}</td>
+            <td>{{ item.time }}</td>
 
             <template v-if="pageType == 2">
               <td v-for="option of tableOptions2">{{ item[option.key] }}</td>

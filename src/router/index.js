@@ -7,7 +7,7 @@ Vue.use(Router)
 let routes = new Router({
   //mode: 'history',
   routes: [
-    { path: '/', redirect: '/login' },
+    { path: '/', redirect: '/auth' },
     {
       path: '/admin',
       component: COMPONENTS.IndexComponent,
@@ -34,17 +34,22 @@ let routes = new Router({
     },
     {
       path: '/login',
-      component: COMPONENTS.Login
+      component: COMPONENTS.LoginComponent
+      // 登录
+    },
+    {
+      path: '/register',
+      component: COMPONENTS.RegisterComponent
       // 登录
     },
     {
       path: '/modifyPassword',
-      component: COMPONENTS.ModifyPassword
+      component: COMPONENTS.ModifyPasswordComponent
       // 修改密码
     },
     {
       path: '/editUserPassword/:id',
-      component: COMPONENTS.ModifyPassword
+      component: COMPONENTS.ModifyPasswordComponent
       // 修改员工密码
     }
     // routes end
@@ -57,18 +62,18 @@ routes.beforeEach((to, from, next) => {
   next()
   return
 
-  if ((!Cache.getUser() ||  !Cache.getUser().id) && to.path != '/login') {
-    next({ path: '/login' })
+  if ((!Cache.getUser() ||  !Cache.getUser().id) && to.path != '/auth') {
+    next({ path: '/auth' })
   }
 
-  if (to.path != '/login') {
+  if (to.path != '/auth') {
     if ($.inArray('admin', Cache.getUser().permission) != -1) { // 超级用户
       console.log('超级用户')
       next()
     } else if (to.name) { // 权限验证
       console.log('权限验证')
       if ($.inArray(to.name, Cache.getUser().permission) == -1) {
-        next({ path: '/login' })
+        next({ path: '/auth' })
       } else {
         next()
       }

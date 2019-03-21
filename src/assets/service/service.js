@@ -20,11 +20,14 @@ const SubDevice = createService('sub_device')
 const Manufacturer = createService('manufacturer')
 const Good = createService('good')
 const GoodType = createService('good_type')
+const GoodPrice = createService('good_price')
 const GoodUpperShelf = createService('good_upper_shelf')
 const Merchant = createService('merchant')
 const Order = createService('order')
 const SettlementLogs = createService('settlement_logs')
 const User = createService('user')
+
+function register (request) { return post('register', request) }
 
 export default {
   Device,
@@ -32,9 +35,12 @@ export default {
   Manufacturer,
   Good,
   GoodType,
+  GoodPrice,
   GoodUpperShelf,
   Merchant,
   Order,
   SettlementLogs,
-  User
+  User,
+
+  register
 }
