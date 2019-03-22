@@ -6,6 +6,7 @@ import vuePagination from 'vue-pagination-y'
 
 import App from '@/App'
 import router from '@/router'
+import store from '@/stores'
 import FilterService from '@/assets/filter'
 import directives from '@/assets/directive'
 // components
@@ -41,6 +42,7 @@ Vue.prototype.$Method = require('@/assets/method.js')
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

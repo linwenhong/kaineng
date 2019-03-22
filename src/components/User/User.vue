@@ -145,6 +145,7 @@ export default {
   name: 'User',
   data () {
     return {
+      user: this.$store.getters.getUser,
       tableOptions: [
         { key: "id", title: "ID" },
         { key: "username", title: "用户名" },
@@ -274,7 +275,7 @@ export default {
   },
   created () {
     this.getDataTables()
-//  {"id": 1, "name": "zhangsan"}
+    console.log(this.user)
   },
   mounted () {
     this.validate = this.$H5UI.validate('#form')  //  添加表单验证

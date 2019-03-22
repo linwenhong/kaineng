@@ -47,9 +47,10 @@ export default {
   },
   methods: {
     login () {
-      Cache.setLocalStorage('user', {id:1, name: '张三'})
-      this.$router.push({ path: '/admin/user/' + 1 })
-      return
+      const user = {
+        id: 2,
+        name: '张三'
+      }
       if (!this.username || !this.password) {
         toastr.error('用户名或密码不能为空!')
       } else {
@@ -61,13 +62,17 @@ export default {
           .then(response => {
             const data = response.data.data
             if (response.data.status == 200) {
-              Cache.setLocalStorage('token', data.token)
-              Cache.setLocalStorage('user', data)
+              Cache.setCache('token', data.token)
+              Cache.setCache('user', data)
               this.$router.push({ path: '/admin/user/' + data.id })
             } else if (response.data.status == 500) {
               toastr.error(response.data.msg)
             }
           })
+        .catch(error => {
+          console.log(error)
+          this.$store.dispatch('login', user)
+        })
       }
     }
   }

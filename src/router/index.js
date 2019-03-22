@@ -56,38 +56,19 @@ let routes = new Router({
   ]
 })
 
-import Cache from '@/assets/cache'
+import store from '@/stores'
 routes.beforeEach((to, from, next) => {
   console.log(to)
-  next()
-  return
+  const user = store.getters.getUser
 
-  if ((!Cache.getUser() ||  !Cache.getUser().id) && to.path != '/auth') {
-    next({ path: '/auth' })
-  }
-
-  if (to.path != '/auth') {
-    if ($.inArray('admin', Cache.getUser().permission) != -1) { // 超级用户
-      console.log('超级用户')
-      next()
-    } else if (to.name) { // 权限验证
-      console.log('权限验证')
-      if ($.inArray(to.name, Cache.getUser().permission) == -1) {
-        next({ path: '/auth' })
-      } else {
-        next()
-      }
-    } else if (to.path == '/admin/Order') { // 特殊处理
-      console.log('特殊处理')
-      // Order: 所有订单 to_do_order: 待审核订单 unusual_order_cancel: 异常订单取消 unusual_order_refund: 异常订单退款
-      console.log('order')
-      next()
+  if (to.path == '/login') {
+    next()
+  } else { // 登录验证
+    if (!user || !user.id) {
+      next('/login')
     } else {
-      console.log('无验证')
       next()
     }
-  } else {  // 登录
-    next()
   }
 })
 

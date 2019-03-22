@@ -19,7 +19,7 @@
                 <li><a class="J_menuItem" @click="goHref('/admin/user/' + user.id)">修改密码</a>
                 </li>
                 <li class="divider"></li>
-                <li><a href="/">安全退出</a>
+                <li><a @click="logout">安全退出</a>
                 </li>
               </ul>
             </div>
@@ -152,7 +152,7 @@ export default {
   name: 'IndexComponent',
   data () {
     return {
-      user: Cache.getUser()
+      user: this.$store.getters.getUser
     }
   },
   methods: {
@@ -161,6 +161,9 @@ export default {
         $('span.clear').click()
       }
       this.$router.push(url)
+    },
+    logout () {
+      this.$store.dispatch('logout')
     }
   },
   mounted () {

@@ -170,11 +170,11 @@ export default {
         this.form = response.data
       }
     })
-    if (($.inArray('admin', Cache.getUser().permission) > -1) || ($.inArray('user', Cache.getUser().permission) > -1)) {
+    if (($.inArray('admin', Cache.getCache('user').permission) > -1) || ($.inArray('user', Cache.getUser().permission) > -1)) {
       this.canEditRole = true
       this.isManager = true
     }
-    if ($.inArray('admin', Cache.getUser().permission) > -1) {
+    if ($.inArray('admin', Cache.getCache('user').permission) > -1) {
       this.isAdmin = true
     }
   },
