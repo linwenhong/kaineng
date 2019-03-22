@@ -49,7 +49,7 @@
             <td>{{ item.id }}</td>
             <td>{{ item.coding }}</td>
             <td>{{ item.merchant.name }}</td>
-            <td>{{ item.status }}</td>
+            <td>{{ item.status | OrderStatus }}</td>
             <td>{{ item.number }}</td>
             <td>{{ item.total }}</td>
             <td>{{ item.pay_type | PayType }}</td>

@@ -7,7 +7,7 @@ Vue.use(Router)
 let routes = new Router({
   //mode: 'history',
   routes: [
-    { path: '/', redirect: '/auth' },
+    { path: '/', redirect: '/login' },
     {
       path: '/admin',
       component: COMPONENTS.IndexComponent,

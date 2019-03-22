@@ -34,7 +34,7 @@
             <td>{{ item.username }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.phone }}</td>
-            <td>{{ item.status }}</td>
+            <td>{{ item.status | UserStatus }}</td>
             <td>{{ item.ip }}</td>
             <td>{{ item.login_time }}</td>
             <td>

@@ -8,13 +8,13 @@
             <div class="form-group">
               <label class="control-label col-sm-3">账号</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control"  required="" v-model="username">
+                <input type="text" class="form-control" v-model="username">
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-sm-3">密码</label>
               <div class="col-sm-9">
-                <input type="password" class="form-control" required="" v-model="password">
+                <input type="password" class="form-control" v-model="password">
               </div>
             </div>
             <div class="col-sm-offset-3 col-sm-9">
@@ -34,7 +34,6 @@
 <script type="text/ecmascript-6">
 import Vue from 'vue'
 import Cache from '@/assets/cache'
-import { API_URL } from '@/assets/config'
 export default {
   name: 'login',
   data () {
@@ -48,6 +47,9 @@ export default {
   },
   methods: {
     login () {
+      Cache.setLocalStorage('user', {id:1, name: '张三'})
+      this.$router.push({ path: '/admin/user/' + 1 })
+      return
       if (!this.username || !this.password) {
         toastr.error('用户名或密码不能为空!')
       } else {

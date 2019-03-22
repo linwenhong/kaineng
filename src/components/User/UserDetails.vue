@@ -111,6 +111,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import Cache from '@/assets/cache'
 export default {
   name: 'UserDetails',
   data () {
@@ -126,7 +127,7 @@ export default {
   },
   methods: {
     submit () {
-      const request = Method.getDataKeys(this.form, ['username', 'name', 'r_id', 'phone', 'data_permission'])
+      const request = this.form
       if (this.canShow) {
         if (!this.form['new_password'] || !this.form['new_password2']) {
           toastr.warning('请输入密码')
@@ -141,7 +142,7 @@ export default {
           request['new_password'] = this.form['new_password']
         }
       }
-      Service.editUser(this.id, request).then(response => {
+      this.$Service.User.edit(this.id, request).then(response => {
         if (response.status == 200) {
           toastr.success('保存成功')
           if (this.isManager) {
@@ -163,12 +164,8 @@ export default {
     }
   },
   created () {
-    Service.getRole().then(response => {
-      if (response.status == 200) {
-        this.roles = response.data
-      }
-    })
-    Service.getUserDetails(this.id).then(response => {
+    this.roles = []
+    this.$Service.User.details(this.id).then(response => {
       if (response.status == 200) {
         this.form = response.data
       }

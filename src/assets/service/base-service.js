@@ -4,8 +4,8 @@ import Config from '@/assets/config'
 // 默认请求地址
 axios.defaults.baseURL = Config.api_url
 // 超时时间
-axios.defaults.timeout = 5000
-//axios.defaults.headers.common['Authorization'] = JSON.parse(localStorage.getItem('token'))
+axios.defaults.timeout = 10000
+axios.defaults.headers.common['Authorization'] = 'this is a token'
 
 function get (url, request) {
   return axios.get(url, { params: request })
