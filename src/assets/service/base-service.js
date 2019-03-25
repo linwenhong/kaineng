@@ -1,10 +1,26 @@
 import axios from 'axios'
 import Config from '@/assets/config'
+import store from '@/stores'
 
 // 默认请求地址
 axios.defaults.baseURL = Config.api_url
 // 超时时间
 axios.defaults.timeout = 10000
+
+//axios.defaults.headers.common['Authorization'] = '456'
+axios.defaults.headers.common['token'] = store.state.user.token
+//axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8'
+
+//axios.interceptors.response.use(function (response) {
+//  console.log(response);
+//  // 对响应数据做点什么
+//  return response;
+//}, function (error) {
+//  console.log(error.response.status);
+//  // 对响应错误做点什么
+//  return Promise.reject(error);
+//});
+
 
 function get (url, request) {
   return axios.get(url, { params: request })

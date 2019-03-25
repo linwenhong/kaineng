@@ -6,14 +6,14 @@ import Cache from '@/assets/cache'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {
-    user: Cache.getCache('user') || {},
-    token: 'this is a token'
+    user: Cache.getCache('user') || {}
   },
   mutations: {
     setUser(state, user) {
       state.user = user;
-      axios.defaults.headers.common['Authorization'] = state.token
+      axios.defaults.headers.common['token'] = state.user.token
       Cache.setCache('user', user)
     },
     clearCache(state) {
@@ -24,7 +24,7 @@ const store = new Vuex.Store({
   actions: {
     login({commit}, user) {
       commit('setUser', user)
-      router.push('/admin/user/' + user.id)
+      router.push('/admin/user/' + 1)
     },
     logout({commit,state}) {
       commit('clearCache', state)

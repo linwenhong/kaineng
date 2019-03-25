@@ -1,4 +1,5 @@
-const env = 'local'
+const env = 'test'
+const version  = 'v1.0/'
 
 const Config = {
   page_size: 10
@@ -10,8 +11,8 @@ switch (env) {
     Config.base_url = 'http://localhost:8086/'
     break
   case 'test':
-    Config.api_url = 'http://localhost:3000/'
-    Config.base_url = 'http://localhost:8085/'
+    Config.api_url = 'http://api.parks8.com/platform/' + version
+    Config.base_url = 'http://localhost:8086/'
     break
   case 'prod':
     Config.api_url = 'http://api.pmd99.com/'

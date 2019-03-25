@@ -164,6 +164,7 @@ export default {
     },
     logout () {
       this.$store.dispatch('logout')
+      this.$Service.Auth.logout()
     }
   },
   mounted () {

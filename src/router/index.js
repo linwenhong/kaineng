@@ -60,11 +60,11 @@ import store from '@/stores'
 routes.beforeEach((to, from, next) => {
   console.log(to)
   const user = store.getters.getUser
-
+  console.log(user)
   if (to.path == '/login') {
     next()
   } else { // 登录验证
-    if (!user || !user.id) {
+    if (!user) {
       next('/login')
     } else {
       next()

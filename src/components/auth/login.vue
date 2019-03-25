@@ -25,9 +25,6 @@
       </div>
     </div>
 
-    <!--<footer>-->
-      <!--快递查询友情链接：<a href="https://m.kuaidi100.com/" target="_blank">快递查询</a>-->
-    <!--</footer>-->
   </div>
 </template>
 
@@ -47,32 +44,21 @@ export default {
   },
   methods: {
     login () {
-      const user = {
-        id: 2,
-        name: '张三'
-      }
       if (!this.username || !this.password) {
         toastr.error('用户名或密码不能为空!')
       } else {
-        const requset = {
-          username: this.username,
+        const request = {
+          login_name: this.username,
           password: this.password
         }
-        Vue.http.post(this.$Config.api_url + 'login', requset)
-          .then(response => {
-            const data = response.data.data
-            if (response.data.status == 200) {
-              Cache.setCache('token', data.token)
-              Cache.setCache('user', data)
-              this.$router.push({ path: '/admin/user/' + data.id })
-            } else if (response.data.status == 500) {
-              toastr.error(response.data.msg)
-            }
-          })
-        .catch(error => {
-          console.log(error)
-          this.$store.dispatch('login', user)
+        this.$Service.Auth.login(request).then(response => {
+          if (response.err_code) {
+            toastr.error(response.err_msg, response.err_code)
+          } else {
+            this.$store.dispatch('login', response)
+          }
         })
+
       }
     }
   }
