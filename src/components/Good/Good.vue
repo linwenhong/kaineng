@@ -15,9 +15,9 @@
             <input type="text" class="form-control" v-model.trim="condition['name']">
 
             <label class="control-label">商品分类</label>
-            <select class="form-control" v-model="condition['type_id']">
+            <select class="form-control" v-model="condition['category_id']">
               <option value="">全部</option>
-              <option value="1">汽水</option>
+              <option v-for="option of GoodType" :value="option.id">{{ option.name }}</option>
             </select>
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
@@ -34,11 +34,11 @@
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
             <td>{{ item.id }}</td>
-            <td>{{ item.coding }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.type.name }}</td>
-            <td>{{ item.specification }}</td>
-            <td>¥ {{ item.reference_price }}</td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.category_id }}</td>
+            <td>{{ item.spec }}</td>
+            <td>¥ {{ item.product_prices }}</td>
             <td>{{ item.remark }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
@@ -66,33 +66,49 @@
               <div class="row">
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">商品编码</label>
+                  <label class="col-sm-3 control-label">商品名称</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" required="" aria-required="true"
-                           name="coding" v-model.trim="form.coding">
+                           name="product_name" v-model.trim="form.product_name">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">商品名称</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true"
-                           name="name" v-model.trim="form.name">
+                    <button type="button" class="btn btn-sm btn-primary btn_file"><i class="fa fa-upload"></i>&nbsp;&nbsp;
+                      <span class="bold">选择图片</span>
+                      <input id="file" type="file" class="file" accept="image/*" @change="preview($event)"/></button>
+                    <div class="view-img">
+                      <img id="img">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">商品编码</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control"
+                           name="code" v-model.trim="form.code">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">商品类型</label>
                   <div class="col-sm-8">
-                    <treeselect :multiple="false" :options="options" v-model="form.type"/></treeselect>
+                    <!--<treeselect :multiple="false" :options="options" v-model="form.type"/></treeselect>-->
+                    <select class="form-control"  required="" aria-required="true"
+                            name="category_id" v-model="form['category_id']">
+                      <option v-for="option of GoodType" :value="option.id">{{ option.name }}</option>
+                    </select>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">商品规格</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true"
-                           name="specification" v-model.trim="form.specification">
+                    <input type="text" class="form-control"
+                           name="spec" v-model.trim="form.spec">
                   </div>
                 </div>
 
@@ -100,7 +116,7 @@
                   <label class="col-sm-3 control-label">参考价格</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" required="" aria-required="true"
-                           oninput="moneyFormat(this)" name="reference_price" v-model.trim="form.reference_price">
+                           oninput="moneyFormat(this)" name="product_prices" v-model.trim="form.product_prices">
                   </div>
                 </div>
 
@@ -136,16 +152,18 @@ export default {
   components: { Treeselect },
   data () {
     return {
+      user: this.$store.getters.getUser,
       tableOptions: [
         { key: "id", title: "ID" },
-        { key: "coding", title: "商品编码" },
-        { key: "name", title: "商品名称" },
+        { key: "code", title: "商品编码" },
+        { key: "product_name", title: "商品名称" },
         { key: "type", title: "商品类型" },
-        { key: "specification", title: "商品规格" },
-        { key: "reference_price", title: "参考价格" },
+        { key: "spec", title: "商品规格" },
+        { key: "product_prices", title: "参考价格" },
         { key: "remark", title: "备注" }
       ],
       items: [],
+      GoodType: [],
       total: 0,
       page: 1,
       pageSize: this.$Config.page_size,
@@ -153,6 +171,7 @@ export default {
         type_id: ''
       },
       form: {},
+      detailsImgUrl: '',
       validate: null,
       value: null,
       options: this.$Config.test,
@@ -161,11 +180,10 @@ export default {
   },
   methods: {
     getDataTables (page = 1) {
-      this.items = []
-      this.total = 0
       const condition = {
-        page: page,
-        per_number: this.pageSize
+        mch_id: this.user.mch_id,
+        page_no: page,
+        page_size: this.pageSize
       }
 
       for (const key in this.condition) {
@@ -175,12 +193,12 @@ export default {
       }
 
       this.$Service.Good.get(condition).then(response => {
-        if (response.code == 200) {
-          this.items = response.data
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.items = response.list
           this.total = response.total
           this.$nextTick(() => this.$H5UI.iCheck())
-        } else {
-          toastr.error(response.msg)
         }
       })
     },
@@ -191,14 +209,16 @@ export default {
       this.$H5UI.reset(this.validate)
       this.form = {}
       this.isSubmit = false
+      $('#file').val('')
+      $('#img').attr('src', '')
       $('#Modal').modal('hide')
     },
     add () {
       this.clear()
     },
     checkForm (form) {
-      if (!form.type) {
-        toastr.info('请选择商品分类')
+      if (!$('#img').attr('src')) {
+        toastr.info('请选择商品图片!')
         return false
       }
       return true
@@ -210,34 +230,40 @@ export default {
       this.isSubmit = true
 
       const request = {
-        coding: this.form.coding,
-        name: this.form.name,
-        type: this.form.type,
-        specification: this.form.specification,
-        reference_price: this.form.reference_price,
-        remark: this.form.remark
+        mch_id: this.user.mch_id,
+        category_id: this.form.category_id,
+        code: this.form.code,
+//        product_prices: this.form.product_prices,
+        product_name: this.form.product_name,
+        remark: this.form.remark,
+        spec: this.form.spec
       }
-      console.log(request);this.isSubmit = false;return;
+      if (!this.form.id || (this.form.id && $('#img').attr('src') != this.detailsImgUrl)) {
+        request.img = $('#img').attr('src').split('base64,')[1]
+        request.img_format = this.form.img_format
+      }
 
       if (this.form.id) { // 修改
-        const id = this.form.id
-        this.$Service.Good.edit(id, request).then(response => {
+        request.id = this.form.id
+        this.$Service.Good.edit(request).then(response => {
           this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('新增成功')
+          if (response.err_code == 0) {
+            toastr.success('修改成功')
             this.getDataTables(this.page)
+            $('#Modal').modal('hide')
           } else {
-            toastr.error(response.msg)
+            toastr.error(response.err_msg, response.err_code)
           }
         })
       } else {  // 新增
         this.$Service.Good.add(request).then(response => {
           this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('修改成功')
+          if (response.err_code == 0) {
+            toastr.success('新增成功')
             this.getDataTables()
+            $('#Modal').modal('hide')
           } else {
-            toastr.error(response.msg)
+            toastr.error(response.err_msg, response.err_code)
           }
         })
       }
@@ -247,26 +273,53 @@ export default {
       this.clear()
       this.form = {
         id: item.id,
-        coding: item.coding,
-        name: item.name,
-        type: item.type.id,
-        specification: item.specification,
-        reference_price: item.reference_price,
-        remark: item.remark
+        category_id: item.category_id,
+        code: item.code,
+        img_path: item.img_path,
+        img_format: item.img_format,
+        product_prices: item.product_prices,
+        product_name: item.product_name,
+        remark: item.remark,
+        spec: item.spec
       }
+      this.detailsImgUrl = this.$Config.img_url + item.img_path
+      $('#img').attr('src', this.detailsImgUrl)
     },
     del (item) {
-      this.$Service.Good.del(item.id).then(response => {
-        if (response.code == 200) {
+      this.$Service.Good.del({ id: item.id, mch_id: item.mch_id }).then(response => {
+        if (response.err_code == 0) {
           toastr.success('删除成功')
           this.getDataTables()
         } else {
-          toastr.error(response.msg)
+          toastr.error(response.err_msg, response.err_code)
         }
       })
+    },
+    getGoodType () {
+      const condition = {
+        mch_id: this.user.mch_id,
+        page_no: 1,
+        page_size: 100
+      }
+      this.$Service.GoodType.get(condition).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.GoodType = response.list
+        }
+      })
+    },
+    preview (e) {
+      const localSrc = e.target.value
+      if (localSrc) {
+        const arr = localSrc.split('.')
+        this.form.img_format = arr[arr.length - 1]
+        this.$H5UI.setImgBase(e, '#img')
+      }
     }
   },
   created () {
+    this.getGoodType()
     this.getDataTables()
   },
   mounted () {

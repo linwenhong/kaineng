@@ -93,6 +93,7 @@ export default {
   components: { Treeselect },
   data () {
     return {
+      user: this.$store.getters.getUser,
       tableOptions: [
         { key: "id", title: "ID" },
         { key: "name", title: "分类名称" },
@@ -114,11 +115,10 @@ export default {
   },
   methods: {
     getDataTables (page = 1) {
-      this.items = []
-      this.total = 0
       const condition = {
-        page: page,
-        per_number: this.pageSize
+        mch_id: this.user.mch_id,
+        page_no: page,
+        page_size: this.pageSize
       }
 
       for (const key in this.condition) {
@@ -128,12 +128,11 @@ export default {
       }
 
       this.$Service.GoodType.get(condition).then(response => {
-        if (response.code == 200) {
-          this.items = response.data
-          this.total = response.total
-          this.$nextTick(() => this.$H5UI.iCheck())
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
         } else {
-          toastr.error(response.msg)
+          this.items = response.list
+          this.total = response.total
         }
       })
     },
@@ -161,28 +160,32 @@ export default {
       console.log(this.form)
       const request = {
         name: this.form.name,
-        parent_id: this.form.parent_id
+        parent_id: 0
       }
 
       if (this.form.id) { // 修改
-        const id = this.form.id
-        this.$Service.GoodType.edit(id, request).then(response => {
+        request.id = this.form.id
+        request.order_number = this.form.order_number
+        this.$Service.GoodType.edit(request).then(response => {
           this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('新增成功')
+          if (response.err_code == 0) {
+            toastr.success('修改成功')
             this.getDataTables(this.page)
+            $('#Modal').modal('hide')
           } else {
-            toastr.error(response.msg)
+            toastr.error(response.err_msg, response.err_code)
           }
         })
       } else {  // 新增
+        request.mch_id = this.user.mch_id
         this.$Service.GoodType.add(request).then(response => {
           this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('修改成功')
+          if (response.err_code == 0) {
+            toastr.success('新增成功')
             this.getDataTables()
+            $('#Modal').modal('hide')
           } else {
-            toastr.error(response.msg)
+            toastr.error(response.err_msg, response.err_code)
           }
         })
       }
@@ -193,16 +196,17 @@ export default {
       this.form = {
         id: item.id,
         name: item.name,
+        order_number: item.order_number,
         parent_id: item.parent_id
       }
     },
     del (item) {
-      this.$Service.GoodType.del(item.id).then(response => {
-        if (response.code == 200) {
+      this.$Service.GoodType.del({ id: item.id, mch_id: item.mch_id }).then(response => {
+        if (response.err_code == 0) {
           toastr.success('删除成功')
           this.getDataTables()
         } else {
-          toastr.error(response.msg)
+          toastr.error(response.err_msg, response.err_code)
         }
       })
     }

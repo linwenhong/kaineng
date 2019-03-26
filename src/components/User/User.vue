@@ -68,7 +68,7 @@
                   <label class="col-sm-3 control-label">登录名</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" required="" aria-required="true"
-                           name="login_name" v-model.trim="form.login_name" :disabled="form.id">
+                           oninput="NonSpecialSymbolsFormat(this)" name="login_name" v-model.trim="form.login_name" :disabled="form.id">
                   </div>
                 </div>
 
@@ -98,14 +98,16 @@
                   <div class="form-group">
                     <label class="col-sm-3 control-label">初始密码</label>
                     <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="password" v-model="form.password">
+                      <input type="password" class="form-control" required="" aria-required="true"
+                             oninput="NonSpecialSymbolsFormat(this)" name="password" v-model="form.password">
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label class="col-sm-3 control-label">确认密码</label>
                     <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="confirmPassword" v-model="form.confirmPassword">
+                      <input type="password" class="form-control" required="" aria-required="true"
+                             oninput="NonSpecialSymbolsFormat(this)" name="confirmPassword" v-model="form.confirmPassword">
                     </div>
                   </div>
                 </template>
@@ -141,21 +143,24 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">原密码</label>
                   <div class="col-sm-8">
-                    <input type="password" class="form-control" required="" aria-required="true" name="old_password" v-model="form2.old_password">
+                    <input type="password" class="form-control" required="" aria-required="true"
+                           oninput="NonSpecialSymbolsFormat(this)" name="old_password" v-model="form2.old_password">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">密码</label>
                   <div class="col-sm-8">
-                    <input type="password" class="form-control" required="" aria-required="true" name="new_password" v-model="form2.new_password">
+                    <input type="password" class="form-control" required="" aria-required="true"
+                           oninput="NonSpecialSymbolsFormat(this)" name="new_password" v-model="form2.new_password">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">确认密码</label>
                   <div class="col-sm-8">
-                    <input type="password" class="form-control" required="" aria-required="true" name="new_password2" v-model="form2.new_password2">
+                    <input type="password" class="form-control" required="" aria-required="true"
+                           oninput="NonSpecialSymbolsFormat(this)" name="new_password2" v-model="form2.new_password2">
                   </div>
                 </div>
 
@@ -207,8 +212,8 @@ export default {
   methods: {
     getDataTables (page = 1) {
       const condition = {
-//        page_no: page,
-//        page_size: this.pageSize,
+        page_no: page,
+        page_size: this.pageSize,
         mch_id: this.user.mch_id
       }
 
@@ -222,8 +227,8 @@ export default {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
-          this.items = response.users
-          this.total = response.total || this.items.length
+          this.items = response.list
+          this.total = response.total
           this.$nextTick(() => this.$H5UI.iCheck())
         }
       })
@@ -244,6 +249,10 @@ export default {
       if (form.user_phone.length != 11) {
         toastr.info('请输入11位数的电话号码!')
         return false
+      }
+      if (form.password == Number(form.password) || form.password.length < 6) {
+        toastr.info('请输入6位以上的字母加数字的密码')
+        return
       }
       if (form.password && form.confirmPassword && form.password != form.confirmPassword) {
         toastr.info('两次输入的密码不一致!')
@@ -332,7 +341,7 @@ export default {
       this.$Service.User.editPassword(request).then(response => {
         if (response.err_code == 0) {
           toastr.success('密码修改成功')
-          this.getDataTables()
+          $('#Modal2').modal('hide')
         } else {
           toastr.error(response.err_msg, response.err_code)
         }

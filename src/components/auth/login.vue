@@ -41,6 +41,9 @@ export default {
   },
   created () {
     localStorage.clear()
+    this.$Service.Auth.qrCode().then(response => {
+      console.log(response)
+    })
   },
   methods: {
     login () {

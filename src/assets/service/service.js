@@ -9,7 +9,7 @@ function del (url, request) { return BaseService.del(url, request).then(response
 function createService (url) {
   return {
     get: request => { return get(url, request) },
-    details: (id, request) => { return get(url + '/' + id, request) },
+    details: (request) => { return get(url, request) },
     add: (request) => { return post(url, request) },
     edit: (request) => { return put(url, request) },
     del: (request) => { return del(url, request) }
@@ -19,27 +19,32 @@ function createService (url) {
 const Device = createService('device')
 const SubDevice = createService('sub_device')
 const Manufacturer = createService('manufacturer')
-const Good = createService('good')
-const GoodType = createService('good_type')
+const Good = createService('product') //*
+const GoodType = createService('categories') //*
 const GoodPrice = createService('good_price')
 const GoodUpperShelf = createService('good_upper_shelf')
-//const Merchant = createService('merchant')
+
+const Merchant = createService('merchant') //*
+Merchant.get = request => { return get('merchantList', request) }
+
 const Order = createService('order')
 const SettlementLogs = createService('settlement_logs')
-const User = createService('user')
+
+const User = createService('user') //*
 User.editPassword = (request) => { return patch('user', request) }
 /******************************/
 const Auth = {
   login: (request) => { return post('auth', request) },
-  logout: (request) => { return del('auth', request) }
+  logout: (request) => { return del('auth', request) },
+  qrCode: (request) => { return get('auth/bind/qrCode', request) }
 }
-const Merchant = {
-  get: request => { return get('merchantList', request) },
-  details: (id, request) => { return get('merchant' + '/' + id, request) },
-  add: (request) => { return post('merchant', request) },
-  edit: (request) => { return put('merchant', request) },
-  del: (id, request) => { return del('merchant' + '/' + id, request) }
-}
+//const Merchant = {
+//  get: request => { return get('merchantList', request) },
+//  details: (request) => { return get('merchant', request) },
+//  add: (request) => { return post('merchant', request) },
+//  edit: (request) => { return put('merchant', request) },
+//  del: (request) => { return del('merchant', request) }
+//}
 
 function register (request) { return post('register', request) }
 

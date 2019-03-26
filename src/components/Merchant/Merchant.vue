@@ -12,7 +12,7 @@
         <div class="search-page">
           <div class="form-group">
             <label class="control-label">商户名称</label>
-            <input type="text" class="form-control" v-model.trim="condition['name']">
+            <input type="text" class="form-control" v-model.trim="condition['mch_name']">
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -65,12 +65,13 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">管理员登录名</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="login_name" v-model.trim="form.login_name">
+                    <input type="text" class="form-control" required="" aria-required="true"
+                           oninput="NonSpecialSymbolsFormat(this)" name="login_name" v-model.trim="form.login_name">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">管理员名称</label>
+                  <label class="col-sm-3 control-label">管理员姓名</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" required="" aria-required="true" name="user_name" v-model.trim="form.user_name">
                   </div>
@@ -156,14 +157,16 @@
                   <div class="form-group">
                     <label class="col-sm-3 control-label">密码</label>
                     <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="password" v-model.trim="form.password">
+                      <input type="password" class="form-control" required="" aria-required="true"
+                             oninput="NonSpecialSymbolsFormat(this)" name="password" v-model.trim="form.password">
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label class="col-sm-3 control-label">确认密码</label>
                     <div class="col-sm-8">
-                      <input type="password" class="form-control" required="" aria-required="true" name="confirmPassword" v-model.trim="password">
+                      <input type="password" class="form-control" required="" aria-required="true"
+                             oninput="NonSpecialSymbolsFormat(this)" name="confirmPassword" v-model.trim="password">
                     </div>
                   </div>
                 </template>
@@ -231,8 +234,8 @@ export default {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
-          this.items = response.MerchantList
-          this.total = response.total || this.items.length
+          this.items = response.list
+          this.total = response.total
           this.$nextTick(() => this.$H5UI.iCheck())
         }
       })
@@ -263,7 +266,11 @@ export default {
         toastr.info('"开户支行"与"银行卡号"为共存关系, 只可都填或都不填!')
         return false
       }
-      if (form.password != this.password) {
+      if (form.password && (form.password == Number(form.password) || form.password.length < 6)) {
+        toastr.info('请输入6位以上的字母加数字的密码')
+        return
+      }
+      if (form.password && form.password != this.password) {
         toastr.info('两次输入的密码不同!')
         return false
       }
@@ -336,7 +343,7 @@ export default {
       }
     },
     del (item) {
-      this.$Service.Merchant.del(item.id).then(response => {
+      this.$Service.Merchant.del({ id: item.id }).then(response => {
         if (response.err_code == 0) {
           toastr.success('删除成功')
           this.getDataTables()

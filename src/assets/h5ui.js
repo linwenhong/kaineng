@@ -62,7 +62,8 @@ function resetForm (validate, isClear) {
   $('.form-group').removeClass('has-success')
   $('.form-group').removeClass('has-error')
   if (isClear) {
-    clearChecked()
+    clearCheckBox()
+    clearRadio()
   }
 }
 
@@ -84,6 +85,15 @@ function setSearchSelect (data, select, keys, valueKey, textKey) {
       value: items
     }
   })
+}
+
+
+function setImgBase(e, select) {
+  let reader = new FileReader()
+  reader.readAsDataURL(e.target.files[0])
+  reader.onload = function () {
+    $(select).attr('src', this.result)
+  }
 }
 
 module.exports = {
@@ -113,5 +123,8 @@ module.exports = {
   },
   setSearchSelect: (data, select, keys = ['id', 'name'], valueKey = 'id', textKey = 'name') => {
     setSearchSelect(data, select, keys, valueKey, textKey)
+  },
+  setImgBase: (e, select) => {
+    setImgBase(e, select)
   }
 }

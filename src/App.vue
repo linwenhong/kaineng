@@ -47,6 +47,9 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+input.help-block {
+  margin-top: 0;
+}
 .modal-body input {
   margin-top: 0;
 }
@@ -146,6 +149,13 @@ ul, li {
 }
 .search-page .searchOption .searchSelect {
   top: 16px;
+}
+.view-img img {
+  display: inline-block;
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 5px;
+  background-size: 100%;
 }
 
 .layer-date {

@@ -4,29 +4,33 @@
       <div class="form-horizontal middle-box">
         <form class="form-horizontal" @submit.prevent="register" id="form">
           <div class="form-group">
-            <label class="control-label"><span class="MustFill">*</span>商户名</label>
-            <input type="text" class="form-control"  required="" aria-required="true"  name="name" v-model.trim="form.name">
+            <label class="control-label"><span class="MustFill">*</span>商户名称</label>
+            <input type="text" class="form-control"  required="" aria-required="true"  name="mch_name" v-model.trim="form.mch_name">
           </div>
+
           <div class="form-group">
             <label class="control-label"><span class="MustFill">*</span>商户联系电话</label>
             <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
-                   oninput="numberFormat(this)" name="phone" v-model="form.phone">
+                   oninput="numberFormat(this)" name="mobile" v-model="form.mobile">
           </div>
+
+          <div class="form-group">
+            <label class="control-label"><span class="MustFill">*</span>管理员登录名</label>
+            <input type="text" class="form-control" required="" aria-required="true" maxlength="12"
+                   oninput="NonSpecialSymbolsFormat(this)" name="login_name" v-model="form.login_name">
+          </div>
+
           <div class="form-group">
             <label class="control-label"><span class="MustFill">*</span>管理员姓名</label>
-            <input type="text" class="form-control"  required="" aria-required="true"  name="admin_name" v-model.trim="form.admin_name">
+            <input type="text" class="form-control"  required="" aria-required="true"  name="user_name" v-model.trim="form.user_name">
           </div>
 
           <div class="form-group">
             <label class="control-label"><span class="MustFill">*</span>管理员联系电话</label>
             <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
-                   oninput="numberFormat(this)" name="admin_phone" v-model="form.admin_phone">
+                   oninput="numberFormat(this)" name="user_phone" v-model="form.user_phone">
           </div>
-          <div class="form-group">
-            <label class="control-label"><span class="MustFill">*</span>登录账号</label>
-            <input type="text" class="form-control" required="" aria-required="true" maxlength="12"
-                   oninput="NonSpecialSymbolsFormat(this)" name="username" v-model="form.username">
-          </div>
+
           <div class="form-group">
             <label class="control-label"><span class="MustFill">*</span>密码</label>
             <input type="password" class="form-control" required="" aria-required="true"
@@ -72,16 +76,16 @@ export default {
         toastr.info('请补充完善数据后提交')
         return
       }
-      if (!this.form.phone || (this.form.phone && this.form.phone.length != 11)) {
+      if (!this.form.mobile || (this.form.mobile && this.form.mobile.length != 11)) {
         toastr.info('请输入11位数的电话号码')
         return
       }
-      if (!this.form.admin_phone || (this.form.admin_phone && this.form.admin_phone.length != 11)) {
+      if (!this.form.user_phone || (this.form.user_phone && this.form.user_phone.length != 11)) {
         toastr.info('请输入11位数的电话号码')
         return
       }
       if (this.form.password == Number(this.form.password) || this.form.password.length < 6) {
-        toastr.info('请输入6位以上的字母加数字')
+        toastr.info('请输入6位以上的字母加数字的密码')
         return
       }
       if (this.password != this.form.password) {
@@ -89,13 +93,23 @@ export default {
         return
       }
       this.canSubmit = false
-      this.$Service.register(this.form).then(response => {
-        if (response.data.code == 200) {
-          toastr.success('注册成功,请联系管理员启用')
+
+      const request = {
+        login_name: this.form.login_name,
+        mch_name: this.form.mch_name,
+        mobile: this.form.mobile,
+        password: this.form.password,
+        user_name: this.form.user_name,
+        user_phone: this.form.user_phone
+      }
+
+      this.$Service.Merchant.add(request).then(response => {
+        if (response.err_code == 0) {
+          toastr.success('注册成功')
           setTimeout(() => this.$router.push('/login'), 1000)
         } else {
           this.canSubmit = true
-          toastr.error(response.data.msg)
+          toastr.error(response.err_msg, response.err_code)
         }
       }).catch(error => {
         this.canSubmit = true
