@@ -11,6 +11,7 @@ export const COMPONENTS = {
   DeviceMonitoringComponent: resolve => require(['@/components/Device/DeviceMonitoring'], resolve),
   ManufacturerComponent: resolve => require(['@/components/Device/Manufacturer'], resolve),
   GoodComponent: resolve => require(['@/components/Good/Good'], resolve),
+  GoodPriceComponent: resolve => require(['@/components/Good/GoodPrice'], resolve),
   GoodTypeComponent: resolve => require(['@/components/Good/GoodType'], resolve),
   GoodTypeTreeComponent: resolve => require(['@/components/Good/GoodTypeTree'], resolve),
   GoodUpperShelfComponent: resolve => require(['@/components/Good/GoodUpperShelf'], resolve),

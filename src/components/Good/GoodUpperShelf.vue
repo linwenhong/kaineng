@@ -12,10 +12,10 @@
           <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
         </div>
         <ul>
-          <li v-for="(device, index) of MerchantDevice" @click="selectMerchantDevice(device)">
-            <p>{{ index + 1 }}.{{ device.name }}</p>
-            <p>地址: {{ device.position }}</p>
-            <p>联系人: {{ device.staff }} {{ device.phone }}</p>
+          <li v-for="(device, index) of MerchantDevice" @click="selectMerchantDevice(device, index)">
+            <p>{{ index + 1 }}.{{ device.device_name }}</p>
+            <p>地址: {{ device.deploy_branch_id }}</p>
+            <p>联系人: {{ device.mch_name }} {{ device.mch_id }}</p>
           </li>
         </ul>
       </div>
@@ -37,26 +37,26 @@
           </thead>
           <tbody>
             <tr v-for="(shelf_layer, index) of DeviceGood">
-              <td>{{ DeviceGood.length - index }}</td>
-              <!--<td>{{ shelf_layer.name }}</td>-->
+              <!--<td>{{ DeviceGood.length - index }}</td>-->
+              <td>{{ shelf_layer.name }}</td>
               <td v-for="passageway of shelf_layer.passageways">
-                <template v-if="passageway.status == 3">
+                <template v-if="passageway.merge_status == 2">
                   被合并
                 </template>
                 <template v-else>
                   <div class="good" @click="edit(passageway)">
                     <div class="good-icon-box">
-                      <img class="good-icon" :src="passageway.good.img_url">
+                      <img class="good-icon" :src="passageway.good">
                     </div>
                     <div class="good-icon-box">
-                      <p>¥ {{ passageway.price }}</p>
-                      <p><small>库存: {{ passageway.number }}</small></p>
+                      <p>¥ {{ passageway.product_price }}</p>
+                      <p><small>库存: {{ passageway.product_sum }}</small></p>
                     </div>
-                    <p class="text">{{ passageway.good.name }}</p>
-                    <p class="text">
-                      {{ passageway.good.specification }}
-                      <span><small>货道号: {{ passageway.id }}</small></span>
-                    </p>
+                    <p class="text">{{ passageway.product_name }}</p>
+                    <span class="left">状态:
+                      <span :class="passageway.used == 1 ? 'green' : 'red'">{{ passageway.used == 1 ? '启用' : '未启用' }}</span>
+                    </span>
+                    <span class="right"><small>货道号: {{ passageway.channel_no }}</small></span>
                   </div>
                 </template>
               </td>
@@ -76,9 +76,11 @@
             <h4 class="modal-title">选择上架商品</h4>
           </div>
 
-
           <div class="modal-body">
-            <p class="passageway-number">当前货道号: <font color="red">{{ passageway.id }}</font></p>
+            <p class="passageway-number">当前货道号:
+              <font color="red">{{ passageway.channel_no }}</font>
+              <button type="button" class="btn btn-sm btn-danger" @click="enable(passageway)">{{ passageway.used == 1 ? '关闭' : '启用' }}</button>
+            </p>
             <form id="form" class="form-horizontal" @submit.prevent="getGoodTables">
               <div class="search-page">
                 <div class="form-group">
@@ -104,18 +106,18 @@
               <tbody>
               <tr v-for="(good, index) of goods" :key="good.id" @click="selectGood(good)" :class="selectGoodId == good.id ? 'hover' : ''">
                 <td>{{ good.id }}</td>
-                <td>{{ good.name }}</td>
-                <td>{{ good.specification }}</td>
-                <td>系统</td>
+                <td>{{ good.product_name }}</td>
+                <td>{{ good.spec }}</td>
+                <td>商户添加</td>
               </tr>
               </tbody>
             </table>
 
             <div class="form-group" v-if="selectGoodId > 0">
               <p>请选择商品价格</p>
-              <div class="radio i-checks" v-for="option of goodPrices">
+              <div class="radio i-checks" v-for="(option, optionIndex) of goodPrices">
                 <label>
-                  <input type="radio" :value="option.price" name="price"/>¥ {{ option.price }}
+                  <input type="radio" :value="optionIndex" name="price"/>¥ {{ option.selling_price }}
                 </label>
               </div>
             </div>
@@ -139,16 +141,19 @@ export default {
   name: 'GoodUpperShelf',
   data () {
     return {
+      user: this.$store.getters.getUser,
       goods: [],
       selectOption: 0, // 选择的子设备(柜体)下标
       selectGoodId: 0, // 选中定价的商品id, 用于获取当前商品所有定价
+      valuationGood: {}, // 选中定价的商品
       goodPrices: [], // 商品所有定价
       passageway: {},  // 当前货物通道
       condition: {},
       deviceName: '',
       goodName: '',
+      lastSelectDeviceIndex: 0,
       MerchantDevice: [], // 商户设备列表
-      SubDevices: {}, // 选中的设备 子设备(柜体)列表
+      SubDevices: [], // 选中的设备 子设备(柜体)列表
       DeviceGood: [], // 选中的子设备(柜体) 货物层列表
       validate: null,
       isSubmit: false
@@ -156,21 +161,80 @@ export default {
   },
   methods: {
     getDataTables () {
-      const request= {}
+      this.SubDevices = []
+      this.DeviceGood = []
+      const request= {
+        mch_id: this.user.mch_id,
+        page_no: 1,
+        page_size: 10000
+      }
       if (this.deviceName) {
         request.name = this.deviceName
       }
       this.$Service.Device.get(request).then(response => {
-        if (response.code == 200) {
-          this.MerchantDevice = response.data
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.MerchantDevice = response.list
+          this.total = response.total
+          if (this.MerchantDevice.length > 0) {
+            this.selectMerchantDevice(this.MerchantDevice[this.lastSelectDeviceIndex], this.lastSelectDeviceIndex)
+          }
         }
       })
     },
-    selectMerchantDevice (device) {
+    selectMerchantDevice (device, index) {
+      this.lastSelectDeviceIndex = index
       console.log('device', device)
-      this.$Service.GoodUpperShelf.get().then(response => {
-        this.SubDevices = response.data.sub_device
-        this.selectDeviceOption(0)
+      this.$Service.GoodUpperShelf.get({
+        mch_id: device.mch_id,
+        device_id: device.sn,
+        page_no: 1,
+        page_size: 10000
+      }).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.SubDevices = []
+          response.list.map(passageway => {
+            if (passageway.channel_no > 999 && passageway.channel_no < 10000) {
+              const passagewayChannelNo = passageway.channel_no.toString()
+              const d = Number(passagewayChannelNo.slice(0, 1))
+              const f = Number(passagewayChannelNo.slice(1, 2))
+              if (!this.SubDevices[d-1] || !this.SubDevices[d-1].name) {
+                switch (d) {
+                  case 1:
+                    this.SubDevices[0] = {}
+                    this.SubDevices[0].name = '主柜'
+                    this.SubDevices[0].shelf_layer = []
+                    break
+                  case 2:
+                    this.SubDevices[1] = {}
+                    this.SubDevices[1].name = '左柜'
+                    this.SubDevices[1].shelf_layer = []
+                    break
+                  case 3:
+                    this.SubDevices[2] = {}
+                    this.SubDevices[2].name = '右柜'
+                    this.SubDevices[2].shelf_layer = []
+                    break
+                  default:
+                    console.log('编号首位非1-3')
+                }
+              }
+              if (!this.SubDevices[d-1].shelf_layer[f] || !this.SubDevices[d-1].shelf_layer[f].name) {
+                this.SubDevices[d-1].shelf_layer[f] = {
+                  name: `第${f+1}层`,
+                  passageways: []
+                }
+              }
+              this.SubDevices[d-1].shelf_layer[f].passageways.push(passageway)
+            } else  {
+              console.log("channel_no非4位数字")
+            }
+          })
+          this.selectDeviceOption(0)
+        }
       })
     },
     selectDeviceOption (index) {
@@ -179,13 +243,34 @@ export default {
       console.log('sub_device', this.SubDevices[index])
     },
     edit (passageway) {
+      this.selectGoodId = 0
       console.log('passageway', passageway)
       this.passageway = passageway
-      this.getGoodTables()
       $('#Modal').modal('show')
     },
+    enable (passageway) {
+      console.log('passageway', passageway)
+      this.$Service.GoodUpperShelf.enable({
+        id: passageway.id,
+        device_id: passageway.device_id,
+        used: passageway.used == 1 ? 0 : 1
+      }).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          toastr.success((passageway.used == 1 ? '关闭' : '启用') + '成功')
+          $('#Modal').modal('hide')
+          this.getDataTables()
+        }
+      })
+    },
     getGoodTables () {
-      const request = {}
+      const request = {
+        page_no: 1,
+        page_size: 10000,
+        mch_id: this.user.mch_id,
+        category_id: 10008
+      }
       if (this.goodName) {
         request.name = this.goodName
       }
@@ -194,42 +279,62 @@ export default {
       }
       this.selectGoodId = 0
       this.$Service.Good.get(request).then(response => {
-        this.goods = response.data
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.goods = response.list
+        }
       })
     },
     selectGood (good) {
-      this.$Service.GoodPrice.get().then(response => {
-        if (response.code == 200) {
-          this.goodPrices = response.data
-          this.$nextTick(() => {
-            this.$H5UI.iCheck()
-            this.$H5UI.clearRadio()
-            this.$H5UI.setRadioVal('price', this.goodPrices[0].price)
-          })
-        }
-      })
+      if (this.selectGoodId == good.id) {
+        return
+      }
+      this.valuationGood = good
       this.selectGoodId = good.id
+      this.goodPrices = good.product_prices
+      this.$nextTick(() => {
+        this.$H5UI.iCheck()
+        this.$H5UI.clearRadio()
+        this.$H5UI.setRadioVal('price', 0)
+      })
     },
     submit () {
       if (this.selectGoodId == 0) {
         toastr.info('请先选择商品')
         return
       }
-      const price = this.$H5UI.getRadioVal('price')
-      if (!price) {
+      const priceIndex = Number(this.$H5UI.getRadioVal('price'))
+      if (!priceIndex && priceIndex != 0) {
         toastr.info('请选择商品价格')
         return
       }
       const request = {
-        passageway_id: this.passageway.id,
-        good_id: this.selectGoodId,
-        price: price
+        mch_id: this.user.mch_id,
+        id: this.passageway.id,
+        category_id: this.valuationGood.category_id,
+        category_name: this.valuationGood.category_name,
+        product_id: this.valuationGood.id,
+        product_name: this.valuationGood.product_name,
+        price_id: this.goodPrices[priceIndex].id,
+        product_price: this.goodPrices[priceIndex].selling_price
       }
       console.log(request)
+      console.log(this.valuationGood)
+      this.$Service.GoodUpperShelf.edit({
+        list: [request]
+      }).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          $('#Modal').modal('hide')
+          this.getDataTables()
+        }
+      })
     }
   },
   created () {
-
+    this.getDataTables()
   },
   mounted () {
     this.$H5UI.iCheck()
@@ -265,7 +370,7 @@ export default {
 
   .good {
     display: inline-block;
-    width: 120px;
+    width: 150px;
   }
   .good p {
     margin-bottom: 0;
@@ -273,8 +378,17 @@ export default {
   .good p.text {
     text-align: left;
   }
-  .good p.text span {
+  .good span.left {
+    float: left;
+  }
+  .good span.right {
     float: right;
+  }
+  .good span.left .green {
+    color: #1ab394;
+  }
+  .good span.left .red {
+    color: red;
   }
   .good-icon-box {
     width: 60px;

@@ -16,13 +16,13 @@ function createService (url) {
   }
 }
 /******************************/
-const Device = createService('device')
 const SubDevice = createService('sub_device')
 const Manufacturer = createService('manufacturer')
 const Good = createService('product') //*
 const GoodType = createService('categories') //*
-const GoodPrice = createService('good_price')
-const GoodUpperShelf = createService('good_upper_shelf')
+const GoodPrice = createService('productPrice') //*
+const GoodUpperShelf = createService('device/channel')
+GoodUpperShelf.enable = (request) => { return patch('device/channel', request) }
 
 const Merchant = createService('merchant') //*
 Merchant.get = request => { return get('merchantList', request) }
@@ -38,18 +38,16 @@ const Auth = {
   logout: (request) => { return del('auth', request) },
   qrCode: (request) => { return get('auth/bind/qrCode', request) }
 }
-//const Merchant = {
-//  get: request => { return get('merchantList', request) },
-//  details: (request) => { return get('merchant', request) },
-//  add: (request) => { return post('merchant', request) },
-//  edit: (request) => { return put('merchant', request) },
-//  del: (request) => { return del('merchant', request) }
-//}
 
+const Device = {
+  get: (request) => { return get('device', request) },
+  edit: (request) => { return patch('device', request) }
+}
+
+function deviceChannels (request) { return get('device/channel', request) }
 function register (request) { return post('register', request) }
 
 export default {
-  Device,
   SubDevice,
   Manufacturer,
   Good,
@@ -62,5 +60,7 @@ export default {
   User,
 
   Auth,
+  Device,
+  deviceChannels,
   register
 }

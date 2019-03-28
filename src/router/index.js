@@ -22,6 +22,7 @@ let routes = new Router({
         { path: 'device-monitoring', name: 'user', component: COMPONENTS.DeviceMonitoringComponent },  // 设备状态监测
         { path: 'manufacturer', name: 'user', component: COMPONENTS.ManufacturerComponent },  // 制造商管理
         { path: 'good', name: 'user', component: COMPONENTS.GoodComponent },  // 商品管理
+        { path: 'good-price', name: 'user', component: COMPONENTS.GoodPriceComponent },  // 商品价格管理
         { path: 'good-type', name: 'user', component: COMPONENTS.GoodTypeComponent },  // 商品分类管理
         { path: 'good-type-tree', name: 'user', component: COMPONENTS.GoodTypeTreeComponent },  // 商品分类管理(树结构)
         { path: 'good-upper-shelf', name: 'user', component: COMPONENTS.GoodUpperShelfComponent },  // 商品上架

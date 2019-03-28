@@ -105,6 +105,9 @@
                 <a class="J_menuItem" @click="goHref('/admin/good')">商品管理</a>
               </li>
               <li>
+                <a class="J_menuItem" @click="goHref('/admin/good-price')">商品价格管理</a>
+              </li>
+              <li>
                 <a class="J_menuItem" @click="goHref('/admin/good-upper-shelf')">商品上架</a>
               </li>
             </ul>

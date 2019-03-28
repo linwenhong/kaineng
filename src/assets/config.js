@@ -11,7 +11,7 @@ switch (env) {
     Config.base_url = 'http://localhost:8086/'
     break
   case 'test':
-    Config.img_url = 'http://api.parks8.com/'
+    Config.img_url = 'http://api.parks8.com/fileService/image/product/'
     Config.api_url = 'http://api.parks8.com/platform/' + version
     Config.base_url = 'http://localhost:8086/'
     break

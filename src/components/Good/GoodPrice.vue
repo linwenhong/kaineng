@@ -5,14 +5,23 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>商品管理</h5>
+        <h5>商品价格管理</h5>
       </div>
 
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
             <label class="control-label">商品名称</label>
-            <input type="text" class="form-control" v-model.trim="condition['name']">
+            <div class="searchOption">
+              <template v-if="GoodList.length > 0">
+                <search-select
+                  :data="GoodList"
+                  :keys="['id', 'product_name']"
+                  valueKey="id"
+                  textKey="product_name"
+                ></search-select>
+              </template>
+            </div>
 
             <label class="control-label">商品分类</label>
             <select class="form-control" v-model="condition['category_id']">
@@ -36,13 +45,12 @@
             <td>{{ item.id }}</td>
             <td>{{ item.code }}</td>
             <td>{{ item.product_name }}</td>
-            <td>{{ item.category_id }}</td>
+            <td>{{ item.category_name }}</td>
             <td>{{ item.spec }}</td>
-            <!--<td>¥ {{ item.product_prices }}</td>-->
-            <td>{{ item.remark }}</td>
+            <td>¥ {{ item.purchase_price }}</td>
+            <td>¥ {{ item.selling_price }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <button type="button" class="btn btn-sm btn-warning" @click="valuation(item)">定价</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
             </td>
           </tr>
@@ -59,7 +67,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">{{ form.id ? '修改商品信息' : '新增商品' }}</h4>
+            <h4 class="modal-title">{{ form.id ? '修改商品价格' : '新增商品价格' }}</h4>
           </div>
 
           <form id="form" class="form-horizontal" @submit.prevent="submit">
@@ -69,63 +77,31 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">商品名称</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true"
-                           name="product_name" v-model.trim="form.product_name">
+                    <template v-if="GoodList.length > 0">
+                      <search-select
+                        id="good"
+                        :data="GoodList"
+                        :keys="['id', 'product_name']"
+                        valueKey="id"
+                        textKey="product_name"
+                      ></search-select>
+                    </template>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">商品名称</label>
-                  <div class="col-sm-8">
-                    <button type="button" class="btn btn-sm btn-primary btn_file"><i class="fa fa-upload"></i>&nbsp;&nbsp;
-                      <span class="bold">选择图片</span>
-                      <input id="file" type="file" class="file" accept="image/*" @change="preview($event)"/></button>
-                    <div class="view-img">
-                      <img id="img">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">商品编码</label>
+                  <label class="col-sm-3 control-label">商品进货价</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control"
-                           name="code" v-model.trim="form.code">
+                           oninput="moneyFormat(this)" name="purchase_price" v-model="form.purchase_price">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">商品类型</label>
-                  <div class="col-sm-8">
-                    <!--<treeselect :multiple="false" :options="options" v-model="form.type"/></treeselect>-->
-                    <select class="form-control"  required="" aria-required="true"
-                            name="category_id" v-model="form['category_id']">
-                      <option v-for="option of GoodType" :value="option.id">{{ option.name }}</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">商品规格</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control"
-                           name="spec" v-model.trim="form.spec">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">参考价格</label>
+                  <label class="col-sm-3 control-label">商品销售价</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" required="" aria-required="true"
-                           oninput="moneyFormat(this)" name="product_prices" v-model.trim="form.product_prices">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">备注</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control"
-                           name="remark" v-model.trim="form.remark">
+                           oninput="moneyFormat(this)" name="selling_price" v-model="form.selling_price">
                   </div>
                 </div>
 
@@ -149,22 +125,25 @@
 <script type="text/ecmascript-6">
 import Treeselect from '@riophae/vue-treeselect'
 export default {
-  name: 'Good',
+  name: 'GoodPrice',
   components: { Treeselect },
   data () {
     return {
+      typeId: this.$route.query['type_id'],
+      goodId: this.$route.query['good_id'],
       user: this.$store.getters.getUser,
       tableOptions: [
         { key: "id", title: "ID" },
         { key: "code", title: "商品编码" },
         { key: "product_name", title: "商品名称" },
-        { key: "type", title: "商品类型" },
+        { key: "category_name", title: "商品类型" },
         { key: "spec", title: "商品规格" },
-//        { key: "product_prices", title: "参考价格" },
-        { key: "remark", title: "备注" }
+        { key: "purchase_price", title: "商品进货价" },
+        { key: "selling_price", title: "商品销售价" }
       ],
       items: [],
       GoodType: [],
+      GoodList: [],
       total: 0,
       page: 1,
       pageSize: this.$Config.page_size,
@@ -172,7 +151,7 @@ export default {
         type_id: ''
       },
       form: {},
-      detailsImgUrl: '',
+      valuationGood: {},
       validate: null,
       value: null,
       options: this.$Config.test,
@@ -183,6 +162,7 @@ export default {
     getDataTables (page = 1) {
       const condition = {
         mch_id: this.user.mch_id,
+        product_id: $('#searchSelect').attr('data-id') || this.goodId,
         page_no: page,
         page_size: this.pageSize
       }
@@ -193,13 +173,12 @@ export default {
         }
       }
 
-      this.$Service.Good.get(condition).then(response => {
+      this.$Service.GoodPrice.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
           this.items = response.list
           this.total = response.total
-          this.$nextTick(() => this.$H5UI.iCheck())
         }
       })
     },
@@ -210,18 +189,14 @@ export default {
       this.$H5UI.reset(this.validate)
       this.form = {}
       this.isSubmit = false
-      $('#file').val('')
-      $('#img').attr('src', '')
+      $('#good').val('')
+      $('#good').attr('data-id', '')
       $('#Modal').modal('hide')
     },
     add () {
       this.clear()
     },
     checkForm (form) {
-      if (!$('#img').attr('src')) {
-        toastr.info('请选择商品图片!')
-        return false
-      }
       return true
     },
     submit () {
@@ -232,21 +207,16 @@ export default {
 
       const request = {
         mch_id: this.user.mch_id,
-        category_id: this.form.category_id,
-        code: this.form.code,
-        product_name: this.form.product_name,
-        remark: this.form.remark,
-        spec: this.form.spec
-      }
-      if (!this.form.id || (this.form.id && $('#img').attr('src') != this.detailsImgUrl)) {
-        request.img = $('#img').attr('src').split('base64,')[1]
-        request.img_format = this.form.img_format
+        product_id: Number($('#good').attr('data-id')),
+        selling_price: Number(this.form.selling_price),
+        purchase_price: Number(this.form.purchase_price)
       }
 
       if (this.form.id) { // 修改
         request.id = this.form.id
-        request.mch_id = this.valuationGood.mch_id
-        this.$Service.Good.edit(request).then(response => {
+//        request.mch_id = this.form.mch_id
+        request.mch_id = this.user.mch_id
+        this.$Service.GoodPrice.edit(request).then(response => {
           this.isSubmit = false
           if (response.err_code == 0) {
             toastr.success('修改成功')
@@ -258,7 +228,7 @@ export default {
         })
       } else {  // 新增
         request.mch_id = this.user.mch_id
-        this.$Service.Good.add(request).then(response => {
+        this.$Service.GoodPrice.add(request).then(response => {
           this.isSubmit = false
           if (response.err_code == 0) {
             toastr.success('新增成功')
@@ -276,20 +246,15 @@ export default {
       this.form = {
         id: item.id,
         mch_id: item.mch_id,
-        category_id: item.category_id,
-        code: item.code,
-        img_path: item.img_path,
-        img_format: item.img_format,
-        product_prices: item.product_prices,
-        product_name: item.product_name,
-        remark: item.remark,
-        spec: item.spec
+        product_id: item.product_id,
+        selling_price: item.selling_price,
+        purchase_price: item.purchase_price
       }
-      this.detailsImgUrl = this.$Config.img_url + item.img_path
-      $('#img').attr('src', this.detailsImgUrl)
+      $('#good').attr('data-id', item.product_id)
+      $('#good').val(this.getValuationGood().product_name)
     },
     del (item) {
-      this.$Service.Good.del({ id: item.id, mch_id: item.mch_id }).then(response => {
+      this.$Service.GoodPrice.del({ id: item.id, mch_id: item.mch_id }).then(response => {
         if (response.err_code == 0) {
           toastr.success('删除成功')
           this.getDataTables()
@@ -312,20 +277,35 @@ export default {
         }
       })
     },
-    preview (e) {
-      const localSrc = e.target.value
-      if (localSrc) {
-        const arr = localSrc.split('.')
-        this.form.img_format = arr[arr.length - 1]
-        this.$H5UI.setImgBase(e, '#img')
+    getGoodList () {
+      const condition = {
+        mch_id: this.user.mch_id,
+        category_id: this.typeId,
+        page_no: 1,
+        page_size: 100
       }
+      this.$Service.Good.get(condition).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.GoodList = response.list
+        }
+      })
     },
-    valuation (item) {  // 商品定价管理
-      this.$router.push('/admin/good-price?type_id=' + this.condition.category_id + '&good_id=' + item.id)
+    getValuationGood () {
+      const id = $('#searchSelect').attr('data-id') || this.goodId
+      for (const good of this.GoodList) {
+        if (good.id == id) {
+          this.valuationGood = good
+          break
+        }
+      }
+      return this.valuationGood
     }
   },
   created () {
     this.getGoodType()
+    this.getGoodList()
     this.getDataTables()
   },
   mounted () {
