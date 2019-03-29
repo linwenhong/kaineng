@@ -149,6 +149,7 @@ export default {
 
       console.log(this.form)
       const request = {
+        mch_id: this.user.mch_id,
         name: this.form.name,
         parent_id: this.form.parent_id
       }
