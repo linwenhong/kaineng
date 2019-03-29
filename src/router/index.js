@@ -26,6 +26,7 @@ let routes = new Router({
         { path: 'good-type', name: 'user', component: COMPONENTS.GoodTypeComponent },  // 商品分类管理
         { path: 'good-type-tree', name: 'user', component: COMPONENTS.GoodTypeTreeComponent },  // 商品分类管理(树结构)
         { path: 'good-upper-shelf', name: 'user', component: COMPONENTS.GoodUpperShelfComponent },  // 商品上架
+        { path: 'replenish-order', name: 'user', component: COMPONENTS.ReplenishOrderComponent },  // 设备补货记录
         { path: 'merchant', name: 'user', component: COMPONENTS.MerchantComponent },  // 商户管理
         { path: 'merchant-details', name: 'user', component: COMPONENTS.MerchantDetailsComponent },  // 商户信息
         { path: 'order', name: 'user', component: COMPONENTS.OrderComponent },  // 订单管理
@@ -62,7 +63,7 @@ routes.beforeEach((to, from, next) => {
   console.log(to)
   const user = store.getters.getUser
   console.log(user)
-  if (to.path == '/login') {
+  if (to.path == '/login' || to.path == '/register') {
     next()
   } else { // 登录验证
     if (!user) {

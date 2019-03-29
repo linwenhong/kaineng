@@ -24,10 +24,18 @@ const GoodPrice = createService('productPrice') //*
 const GoodUpperShelf = createService('device/channel')
 GoodUpperShelf.enable = (request) => { return patch('device/channel', request) }
 
+const ReplenishOrder = createService('replenishOrder')
+ReplenishOrder.details = (request) => { return get('replenishOrder/details', request) }
+ReplenishOrder.detailsAdd = (request) => { return post('replenishOrder/details', request) }
+ReplenishOrder.edit = (request) => { return put('replenishOrder/details', request) }
+ReplenishOrder.cancel = (request) => { return patch('replenishOrder', request) }
+
 const Merchant = createService('merchant') //*
 Merchant.get = request => { return get('merchantList', request) }
 
-const Order = createService('order')
+const Order = createService('paymentOrder')
+Order.details = (request) => { return get('paymentOrder/details', request) }
+
 const SettlementLogs = createService('settlement_logs')
 
 const User = createService('user') //*
@@ -54,6 +62,7 @@ export default {
   GoodType,
   GoodPrice,
   GoodUpperShelf,
+  ReplenishOrder,
   Merchant,
   Order,
   SettlementLogs,

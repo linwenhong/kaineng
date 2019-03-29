@@ -19,6 +19,10 @@
             </div>
             <div class="col-sm-offset-3 col-sm-9">
               <button type="submit" class="btn btn-primary block full-width">登 录</button>
+
+              <p class="text-center">
+                <a @click="register()">去注册？</a>
+              </p>
             </div>
           </form>
         </div>
@@ -63,6 +67,9 @@ export default {
         })
 
       }
+    },
+    register () {
+      this.$router.push('/register')
     }
   }
 }

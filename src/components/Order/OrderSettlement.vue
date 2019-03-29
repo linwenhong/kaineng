@@ -10,15 +10,15 @@
         <div class="search-page">
 
           <div class="form-group">
-            <label class="control-label">商户名</label>
-            <div class="searchOption">
-              <search-select :data="merchantList"></search-select>
-            </div>
+            <!--<label class="control-label">商户名</label>-->
+            <!--<div class="searchOption">-->
+              <!--<search-select :data="merchantList"></search-select>-->
+            <!--</div>-->
 
             <date-time text="下单时间"></date-time>
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
-            <button type="button" class="btn btn-warning search" @click="settlement()">结算</button>
+            <!--<button type="button" class="btn btn-warning search" @click="settlement()">结算</button>-->
           </div>
         </div>
 
@@ -26,9 +26,6 @@
           <thead>
             <tr>
               <th></th>
-              <th>ID</th>
-              <th>订单号</th>
-              <th>商户名</th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
               <th>操作</th>
             </tr>
@@ -41,12 +38,17 @@
                   <input name="select" type="checkbox" :value="item.id"><i></i></label>
               </div>
             </td>
-            <td>{{ item.id }}</td>
-            <td>{{ item.coding }}</td>
-            <td>{{ item.merchant.name }}</td>
-            <td v-for="option of tableOptions">{{ item[option.key] }}</td>
+            <td>{{ item.out_trade_no }}</td>
+            <td>{{ item.mch_name }}</td>
+            <td>{{ item.trade_status | OrderStatus }}</td>
+            <td>{{ item.total_amount }}</td>
+            <td>{{ item.null }}</td>
+            <td>{{ item.has_settled }}</td>
+            <td>{{ item.null }}</td>
+            <td>{{ item.create_at }}</td>
+            <td>{{ item.null }}</td>
             <td>
-              <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal" @click="details(item)">结算</button>
+              <!--<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal" @click="details(item)">结算</button>-->
             </td>
           </tr>
           </tbody>
@@ -111,15 +113,17 @@ export default {
   name: 'OrderSettlement',
   data () {
     return {
+      user: this.$store.getters.getUser,
       tableOptions: [
-        { key: "total", title: "订单金额" },
-//        { key: "pay_type", title: "支付类型" },
-        { key: "status", title: "订单状态" },
-        { key: "enable_status", title: "是否冻结" },
-        { key: "settlement_status", title: "结算状态" },
-        { key: "settlement_total", title: "结算金额" },
-        { key: "time", title: "下单时间" },
-        { key: "settlement_time", title: "结算时间" }
+        { key: "out_trade_no", title: "订单号" },
+        { key: "mch_name", title: "商户名" },
+        { key: "trade_status", title: "订单状态" },
+        { key: "total_amount", title: "订单总金额" },
+        { key: "???", title: "是否冻结" },
+        { key: "has_settled", title: "结算状态" },
+        { key: "???", title: "结算金额" },
+        { key: "create_at", title: "下单时间" },
+        { key: "???", title: "结算时间" }
       ],
       items: [],
       total: 0,
@@ -127,7 +131,6 @@ export default {
       pageSize: this.$Config.page_size,
       condition: {},
       lastCondition: {},
-      merchantList: [{id: 1,name: '张三'}, {id: 2,name: '李四'}],
       settlementOrderDetails: {},
       isSubmit: false
     }
@@ -152,11 +155,10 @@ export default {
         return
       }
 
-      this.items = []
-      this.total = 0
       const condition = {
-        page: page,
-        per_number: this.pageSize
+        mch_id: this.user.mch_id,
+        page_no: page,
+        page_size: this.pageSize
       }
 
       for (const key in this.condition) {
@@ -186,12 +188,12 @@ export default {
       }
 
       this.$Service.Order.get(condition).then(response => {
-        if (response.code == 200) {
-          this.items = response.data
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.items = response.list
           this.total = response.total
           this.$nextTick(() => this.$H5UI.iCheck())
-        } else {
-          toastr.error(response.msg)
         }
       })
     },

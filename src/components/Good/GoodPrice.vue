@@ -11,6 +11,11 @@
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
+            <label class="control-label">商品分类</label>
+            <div class="searchOption">
+              <treeselect :multiple="false" :options="TreeSelectOption" v-model="condition.category_id"/></treeselect>
+            </div>
+
             <label class="control-label">商品名称</label>
             <div class="searchOption">
               <template v-if="GoodList.length > 0">
@@ -22,12 +27,6 @@
                 ></search-select>
               </template>
             </div>
-
-            <label class="control-label">商品分类</label>
-            <select class="form-control" v-model="condition['category_id']">
-              <option value="">全部</option>
-              <option v-for="option of GoodType" :value="option.id">{{ option.name }}</option>
-            </select>
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -154,7 +153,7 @@ export default {
       valuationGood: {},
       validate: null,
       value: null,
-      options: this.$Config.test,
+      TreeSelectOption: [],
       isSubmit: false
     }
   },
@@ -267,13 +266,14 @@ export default {
       const condition = {
         mch_id: this.user.mch_id,
         page_no: 1,
-        page_size: 100
+        page_size: 10000
       }
       this.$Service.GoodType.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
           this.GoodType = response.list
+          this.TreeSelectOption = this.$Method.getTreeSelectOption(response.list, true)
         }
       })
     },
@@ -282,7 +282,7 @@ export default {
         mch_id: this.user.mch_id,
         category_id: this.typeId,
         page_no: 1,
-        page_size: 100
+        page_size: 10000
       }
       this.$Service.Good.get(condition).then(response => {
         if (response.err_code) {

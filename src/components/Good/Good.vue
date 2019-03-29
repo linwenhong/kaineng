@@ -11,14 +11,13 @@
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
+            <label class="control-label">商品分类</label>
+            <div class="searchOption">
+              <treeselect :multiple="false" :options="TreeSelectOption" v-model="condition.category_id"/></treeselect>
+            </div>
+
             <label class="control-label">商品名称</label>
             <input type="text" class="form-control" v-model.trim="condition['name']">
-
-            <label class="control-label">商品分类</label>
-            <select class="form-control" v-model="condition['category_id']">
-              <option value="">全部</option>
-              <option v-for="option of GoodType" :value="option.id">{{ option.name }}</option>
-            </select>
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -38,7 +37,6 @@
             <td>{{ item.product_name }}</td>
             <td>{{ item.category_id }}</td>
             <td>{{ item.spec }}</td>
-            <!--<td>¥ {{ item.product_prices }}</td>-->
             <td>{{ item.remark }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
@@ -114,14 +112,6 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">参考价格</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true"
-                           oninput="moneyFormat(this)" name="product_prices" v-model.trim="form.product_prices">
-                  </div>
-                </div>
-
-                <div class="form-group">
                   <label class="col-sm-3 control-label">备注</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control"
@@ -160,7 +150,6 @@ export default {
         { key: "product_name", title: "商品名称" },
         { key: "type", title: "商品类型" },
         { key: "spec", title: "商品规格" },
-//        { key: "product_prices", title: "参考价格" },
         { key: "remark", title: "备注" }
       ],
       items: [],
@@ -175,7 +164,7 @@ export default {
       detailsImgUrl: '',
       validate: null,
       value: null,
-      options: this.$Config.test,
+      TreeSelectOption: [],
       isSubmit: false
     }
   },
@@ -192,6 +181,7 @@ export default {
           condition[key] = this.condition[key]
         }
       }
+      condition.category_id = condition.category_id || 0
 
       this.$Service.Good.get(condition).then(response => {
         if (response.err_code) {
@@ -280,7 +270,6 @@ export default {
         code: item.code,
         img_path: item.img_path,
         img_format: item.img_format,
-        product_prices: item.product_prices,
         product_name: item.product_name,
         remark: item.remark,
         spec: item.spec
@@ -302,13 +291,14 @@ export default {
       const condition = {
         mch_id: this.user.mch_id,
         page_no: 1,
-        page_size: 100
+        page_size: 10000
       }
       this.$Service.GoodType.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
           this.GoodType = response.list
+          this.TreeSelectOption = this.$Method.getTreeSelectOption(response.list, true)
         }
       })
     },
@@ -321,7 +311,7 @@ export default {
       }
     },
     valuation (item) {  // 商品定价管理
-      this.$router.push('/admin/good-price?type_id=' + this.condition.category_id + '&good_id=' + item.id)
+      this.$router.push('/admin/good-price?type_id=' + item.category_id + '&good_id=' + item.id)
     }
   },
   created () {

@@ -21,9 +21,15 @@
       </div>
 
       <div class="ibox-content">
+        <div class="form-group" v-if="SubDevices.length > 0">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal2" @click="replenish()">货道补货</button>
+          <button type="button" class="btn btn-danger" @click="replenishOrderConfirm()">补货完成</button>
+          <button type="button" class="btn btn-info" @click="replenishOrderHistory()">补货记录</button>
+        </div>
         <div class="form-group device">
+          柜号:
           <template v-for="(details, index) of SubDevices">
-            <button type="button" class="btn" :class="selectOption == index ? 'btn-info' : 'btn-default'"
+            <button type="button" class="btn btn-sm" :class="selectOption == index ? 'btn-info' : 'btn-default'"
                     @click="selectDeviceOption(index)">{{ details.name }}</button>
           </template>
         </div>
@@ -46,13 +52,16 @@
                 <template v-else>
                   <div class="good" @click="edit(passageway)">
                     <div class="good-icon-box">
-                      <img class="good-icon" :src="passageway.good">
+                      <img class="good-icon" :src="$Config.img_url + passageway.img_path">
                     </div>
                     <div class="good-icon-box">
-                      <p>¥ {{ passageway.product_price }}</p>
+                      <p><small>售价: ¥ {{ passageway.product_price }}</small></p>
                       <p><small>库存: {{ passageway.product_sum }}</small></p>
                     </div>
-                    <p class="text">{{ passageway.product_name }}</p>
+                    <p class="text">
+                      {{ passageway.product_name }}
+                      <small v-if="passageway.spec">({{ passageway.spec }})</small>
+                    </p>
                     <span class="left">状态:
                       <span :class="passageway.used == 1 ? 'green' : 'red'">{{ passageway.used == 1 ? '启用' : '未启用' }}</span>
                     </span>
@@ -133,6 +142,53 @@
       </div>
     </div>
     <!-- model end -->
+
+    <!-- model -->
+    <div class="modal inmodal fade" id="Modal2" tabindex="-1" role="dialog"  aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">补货</h4>
+          </div>
+
+          <form id="form2" class="form-horizontal" @submit.prevent="replenishConfirm">
+            <div class="modal-body">
+              <table class="table table-bordered text-center">
+                <thead>
+                  <tr>
+                    <th>货道号</th>
+                    <th>商品</th>
+                    <th>规格</th>
+                    <th>库存</th>
+                    <th>补货数量</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(passageway, index) of Passageways" :key="passageway.id">
+                    <td>{{ passageway.channel_no }}</td>
+                    <td>{{ passageway.product_name }}</td>
+                    <td>{{ passageway.spec }}</td>
+                    <td>{{ passageway.residue }}</td>
+                    <td style="width: 100px">
+                      <input type="text" class="form-control" required="" aria-required="true" maxlength="4"
+                             oninput="numberFormat(this)" name="require_sum" v-model.number="passageway.require_sum">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="modal-footer">
+              <b class="btn btn-white" data-dismiss="modal">关闭</b>
+              <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <!-- model end -->
   </div>
 </template>
 
@@ -145,6 +201,7 @@ export default {
       goods: [],
       selectOption: 0, // 选择的子设备(柜体)下标
       selectGoodId: 0, // 选中定价的商品id, 用于获取当前商品所有定价
+      selectDevice: {}, // 选中设备
       valuationGood: {}, // 选中定价的商品
       goodPrices: [], // 商品所有定价
       passageway: {},  // 当前货物通道
@@ -152,6 +209,8 @@ export default {
       deviceName: '',
       goodName: '',
       lastSelectDeviceIndex: 0,
+      DevicePassageways: [],  // 选择设备的通道列表
+      Passageways: [],  // 补货列表
       MerchantDevice: [], // 商户设备列表
       SubDevices: [], // 选中的设备 子设备(柜体)列表
       DeviceGood: [], // 选中的子设备(柜体) 货物层列表
@@ -184,6 +243,7 @@ export default {
       })
     },
     selectMerchantDevice (device, index) {
+      this.selectDevice = device
       this.lastSelectDeviceIndex = index
       console.log('device', device)
       this.$Service.GoodUpperShelf.get({
@@ -196,6 +256,7 @@ export default {
           toastr.error(response.err_msg, response.err_code)
         } else {
           this.SubDevices = []
+          this.DevicePassageways = response.list
           response.list.map(passageway => {
             if (passageway.channel_no > 999 && passageway.channel_no < 10000) {
               const passagewayChannelNo = passageway.channel_no.toString()
@@ -331,6 +392,39 @@ export default {
           this.getDataTables()
         }
       })
+    },
+    replenish () {  // 打开补货窗口
+      this.Passageways = this.DevicePassageways.map(passageway => {
+        return {
+          channel_no: passageway.channel_no,
+          product_name: passageway.product_name,
+          spec: passageway.spec,
+          price: passageway.product_price,
+          residue: passageway.product_sum
+        }
+      })
+      console.log(this.Passageways)
+    },
+    replenishConfirm () {  // 提交补货订单
+      console.log(this.Passageways)
+      this.$Service.ReplenishOrder.add({
+        mch_id: this.user.mch_id,
+        device_id: this.selectDevice.sn,
+        list: this.Passageways
+      }).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          $('#Modal').modal('hide')
+          this.getDataTables()
+        }
+      })
+    },
+    replenishOrderConfirm () {
+      console.log('补货完成')
+    },
+    replenishOrderHistory () {
+      this.$router.push('/admin/replenish-order?device_id=' + this.selectDevice.sn)
     }
   },
   created () {
@@ -376,6 +470,9 @@ export default {
     margin-bottom: 0;
   }
   .good p.text {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 5px;
     text-align: left;
   }
   .good span.left {
@@ -396,7 +493,8 @@ export default {
     float: left;
   }
   .good-icon-box p {
-     margin-top: 5px;
+    margin-top: 5px;
+    text-align: left;
    }
   .good-icon {
     display: inline-block;

@@ -1,18 +1,36 @@
-// 订单状态
-function OrderStatus (value) {
+// 补充订单状态
+function ReplenishOrderStatus (value) {
   let status = ''
   switch (Number(value)) {
-    case -1: status = '超时未付款取消'; break;
-    case 0: status = '未提交'; break;
-    case 1: status = '待付款'; break;
-    case 2: status = '付款成功'; break;
-    case 3: status = '订单取消'; break;
-    case 4: status = '订单完成'; break;
+    case 0: status = '未完成'; break;
+    case 1: status = '已完成'; break;
+    case 2: status = '已取消'; break;
     default: status = '其他';
   }
   return status
 }
-// 咨询订单类型
+// 补充订单状态
+function OrderStatus (value) {
+  let status = ''
+  switch (Number(value)) {
+    case 0: status = '未完成'; break;
+    case 1: status = '已完成'; break;
+    default: status = '其他';
+  }
+  return status
+}
+// 订单商品出货状态
+function OrderGoodOutStatus (value) {
+  let status = ''
+  switch (Number(value)) {
+    case 0: status = '初始状态'; break;
+    case 1: status = '出货完成'; break;
+    case 2: status = '出货失败'; break;
+    default: status = '其他';
+  }
+  return status
+}
+// 支付类型
 function PayType (value) {
   let status = ''
   switch (Number(value)) {
@@ -24,22 +42,12 @@ function PayType (value) {
   }
   return status
 }
-// 用户状态
-function UserStatus (value) {
-  let status = ''
-  switch (Number(value)) {
-    case 1: status = '新注册'; break;
-    case 2: status = '正常'; break;
-    case 3: status = '禁用'; break;
-    default: status = '其他';
-  }
-  return status
-}
 
 
 let transform = {
+  ReplenishOrderStatus: ReplenishOrderStatus,
   OrderStatus: OrderStatus,
-  PayType: PayType,
-  UserStatus: UserStatus
+  OrderGoodOutStatus: OrderGoodOutStatus,
+  PayType: PayType
 }
 export default transform

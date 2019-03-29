@@ -47,7 +47,7 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-input.help-block {
+.help-block {
   margin-top: 0;
 }
 .modal-body input {
@@ -149,6 +149,9 @@ ul, li {
 }
 .search-page .searchOption .searchSelect {
   top: 16px;
+}
+.search-page .searchOption .vue-treeselect {
+  top: 12px;
 }
 .view-img img {
   display: inline-block;

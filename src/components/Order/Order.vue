@@ -32,9 +32,6 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>订单号</th>
-              <th>商户名</th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
 
               <template v-if="pageType == 2">
@@ -46,22 +43,22 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.coding }}</td>
-            <td>{{ item.merchant.name }}</td>
-            <td>{{ item.status | OrderStatus }}</td>
-            <td>{{ item.number }}</td>
-            <td>{{ item.total }}</td>
+            <td>{{ item.out_trade_no }}</td>
+            <td>{{ item.mch_name }}</td>
+            <td>{{ item.trade_status | OrderStatus }}</td>
+            <td>{{ item.product_sum }}</td>
+            <td>{{ item.total_amount }}</td>
+            <td>{{ item.reality_amount }}</td>
             <td>{{ item.pay_type | PayType }}</td>
-            <td>{{ item.time }}</td>
+            <td>{{ item.create_at }}</td>
 
             <template v-if="pageType == 2">
-              <td v-for="option of tableOptions2">{{ item[option.key] }}</td>
+              <td>{{ item.refund_amount }}</td>
             </template>
 
             <td>
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="details(item)">编辑</button>
-              <info-confirm @confirm="del" :data="item"></info-confirm>
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="details(item)">详情</button>
+              <!--<info-confirm @confirm="del" :data="item"></info-confirm>-->
             </td>
           </tr>
           </tbody>
@@ -83,11 +80,11 @@
             <table class="table table-bordered text-center">
               <thead>
               <tr>
-                <th>商品编号</th>
+                <th>序号</th>
                 <th>商品名称</th>
                 <th>数量</th>
                 <th>单价</th>
-                <th>小计金额</th>
+                <th>出货状态</th>
 
                 <template v-if="pageType == 2">
                   <th>退款状态</th>
@@ -96,12 +93,12 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="(item, index) of order.goods" :key="item.id">
-                <td>{{ item.good.coding }}</td>
-                <td>{{ item.good.name }}</td>
-                <td>{{ item.number }}</td>
+              <tr v-for="(item, index) of orderGoodList" :key="item.id">
+                <td>{{ index + 1 }}</td>
+                <td>{{ item.product_name }}</td>
+                <td>1</td>
                 <td>¥{{ item.price.toFixed(2) }}</td>
-                <td>¥{{ (item.number * item.price).toFixed(2) }}</td>
+                <td>{{ item.is_out | OrderGoodOutStatus }}</td>
 
                 <template v-if="pageType == 2">
                   <td>{{ order.refund_status }}</td>
@@ -112,7 +109,7 @@
               </tr>
               <tr v-if="pageType == 1">
                 <td colspan="4"></td>
-                <td>合计：¥{{ order.total }}</td>
+                <td>合计：¥{{ order.total_amount }}</td>
               </tr>
               </tbody>
             </table>
@@ -134,20 +131,25 @@ export default {
   name: 'Order',
   data () {
     return {
+      user: this.$store.getters.getUser,
       pageType: 1, // 1: 订单查询, 2: 异常订单
       tableOptions: [
-        { key: "status", title: "订单状态" },
-        { key: "number", title: "商品数量" },
-        { key: "total", title: "订单金额" },
+        { key: "out_trade_no", title: "订单号" },
+        { key: "mch_name", title: "商户名" },
+        { key: "trade_status", title: "订单状态" },
+        { key: "product_sum", title: "商品数量" },
+        { key: "total_amount", title: "订单总金额" },
+        { key: "reality_amount", title: "实际收款金额" },
         { key: "pay_type", title: "支付类型" },
-        { key: "time", title: "下单时间" }
+        { key: "create_at", title: "下单时间" }
       ],
       tableOptions2: [
-        { key: "refund_number", title: "退款商品数量" },
-        { key: "refund_total", title: "退款金额" },
-        { key: "refund_status", title: "退款状态" },
-        { key: "refund_time", title: "退款时间" }
+//        { key: "refund_number", title: "退款商品数量" },
+        { key: "refund_amount", title: "退款金额" },
+//        { key: "refund_status", title: "退款状态" },
+//        { key: "refund_time", title: "退款时间" }
       ],
+      orderGoodList: [],
       items: [],
       total: 0,
       page: 1,
@@ -177,11 +179,10 @@ export default {
         return
       }
 
-      this.items = []
-      this.total = 0
       const condition = {
-        page: page,
-        per_number: this.pageSize
+        mch_id: this.user.mch_id,
+        page_no: page,
+        page_size: this.pageSize
       }
 
       for (const key in this.condition) {
@@ -196,12 +197,11 @@ export default {
       }
 
       this.$Service.Order.get(condition).then(response => {
-        if (response.code == 200) {
-          this.items = response.data
-          this.total = response.total
-          this.$nextTick(() => this.$H5UI.iCheck())
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
         } else {
-          toastr.error(response.msg)
+          this.items = response.list
+          this.total = response.total
         }
       })
     },
@@ -210,6 +210,18 @@ export default {
     },
     details (item) {
       this.order = item
+      this.$Service.Order.details({
+        page_no: 1,
+        page_size: 10000,
+        mch_id: this.user.mch_id,
+        out_trade_no: item.out_trade_no
+      }).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.orderGoodList = response.list
+        }
+      })
     },
     del (item) {
       this.$Service.Order.del(item.id).then(response => {

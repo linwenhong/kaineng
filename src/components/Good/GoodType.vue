@@ -29,7 +29,7 @@
           <tr v-for="(item, index) of items" :key="item.id">
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
-            <td>{{ item.parent_name }}</td>
+            <td>{{ item.parent_id }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
@@ -56,16 +56,16 @@
               <div class="row">
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">分类名称</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" required="" aria-required="true" name="name" v-model.trim="form.name">
+                  <label class="col-sm-3 control-label">父级分类</label>
+                  <div class="col-sm-8" v-if="TreeSelectOption.length > 0">
+                    <treeselect :multiple="false" :options="TreeSelectOption" v-model="form.parent_id"/></treeselect>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">父级分类</label>
+                  <label class="col-sm-3 control-label">分类名称</label>
                   <div class="col-sm-8">
-                    <treeselect :multiple="false" :options="options" v-model="form.parent_id"/></treeselect>
+                    <input type="text" class="form-control" required="" aria-required="true" name="name" v-model.trim="form.name">
                   </div>
                 </div>
 
@@ -108,8 +108,7 @@ export default {
       },
       form: {},
       validate: null,
-      value: null,
-      options: this.$Config.test,
+      TreeSelectOption: [],
       isSubmit: false
     }
   },
@@ -133,6 +132,7 @@ export default {
         } else {
           this.items = response.list
           this.total = response.total
+          this.TreeSelectOption = this.$Method.getTreeSelectOption(response.list)
         }
       })
     },
@@ -160,7 +160,7 @@ export default {
       console.log(this.form)
       const request = {
         name: this.form.name,
-        parent_id: 0
+        parent_id: this.form.parent_id || 0
       }
 
       if (this.form.id) { // 修改
@@ -213,7 +213,6 @@ export default {
   },
   created () {
     this.getDataTables()
-//  {"id": 1, "name": "zhangsan"}
   },
   mounted () {
     this.validate = this.$H5UI.validate('#form')  //  添加表单验证
