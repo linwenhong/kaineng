@@ -122,10 +122,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Treeselect from '@riophae/vue-treeselect'
 export default {
   name: 'GoodPrice',
-  components: { Treeselect },
   data () {
     return {
       typeId: this.$route.query['type_id'],

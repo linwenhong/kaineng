@@ -60,10 +60,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Treeselect from '@riophae/vue-treeselect'
 export default {
   name: 'GoodTypeTree',
-  components: { Treeselect },
   data () {
     return {
       form: {},

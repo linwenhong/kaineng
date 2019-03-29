@@ -87,10 +87,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Treeselect from '@riophae/vue-treeselect'
 export default {
   name: 'GoodType',
-  components: { Treeselect },
   data () {
     return {
       user: this.$store.getters.getUser,

@@ -28,6 +28,8 @@ Vue.component('info-confirm', infoConfirm)
 Vue.component('page-header-button', pageHeaderButton)
 Vue.component('search-select', searchSelect)
 
+Vue.component('treeselect', VueTreeselect.Treeselect)
+
 // defined filter for global
 for (let transform in FilterService) {
   Vue.filter(transform, FilterService[transform])

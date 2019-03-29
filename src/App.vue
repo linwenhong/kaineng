@@ -27,7 +27,8 @@ export default {
 @import "../static/css/plugins/simditor/simditor.css";
 @import "../static/css/plugins/toastr/toastr.min.css";
 
-@import "../node_modules/@riophae/vue-treeselect/dist/vue-treeselect.min.css";
+@import "../static/vue-treeselect/vue-treeselect.min.css";
+
 .vue-treeselect { width: 200px; }
 
 #content-main {
