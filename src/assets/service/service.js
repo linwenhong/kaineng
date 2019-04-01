@@ -16,30 +16,34 @@ function createService (url) {
   }
 }
 /******************************/
-const SubDevice = createService('sub_device')
-const Manufacturer = createService('manufacturer')
-const Good = createService('product') //*
-const GoodType = createService('categories') //*
-const GoodPrice = createService('productPrice') //*
-const GoodUpperShelf = createService('device/channel')
-GoodUpperShelf.enable = (request) => { return patch('device/channel', request) }
+const SubDevice = createService('sub_device');
+const Manufacturer = createService('manufacturer');
+const Good = createService('product');
+const GoodType = createService('categories');
+const GoodPrice = createService('productPrice');
+const GoodUpperShelf = createService('device/channel');
+GoodUpperShelf.enable = (request) => { return patch('device/channel', request) };
 
-const ReplenishOrder = createService('replenishOrder')
-ReplenishOrder.details = (request) => { return get('replenishOrder/details', request) }
-ReplenishOrder.detailsAdd = (request) => { return post('replenishOrder/details', request) }
-ReplenishOrder.edit = (request) => { return put('replenishOrder/details', request) }
-ReplenishOrder.cancel = (request) => { return patch('replenishOrder', request) }
+const ReplenishOrder = createService('replenishOrder');
+ReplenishOrder.details = (request) => { return get('replenishOrder/details', request) };
+ReplenishOrder.detailsAdd = (request) => { return post('replenishOrder/details', request) };
+ReplenishOrder.edit = (request) => { return put('replenishOrder/details', request) };
+ReplenishOrder.cancel = (request) => { return patch('replenishOrder', request) };
 
-const Merchant = createService('merchant') //*
-Merchant.get = request => { return get('merchantList', request) }
+const Merchant = createService('merchant');
+Merchant.get = request => { return get('merchantList', request) };
 
-const Order = createService('paymentOrder')
-Order.details = (request) => { return get('paymentOrder/details', request) }
+const MerchantRegions = createService('regions');
 
-const SettlementLogs = createService('settlement_logs')
+const Order = createService('paymentOrder');
+Order.details = (request) => { return get('paymentOrder/details', request) };
 
-const User = createService('user') //*
-User.editPassword = (request) => { return patch('user', request) }
+const SettlementOrder = createService('settledOrder');
+
+const SettlementLogs = createService('settlement_logs');
+
+const User = createService('user');
+User.editPassword = (request) => { return patch('user', request) };
 /******************************/
 const Auth = {
   login: (request) => { return post('auth', request) },
@@ -64,7 +68,9 @@ export default {
   GoodUpperShelf,
   ReplenishOrder,
   Merchant,
+  MerchantRegions,
   Order,
+  SettlementOrder,
   SettlementLogs,
   User,
 

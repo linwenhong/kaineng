@@ -5,7 +5,7 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>商户管理</h5>
+        <h5>商户区域管理</h5>
       </div>
 
       <div class="ibox-content">
@@ -193,6 +193,7 @@ export default {
   name: 'Merchant',
   data () {
     return {
+      user: this.$store.getters.getUser,
       tableOptions: [
         { key: "id", title: "ID" },
         { key: "user_name", title: "管理员名称" },
@@ -220,6 +221,7 @@ export default {
   methods: {
     getDataTables (page = 1) {
       const condition = {
+        mch_id: this.user.mch_id,
         page_no: page,
         page_size: this.pageSize
       }
@@ -230,7 +232,7 @@ export default {
         }
       }
 
-      this.$Service.Merchant.get(condition).then(response => {
+      this.$Service.MerchantRegions.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
@@ -297,7 +299,7 @@ export default {
 
       if (this.form.id) { // 修改
         request.mch_id = this.form.mch_id
-        this.$Service.Merchant.edit(request).then(response => {
+        this.$Service.MerchantRegions.edit(request).then(response => {
           this.isSubmit = false
           if (response.err_code == 0) {
             toastr.success('修改成功')
@@ -312,7 +314,7 @@ export default {
         request.password = this.form.password
         request.user_name = this.form.user_name
         request.user_phone = this.form.user_phone
-        this.$Service.Merchant.add(request).then(response => {
+        this.$Service.MerchantRegions.add(request).then(response => {
           this.isSubmit = false
           if (response.err_code == 0) {
             toastr.success('新增成功')
@@ -343,7 +345,7 @@ export default {
       }
     },
     del (item) {
-      this.$Service.Merchant.del({ id: item.id }).then(response => {
+      this.$Service.MerchantRegions.del({ id: item.id }).then(response => {
         if (response.err_code == 0) {
           toastr.success('删除成功')
           this.getDataTables()

@@ -83,6 +83,9 @@
             </a>
             <ul class="nav nav-second-level">
               <li>
+                <a class="J_menuItem" @click="goHref('/admin/merchant-regions')">商户区域管理</a>
+              </li>
+              <li>
                 <a class="J_menuItem" @click="goHref('/admin/merchant')">商户管理</a>
               </li>
             </ul>

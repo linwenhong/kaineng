@@ -29,6 +29,7 @@ let routes = new Router({
         { path: 'replenish-order', name: 'user', component: COMPONENTS.ReplenishOrderComponent },  // 设备补货记录
         { path: 'merchant', name: 'user', component: COMPONENTS.MerchantComponent },  // 商户管理
         { path: 'merchant-details', name: 'user', component: COMPONENTS.MerchantDetailsComponent },  // 商户信息
+        { path: 'merchant-regions', name: 'user', component: COMPONENTS.MerchantRegionsComponent },  // 商户区域管理
         { path: 'order', name: 'user', component: COMPONENTS.OrderComponent },  // 订单管理
         { path: 'order-settlement', name: 'user', component: COMPONENTS.OrderSettlementComponent },  // 订单结算
         { path: 'order-settlement-logs', name: 'user', component: COMPONENTS.OrderSettlementLogsComponent },  // 订单结算记录

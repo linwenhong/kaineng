@@ -187,7 +187,7 @@ export default {
         delete this.lastCondition['name']
       }
 
-      this.$Service.Order.get(condition).then(response => {
+      this.$Service.SettlementOrder.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
