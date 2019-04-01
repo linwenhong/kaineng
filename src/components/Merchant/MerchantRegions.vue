@@ -28,7 +28,6 @@
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
             <td>{{ item.id }}</td>
-            <td>{{ item.mch_name }}</td>
             <td>{{ item.province }}, {{ item.city }}, {{ item.county }}</td>
             <td>{{ item.address }}</td>
             <td>{{ item.scene }}</td>
@@ -109,7 +108,6 @@ export default {
       user: this.$store.getters.getUser,
       tableOptions: [
         { key: "id", title: "ID" },
-        { key: "mch_name", title: "商户名称" },
         { key: "province, city, county", title: "所在地区" },
         { key: "user_type_name", title: "详细地址" },
         { key: "account_name", title: "场景" }

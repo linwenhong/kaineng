@@ -29,7 +29,7 @@
           <tr v-for="(item, index) of items" :key="item.id">
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
-            <td>{{ item.parent_id }}</td>
+            <td>{{ item.parent_name }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
