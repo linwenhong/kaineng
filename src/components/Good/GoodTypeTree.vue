@@ -11,7 +11,6 @@
         <div class="dd" id="nestable">
           <ol class="dd-list"></ol>
         </div>
-        <treeselect v-model="value" :multiple="false" :options="options"/></treeselect>
       </div>
     </div>
 
@@ -37,8 +36,8 @@
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">父级分类</label>
-                  <div class="col-sm-8">
-                    <treeselect :multiple="false" :options="options" v-model="form.parent_id"/></treeselect>
+                  <div class="col-sm-8" v-if="TreeSelectOption.length > 0">
+                    <treeselect :multiple="false" :options="TreeSelectOption" v-model="form.parent_id"/></treeselect>
                   </div>
                 </div>
 
@@ -64,10 +63,11 @@ export default {
   name: 'GoodTypeTree',
   data () {
     return {
+      user: this.$store.getters.getUser,
       form: {},
       validate: null,
       value: null,
-      options: this.$Config.test,
+      TreeSelectOption: [],
       isSubmit: false
     }
   },
@@ -85,7 +85,7 @@ export default {
         let li = '<li class="dd-item" data-id="' + option.id + '" data-label="' + option.id + '">'
             li += '<div class="dd-handle">'
             li += '<span class="label label-info"><i class="fa fa-users"></i></span> &nbsp; &nbsp;'
-            li += option.id
+            li += option.name
             li += '</div>'
             li += '</li>'
         const f = $(li)
@@ -118,7 +118,9 @@ export default {
       this.form = {
         id: item.id,
         name: item.name,
-        parent_id: item.parent_id
+        parent_id: item.parent_id,
+        order_number: item.order_number,
+        id: item.id
       }
       $('#Modal').modal('show')
     },
@@ -147,45 +149,65 @@ export default {
       if (!this.checkForm(this.form)) return;  // 表单验证
       this.isSubmit = true
 
-      console.log(this.form)
       const request = {
         mch_id: this.user.mch_id,
         name: this.form.name,
-        parent_id: this.form.parent_id
+        parent_id: this.form.parent_id,
+        order_number: this.form.order_number,
+        id: this.form.id
       }
 
-      const id = this.form.id
-      this.$Service.GoodType.edit(id, request).then(response => {
+      this.$Service.GoodType.edit(request).then(response => {
         this.isSubmit = false
-        if (response.code == 200) {
-          toastr.success('新增成功')
-          this.getDataTables(this.page)
+        if (response.err_code == 0) {
+          toastr.success('修改成功')
+          this.pageInit()
+          $('#Modal').modal('hide')
         } else {
-          toastr.error(response.msg)
+          toastr.error(response.err_msg, response.err_code)
         }
       })
-    } // submit end
+    }, // submit end
+    pageInit () {
+      this.items = []
+      this.TreeSelectOption = []
+      $('#nestable>ol').html('')
+      this.$Service.GoodType.get({
+        mch_id: this.user.mch_id,
+        page_no: 1,
+        page_size: 10000
+      }).then(response => {
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
+        } else {
+          this.items = response.list
+          this.total = response.total
+          this.TreeSelectOption = this.$Method.getTreeSelectOption(response.list)
+          const TreeData = this.$Method.arrayToTree(response.list)
+          this.setNestableHtml(TreeData, $('#nestable ol'))
+          const that = this
+          this.$nextTick(() => {
+            $('#nestable').nestable({
+              group: 1
+            }).on('change', this.updateOutput);
+
+            $('body').on('click', '.label-primary', function(){
+              that.edit($(this))
+            });
+            $('body').on('click', '.label-danger', function(){
+              that.del($(this))
+            });
+          })
+        }
+      })
+      this.validate = this.$H5UI.validate('#form')  //  添加表单验证
+    }
   },
   created () {
 
   },
   mounted () {
-    const testData = [{"label":1,"id":1},{"label":7,"id":7,"children":[{"label":5,"id":5,"children":[{"label":4,"id":4}]},{"label":3,"id":3,"children":[{"label":6,"id":6,"children":[{"label":8,"id":8,"children":[{"label":2,"id":2}]}]}]}]}]
-    this.setNestableHtml(testData, $('#nestable ol'))
-    const that = this
-    this.$nextTick(() => {
-      $('#nestable').nestable({
-        group: 1
-      }).on('change', this.updateOutput);
-
-      $('body').on('click', '.label-primary', function(){
-        that.edit($(this))
-      });
-      $('body').on('click', '.label-danger', function(){
-        that.del($(this))
-      });
-    })
-    this.validate = this.$H5UI.validate('#form')  //  添加表单验证
+    this.pageInit()
   }
 }
 </script>

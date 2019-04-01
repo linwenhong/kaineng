@@ -23,7 +23,6 @@
       <div class="ibox-content">
         <div class="form-group" v-if="SubDevices.length > 0">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal2" @click="replenish()">货道补货</button>
-          <button type="button" class="btn btn-danger" @click="replenishOrderConfirm()">补货完成</button>
           <button type="button" class="btn btn-info" @click="replenishOrderHistory()">补货记录</button>
         </div>
         <div class="form-group device">
@@ -419,9 +418,6 @@ export default {
           this.getDataTables()
         }
       })
-    },
-    replenishOrderConfirm () {
-      console.log('补货完成')
     },
     replenishOrderHistory () {
       this.$router.push('/admin/replenish-order?device_id=' + this.selectDevice.sn)
