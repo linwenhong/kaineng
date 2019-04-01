@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import vuePagination from 'vue-pagination-y'
+import Distpicker from 'v-distpicker'
 
 import App from '@/App'
 import router from '@/router'
@@ -19,6 +20,7 @@ import searchSelect from '@/components/share/search-select'
 Vue.config.productionTip = false
 Vue.use(VueResource)
 Vue.use(vuePagination)
+Vue.component('v-distpicker', Distpicker)
 Vue.use(directives) // global directive
 //Vue.component('v-jstree', VJstree)
 

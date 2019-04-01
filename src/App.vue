@@ -203,4 +203,8 @@ ul, li {
   display: inline-block;
   min-width: 100%;
 }
+
+.distpicker-address-wrapper select {
+  display: inline-block;
+}
 </style>
