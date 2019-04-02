@@ -39,7 +39,7 @@
             <td>{{ item.last_login_time }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal2" @click="editPassword(item)">更改密码</button>
+              <button v-if="user.login_name == 'admin'" type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal2" @click="editPassword(item)">更改密码</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
             </td>
           </tr>
