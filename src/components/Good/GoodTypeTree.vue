@@ -11,6 +11,11 @@
         <div class="dd" id="nestable">
           <ol class="dd-list"></ol>
         </div>
+
+        <div class="text-center" style="margin-top: 30px">
+          <button type="button" class="btn btn-primary" @click="confirm">保存修改</button>
+        </div>
+
       </div>
     </div>
 
@@ -68,21 +73,42 @@ export default {
       validate: null,
       value: null,
       TreeSelectOption: [],
+      batchEditList: [],
       isSubmit: false
     }
   },
   methods: {
+    confirm () {
+      const request = {
+        mch_id: this.user.mch_id,
+        list: this.batchEditList
+      }
+      this.$Service.GoodType.batchEdit(request).then(response => {
+        this.isSubmit = false
+        if (response.err_code == 0) {
+          toastr.success('修改成功')
+          this.pageInit()
+        } else {
+          toastr.error(response.err_msg, response.err_code)
+        }
+      })
+
+    },
     updateOutput (e) {
       const list = e.length ? e : $(e.target),
         output = list.data('output')
       const data = list.nestable('serialize')
       console.log(data)
-      console.log(JSON.stringify(data))
+      this.batchEditList = this.$Method.treeToArray(data)
     },
     setNestableHtml (data, html) {
       html.html('');
       data.map(option => {
-        let li = '<li class="dd-item" data-id="' + option.id + '" data-label="' + option.id + '">'
+        let li = '<li class="dd-item"'
+            li += 'data-id="' + option.id + '"'
+            li += 'data-name="' + option.name + '"'
+            li += 'data-order_number="' + option.order_number + '"'
+            li += '">'
             li += '<div class="dd-handle">'
             li += '<span class="label label-info"><i class="fa fa-users"></i></span> &nbsp; &nbsp;'
             li += option.name
@@ -119,8 +145,7 @@ export default {
         id: item.id,
         name: item.name,
         parent_id: item.parent_id,
-        order_number: item.order_number,
-        id: item.id
+        order_number: item.order_number
       }
       $('#Modal').modal('show')
     },

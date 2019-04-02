@@ -56,6 +56,7 @@ function treeTransformArray (nodes) {
     for (var i=0, l=nodes.length; i<l; i++) {
       result.push(nodes[i]); // 取每项数据放入一个新数组
       if (Array.isArray(nodes[i]["children"])&&nodes[i]["children"].length>0)
+        nodes[i]["children"].map(item => item.parent_id = nodes[i].id)
       // 若存在children则递归调用，把数据拼接到新数组中，并且删除该children
         result = result.concat(treeTransformArray(nodes[i]["children"]));
       delete nodes[i]["children"]

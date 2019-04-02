@@ -23,9 +23,6 @@
               <div class="text-left option">
                 <a @click="isCodeLogin = true">扫码登录</a>
               </div>
-              <div class="text-right option">
-                <a @click="register()">去注册？</a>
-              </div>
             </div>
           </form>
 

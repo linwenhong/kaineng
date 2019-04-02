@@ -23,7 +23,10 @@ function createService (url) {
 const SubDevice = createService(merchant_url + 'sub_device');
 const Manufacturer = createService(merchant_url + 'manufacturer');
 const Good = createService(merchant_url + 'product');
+
 const GoodType = createService(merchant_url + 'categories');
+GoodType.batchEdit = (request) => { return put(merchant_url + 'categoriesList', request) }
+
 const GoodPrice = createService(merchant_url + 'productPrice');
 const GoodUpperShelf = createService(merchant_url + 'device/channel');
 GoodUpperShelf.enable = (request) => { return patch(merchant_url + 'device/channel', request) };
