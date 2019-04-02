@@ -81,7 +81,7 @@ export default {
     confirm () {
       const request = {
         mch_id: this.user.mch_id,
-        list: this.batchEditList
+        list: this.$Method.treeToArray(this.batchEditList)
       }
       this.$Service.GoodType.batchEdit(request).then(response => {
         this.isSubmit = false
@@ -99,7 +99,7 @@ export default {
         output = list.data('output')
       const data = list.nestable('serialize')
       console.log(data)
-      this.batchEditList = this.$Method.treeToArray(data)
+      this.batchEditList = data
     },
     setNestableHtml (data, html) {
       html.html('');
