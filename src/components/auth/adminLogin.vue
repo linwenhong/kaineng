@@ -1,9 +1,8 @@
 <template>
   <div>
     <div class="text-center animated fadeInDown login">
-      <a class="admin" @click="toAdmin()">管理员登录？</a>
       <div class="row mt">
-        <h1>自动售货机<small> (商户管理系统)</small></h1>
+        <h1>自动售货机<small> (后台管理系统)</small></h1>
         <div class="m-t form-horizontal middle-box">
           <form class="form-horizontal" @submit.prevent="login" v-show="!isCodeLogin">
             <div class="form-group">
@@ -45,7 +44,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'login',
+  name: 'admin_login',
   data () {
     return {
       isCodeLogin: false,
@@ -61,7 +60,7 @@ export default {
   },
   methods: {
     getLoginCode () {
-      this.$Service.Auth.loginCode().then(response => {
+      this.$Service.AdminAuth.loginCode().then(response => {
         if (response.qr_code && response.access_token) {
           new QRCode("qrcode", {
             text: response.qr_code,
@@ -81,12 +80,12 @@ export default {
       })
     },
     codeLogin () {
-      this.$Service.Auth.codeLogin({
+      this.$Service.AdminAuth.codeLogin({
         access_token: this.access_token
       }).then(response => {
         if (!response.err_code) {
           clearInterval(this.Interval)
-          this.$store.dispatch('identity', 1)
+          this.$store.dispatch('identity', 2)
           this.$store.dispatch('login', response)
         }
       })
@@ -99,22 +98,16 @@ export default {
           login_name: this.username,
           password: this.password
         }
-        this.$Service.Auth.login(request).then(response => {
+        this.$Service.AdminAuth.login(request).then(response => {
           if (response.err_code) {
             toastr.error(response.err_msg, response.err_code)
           } else {
-            this.$store.dispatch('identity', 1)
+            this.$store.dispatch('identity', 2)
             this.$store.dispatch('login', response)
           }
         })
 
       }
-    },
-    register () {
-      this.$router.push('/register')
-    },
-    toAdmin () {
-      this.$router.push('/admin-login')
     }
   }
 }
@@ -155,10 +148,5 @@ footer {
 #qrcode {
   width: 240px;
   height: 240px;
-}
-.admin {
-  position: absolute;
-  top: 2px;
-  right: 2px;
 }
 </style>

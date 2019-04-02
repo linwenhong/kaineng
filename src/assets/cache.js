@@ -1,4 +1,5 @@
 function setCache (name, data) {
+  console.log(typeof data)
   localStorage.setItem(name, JSON.stringify(data))
 }
 

@@ -149,7 +149,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="col-sm-3 control-label">新密码</label>
+                  <label class="col-sm-3 control-label">密码</label>
                   <div class="col-sm-8">
                     <input type="password" class="form-control" required="" aria-required="true"
                            oninput="NonSpecialSymbolsFormat(this)" name="new_password" v-model="form2.new_password">
@@ -183,7 +183,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'User',
+  name: 'AdminUser',
   data () {
     return {
       user: this.$store.getters.getUser,
@@ -223,7 +223,7 @@ export default {
         }
       }
 
-      this.$Service.User.get(condition).then(response => {
+      this.$Service.AdminUser.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
@@ -278,7 +278,7 @@ export default {
 
       if (this.form.id) { // 修改
         request.login_name = this.form.login_name
-        this.$Service.User.edit(request).then(response => {
+        this.$Service.AdminUser.edit(request).then(response => {
           this.isSubmit = false
           if (response.err_code == 0) {
             toastr.success('修改成功')
@@ -291,7 +291,7 @@ export default {
       } else {  // 新增
         request.login_name = this.form.login_name
         request.mch_id = this.user.mch_id
-        this.$Service.User.add(request).then(response => {
+        this.$Service.AdminUser.add(request).then(response => {
           this.isSubmit = false
           if (response.err_code == 0) {
             toastr.success('新增成功')
@@ -314,7 +314,7 @@ export default {
       }
     },
     del (item) {
-      this.$Service.User.del({ login_name: item.login_name }).then(response => {
+      this.$Service.AdminUser.del({ login_name: item.login_name }).then(response => {
         if (response.err_code == 0) {
           toastr.success('删除成功')
           this.getDataTables()
@@ -337,7 +337,7 @@ export default {
         old_password: this.form2.old_password,
         new_password: this.form2.new_password
       }
-      this.$Service.User.editPassword(request).then(response => {
+      this.$Service.AdminUser.editPassword(request).then(response => {
         if (response.err_code == 0) {
           toastr.success('密码修改成功')
           $('#Modal2').modal('hide')

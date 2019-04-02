@@ -8,7 +8,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    user: Cache.getCache('user') || {}
+    user: Cache.getCache('user') || {},
+    identity: Cache.getCache('identity') || 1 // 1 商户, 2 管理员
   },
   mutations: {
     setUser(state, user) {
@@ -16,23 +17,32 @@ const store = new Vuex.Store({
       axios.defaults.headers.common['token'] = state.user.token
       Cache.setCache('user', user)
     },
+    setIdentity(state, identity) {
+      state.identity = identity;
+      Cache.setCache('identity', identity)
+    },
     clearCache(state) {
       state.user = {};
+      state.identity = 1;
       localStorage.clear()
     }
   },
   actions: {
-    login({commit}, user) {
-      commit('setUser', user)
+    login({commit}, user, identity) {
+      commit('setUser', user, identity)
       router.push('/admin/user/' + 1)
     },
     logout({commit,state}) {
       commit('clearCache', state)
       router.push('/')
+    },
+    identity({commit}, identity) {
+      commit('setIdentity', identity)
     }
   },
   getters: {
-    getUser: (state) => state.user
+    getUser: (state) => state.user,
+    getIdentity: (state) => state.identity
   }
 })
 export default store

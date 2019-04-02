@@ -15,9 +15,13 @@ let routes = new Router({
         { path: '/', redirect: '/admin/user' },
         { path: 'role', name: 'role', component: COMPONENTS.RoleComponent },  // 角色管理
         { path: 'roleDetails/:id', name: 'role', component: COMPONENTS.RoleDetailsComponent },  // 角色详情
+
+        { path: 'binding', name: 'user', component: COMPONENTS.BindingComponent },  // 账号绑定
+
+        { path: 'admin-user', name: 'user', component: COMPONENTS.AdminUserComponent },  // 用户管理
+
         { path: 'user', name: 'user', component: COMPONENTS.UserComponent },  // 用户管理
         { path: 'user/:id', component: COMPONENTS.UserDetailsComponent },  // 用户详情
-
         { path: 'device', name: 'user', component: COMPONENTS.DeviceComponent },  // 设备管理
         { path: 'device-monitoring', name: 'user', component: COMPONENTS.DeviceMonitoringComponent },  // 设备状态监测
         { path: 'manufacturer', name: 'user', component: COMPONENTS.ManufacturerComponent },  // 制造商管理
@@ -36,14 +40,19 @@ let routes = new Router({
       ]
     },
     {
+      path: '/admin-login',
+      component: COMPONENTS.AdminLoginComponent
+      // 管理员登录
+    },
+    {
       path: '/login',
       component: COMPONENTS.LoginComponent
-      // 登录
+      // 商户登录
     },
     {
       path: '/register',
       component: COMPONENTS.RegisterComponent
-      // 登录
+      // 商户注册
     },
     {
       path: '/modifyPassword',

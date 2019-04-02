@@ -7,7 +7,7 @@ axios.defaults.baseURL = Config.api_url
 // 超时时间
 axios.defaults.timeout = 10000
 
-//axios.defaults.headers.common['Authorization'] = '456'
+//axios.defaults.headers.common['Authorization'] = ''
 axios.defaults.headers.common['token'] = store.state.user.token
 //axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8'
 

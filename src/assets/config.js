@@ -1,5 +1,6 @@
 const env = 'test'
-const version  = 'v1.0/'
+const merchant_version  = 'v1.0/'
+const admin_version  = 'v1.0/'
 
 const Config = {
   page_size: 10
@@ -12,7 +13,9 @@ switch (env) {
     break
   case 'test':
     Config.img_url = 'http://api.parks8.com/fileService/image/product/'
-    Config.api_url = 'http://api.parks8.com/platform/' + version
+    Config.api_url = 'http://api.parks8.com/'
+    Config.merchant_version = 'v1.0'
+    Config.admin_version = 'v1.0'
     Config.base_url = 'http://localhost:8086/'
     break
   case 'prod':
@@ -22,23 +25,5 @@ switch (env) {
   default:
     console.error('Config error')
 }
-
-Config.test = [ {
-  id: '1',
-  label: 'a',
-  children: [ {
-    id: '2',
-    label: 'aa',
-  }, {
-    id: '3',
-    label: 'ab',
-  } ],
-}, {
-  id: '4',
-  label: 'b',
-}, {
-  id: '5',
-  label: 'c',
-} ]
 
 module.exports = Config

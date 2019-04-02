@@ -12,11 +12,15 @@
               <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
                                <span class="block m-t-xs"><strong class="font-bold"></strong></span>
-                                <span class="text-muted text-xs block">{{ user.name }}<b class="caret"></b></span>
+                                <span class="text-muted text-xs block">{{ user.user_name }}<b class="caret"></b></span>
                                 </span>
               </a>
               <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                <li><a class="J_menuItem" @click="goHref('/admin/user/' + user.id)">修改密码</a>
+                <li>
+                  <a class="J_menuItem" @click="goHref('/admin/user/' + user.login_name)">修改密码</a>
+                </li>
+                <li>
+                  <a class="J_menuItem" @click="goHref('/admin/binding')">绑定微信号</a>
                 </li>
                 <li class="divider"></li>
                 <li><a @click="logout">安全退出</a>
@@ -35,7 +39,10 @@
             </a>
             <ul class="nav nav-second-level">
               <li>
-                <a class="J_menuItem" @click="goHref('/admin/user')">用户管理</a>
+                <a class="J_menuItem" @click="goHref('/admin/admin-user')">用户管理-管理员</a>
+              </li>
+              <li>
+                <a class="J_menuItem" @click="goHref('/admin/user')">用户管理-商户</a>
               </li>
               <li>
                 <a class="J_menuItem" @click="goHref('/admin/merchant-details')">商户信息</a>
@@ -158,7 +165,8 @@ export default {
   name: 'IndexComponent',
   data () {
     return {
-      user: this.$store.getters.getUser
+      user: this.$store.getters.getUser,
+      identity: this.$store.getters.getIdentity
     }
   },
   methods: {
@@ -171,6 +179,12 @@ export default {
     logout () {
       this.$store.dispatch('logout')
       this.$Service.Auth.logout()
+      if (this.identity == 1) {
+        this.$Service.Auth.logout()
+      }
+      if (this.identity == 2) {
+        this.$Service.AdminAuth.logout()
+      }
     }
   },
   mounted () {
