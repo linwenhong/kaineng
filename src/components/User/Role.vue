@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper wrapper-content">
     <div class="text-right">
-      <router-link :to="'/admin/roleDetails/new'">
+      <router-link :to="'/merchant/roleDetails/new'">
         <button type="button" class="btn btn-w-m btn-primary">新建角色</button>
       </router-link>
     </div>
@@ -28,7 +28,7 @@
             <td>{{ item.name }}</td>
             <td>{{ item.created_at }}</td>
             <td>
-              <router-link :to="'/admin/roleDetails/' + item.id">
+              <router-link :to="'/merchant/roleDetails/' + item.id">
                 <button type="button" class="btn btn-sm btn-primary">编辑</button>
               </router-link>
               <delete @delConfirm="delConfirm" v-bind:item="item"></delete>

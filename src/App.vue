@@ -6,11 +6,7 @@
 
 <script>
 export default {
-  name: 'App',
-  mounted () {
-    $('body').append('<script src="static/js/contabs.js"><\/script>')
-    $('body').append('<script src="static/js/hplus.js?v=4.1.0"><\/script>')
-  }
+  name: 'App'
 }
 </script>
 

@@ -28,13 +28,21 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    login({commit}, user, identity) {
-      commit('setUser', user, identity)
-      router.push('/admin/user/' + 1)
+    login({commit,state}, user) {
+      commit('setUser', user)
+      if (state.identity == 1) {
+        router.push('/merchant')
+      } else {
+        router.push('/admin')
+      }
     },
     logout({commit,state}) {
+      if (state.identity == 1) {
+        router.push('/login')
+      } else {
+        router.push('/admin-login')
+      }
       commit('clearCache', state)
-      router.push('/')
     },
     identity({commit}, identity) {
       commit('setIdentity', identity)

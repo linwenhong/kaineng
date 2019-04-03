@@ -62,7 +62,7 @@
                       <small v-if="passageway.spec">({{ passageway.spec }})</small>
                     </p>
                     <span class="left">状态:
-                      <span :class="passageway.used == 1 ? 'green' : 'red'">{{ passageway.used == 1 ? '启用' : '未启用' }}</span>
+                      <span :class="passageway.used == 2 ? 'green' : 'red'">{{ passageway.used | PassagewayUsed }}</span>
                     </span>
                     <span class="right"><small>货道号: {{ passageway.channel_no }}</small></span>
                   </div>
@@ -87,7 +87,7 @@
           <div class="modal-body">
             <p class="passageway-number">当前货道号:
               <font color="red">{{ passageway.channel_no }}</font>
-              <button type="button" class="btn btn-sm btn-danger" @click="enable(passageway)">{{ passageway.used == 1 ? '关闭' : '启用' }}</button>
+              <button type="button" class="btn btn-sm btn-danger" @click="enable(passageway)">{{ passageway.used == 2 ? '关闭' : '启用' }}</button>
             </p>
             <form id="form" class="form-horizontal" @submit.prevent="getGoodTables">
               <div class="search-page">
@@ -313,12 +313,12 @@ export default {
       this.$Service.GoodUpperShelf.enable({
         id: passageway.id,
         device_id: passageway.device_id,
-        used: passageway.used == 1 ? 0 : 1
+        used: passageway.used == 2 ? 1 : 2
       }).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
-          toastr.success((passageway.used == 1 ? '关闭' : '启用') + '成功')
+          toastr.success((passageway.used == 2 ? '关闭' : '启用') + '成功')
           $('#Modal').modal('hide')
           this.getDataTables()
         }
@@ -420,7 +420,7 @@ export default {
       })
     },
     replenishOrderHistory () {
-      this.$router.push('/admin/replenish-order?device_id=' + this.selectDevice.sn)
+      this.$router.push('/merchant/replenish-order?device_id=' + this.selectDevice.sn)
     }
   },
   created () {

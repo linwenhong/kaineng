@@ -17,10 +17,10 @@
               </a>
               <ul class="dropdown-menu animated fadeInRight m-t-xs">
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/user/' + user.login_name)">修改密码</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/user/' + user.login_name)">修改密码</a>
                 </li>
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/binding')">绑定微信号</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/binding')">绑定微信号</a>
                 </li>
                 <li class="divider"></li>
                 <li><a @click="logout">安全退出</a>
@@ -40,10 +40,49 @@
               </a>
               <ul class="nav nav-second-level">
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/admin-user')">用户管理</a>
+                  <a class="J_menuItem" @click="goHref('/admin/user')">用户管理</a>
                 </li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#">
+                <i class="fa fa-sitemap"></i>
+                <span class="nav-label">制造商管理</span>
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
+                <li>
+                  <a class="J_menuItem" @click="goHref('/admin/manufacturer')">制造商管理</a>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#">
+                <i class="fa fa-sitemap"></i>
+                <span class="nav-label">商户管理</span>
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
                 <li>
                   <a class="J_menuItem" @click="goHref('/admin/merchant')">商户管理</a>
+                </li>
+                <li>
+                  <a class="J_menuItem" @click="goHref('/admin/device')">商户设备</a>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#">
+                <i class="fa fa-sitemap"></i>
+                <span class="nav-label">订单管理</span>
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
+                <li>
+                  <a class="J_menuItem" @click="goHref('/admin/order-settlement')">结算订单</a>
                 </li>
               </ul>
             </li>
@@ -58,13 +97,13 @@
               </a>
               <ul class="nav nav-second-level">
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/user')">用户管理</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/user')">用户管理</a>
                 </li>
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/merchant-details')">商户信息</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/merchant-details')">商户信息</a>
                 </li>
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/merchant-regions')">商户区域管理</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/merchant-regions')">商户区域管理</a>
                 </li>
               </ul>
             </li>
@@ -77,10 +116,10 @@
               </a>
               <ul class="nav nav-second-level">
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/order?pageType=1')">订单查询</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/order?pageType=1')">订单查询</a>
                 </li>
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/order?pageType=2')">异常订单</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/order?pageType=2')">异常订单</a>
                 </li>
               </ul>
             </li>
@@ -93,10 +132,10 @@
               </a>
               <ul class="nav nav-second-level">
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/order-settlement')">待结算订单</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/order-settlement')">待结算订单</a>
                 </li>
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/order-settlement-logs')">商户结算记录</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/order-settlement-logs')">商户结算记录</a>
                 </li>
               </ul>
             </li>
@@ -109,19 +148,19 @@
               </a>
               <ul class="nav nav-second-level">
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/good-type')">商品分类管理</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/good-type')">商品分类管理</a>
                 </li>
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/good-type-tree')">商品分类管理(树)</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/good-type-tree')">商品分类管理(树)</a>
                 </li>
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/good')">商品管理</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/good')">商品管理</a>
                 </li>
                 <!--<li>-->
-                <!--<a class="J_menuItem" @click="goHref('/admin/good-price')">商品价格管理</a>-->
+                <!--<a class="J_menuItem" @click="goHref('/merchant/good-price')">商品价格管理</a>-->
                 <!--</li>-->
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/good-upper-shelf')">商品上架</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/good-upper-shelf')">商品上架</a>
                 </li>
               </ul>
             </li>
@@ -133,14 +172,11 @@
                 <span class="fa arrow"></span>
               </a>
               <ul class="nav nav-second-level">
-                <!--<li>-->
-                <!--<a class="J_menuItem" @click="goHref('/admin/manufacturer')">制造商管理</a>-->
-                <!--</li>-->
                 <li>
-                  <a class="J_menuItem" @click="goHref('/admin/device')">设备管理</a>
+                  <a class="J_menuItem" @click="goHref('/merchant/device')">设备管理</a>
                 </li>
                 <!--<li>-->
-                <!--<a class="J_menuItem" @click="goHref('/admin/device-monitoring')">设备状态监测</a>-->
+                <!--<a class="J_menuItem" @click="goHref('/merchant/device-monitoring')">设备状态监测</a>-->
                 <!--</li>-->
               </ul>
             </li>

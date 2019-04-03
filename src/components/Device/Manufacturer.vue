@@ -12,7 +12,11 @@
         <div class="search-page">
           <div class="form-group">
             <label class="control-label">制造商名称</label>
-            <input type="text" class="form-control" v-model.trim="condition['name']">
+            <input type="text" class="form-control" v-model.trim="condition.name">
+
+            <label class="control-label">联系电话</label>
+            <input type="text" class="form-control" maxlength="11"
+                   oninput="numberFormat(this)" v-model="condition.phone">
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -27,7 +31,11 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td v-for="option of tableOptions">{{ item[option.key] }}</td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.contacts }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ item.address }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
@@ -60,6 +68,29 @@
                   </div>
                 </div>
 
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">联系人姓名</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" name="contacts" v-model.trim="form.contacts">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">联系电话</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
+                           oninput="numberFormat(this)" name="phone" v-model="form.phone">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">地址</label>
+                  <div class="col-sm-8">
+                    <textarea type="text" class="form-control" required="" aria-required="true"
+                              name="address" v-model.trim="form.address"></textarea>
+                  </div>
+                </div>
+
               </div>
             </div>
 
@@ -84,7 +115,10 @@ export default {
     return {
       tableOptions: [
         { key: "id", title: "ID" },
-        { key: "name", title: "制造商名称" }
+        { key: "name", title: "制造商名称" },
+        { key: "contacts", title: "联系人姓名" },
+        { key: "phone", title: "联系电话" },
+        { key: "address", title: "地址" }
       ],
       items: [],
       total: 0,
@@ -98,11 +132,9 @@ export default {
   },
   methods: {
     getDataTables (page = 1) {
-      this.items = []
-      this.total = 0
       const condition = {
-        page: page,
-        per_number: this.pageSize
+        page_no: page,
+        page_size: this.pageSize
       }
 
       for (const key in this.condition) {
@@ -112,12 +144,11 @@ export default {
       }
 
       this.$Service.Manufacturer.get(condition).then(response => {
-        if (response.code == 200) {
-          this.items = response.data
-          this.total = response.total
-          this.$nextTick(() => this.$H5UI.iCheck())
+        if (response.err_code) {
+          toastr.error(response.err_msg, response.err_code)
         } else {
-          toastr.error(response.msg)
+          this.items = response.list
+          this.total = response.total
         }
       })
     },
@@ -134,6 +165,10 @@ export default {
       this.clear()
     },
     checkForm (form) {
+      if (!form.phone || (form.phone && form.phone.length != 11)) {
+        toastr.info('请输入11位数的电话号码')
+        return
+      }
       return true
     },
     submit () {
@@ -144,28 +179,33 @@ export default {
 
       console.log(this.form)
       const request = {
-        name: this.form.name
+        name: this.form.name,
+        phone: this.form.phone,
+        contacts: this.form.contacts,
+        address: this.form.address
       }
 
       if (this.form.id) { // 修改
-        const id = this.form.id
-        this.$Service.Manufacturer.edit(id, request).then(response => {
+        request.id = this.form.id
+        this.$Service.Manufacturer.edit(request).then(response => {
           this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('新增成功')
+          if (response.err_code == 0) {
+            toastr.success('修改成功')
             this.getDataTables(this.page)
+            $('#Modal').modal('hide')
           } else {
-            toastr.error(response.msg)
+            toastr.error(response.err_msg, response.err_code)
           }
         })
       } else {  // 新增
         this.$Service.Manufacturer.add(request).then(response => {
           this.isSubmit = false
-          if (response.code == 200) {
-            toastr.success('修改成功')
+          if (response.err_code == 0) {
+            toastr.success('新增成功')
             this.getDataTables()
+            $('#Modal').modal('hide')
           } else {
-            toastr.error(response.msg)
+            toastr.error(response.err_msg, response.err_code)
           }
         })
       }
@@ -175,16 +215,19 @@ export default {
       this.clear()
       this.form = {
         id: item.id,
-        name: item.name
+        name: item.name,
+        phone: item.phone,
+        contacts: item.contacts,
+        address: item.address
       }
     },
     del (item) {
-      this.$Service.Manufacturer.del(item.id).then(response => {
-        if (response.code == 200) {
+      this.$Service.Manufacturer.del({ id: item.id }).then(response => {
+        if (response.err_code == 0) {
           toastr.success('删除成功')
           this.getDataTables()
         } else {
-          toastr.error(response.msg)
+          toastr.error(response.err_msg, response.err_code)
         }
       })
     }

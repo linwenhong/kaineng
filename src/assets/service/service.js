@@ -21,7 +21,6 @@ function createService (url) {
 }
 /******************************/
 const SubDevice = createService(merchant_url + 'sub_device');
-const Manufacturer = createService(merchant_url + 'manufacturer');
 const Good = createService(merchant_url + 'product');
 
 const GoodType = createService(merchant_url + 'categories');
@@ -59,12 +58,12 @@ const Auth = {
   loginCode: (request) => { return get(merchant_url + 'auth/login/qrCode', request) },
   codeLogin: (request) => { return get(merchant_url + 'auth', request) },
   untying: (request) => { return patch(merchant_url + 'auth', request) }
-}
+};
 
 const Device = {
-  get: (request) => { return get(merchant_url + 'device', request) },
-  edit: (request) => { return patch(merchant_url + 'device', request) }
-}
+  get: (request) => { return get(merchant_url + 'devices', request) },
+  edit: (request) => { return patch(merchant_url + 'devices', request) }
+};
 /******************************/
 
 const AdminAuth = {
@@ -74,14 +73,22 @@ const AdminAuth = {
   loginCode: (request) => { return get(admin_url + 'auth/login/qrCode', request) },
   codeLogin: (request) => { return get(admin_url + 'auth', request) },
   untying: (request) => { return patch(admin_url + 'auth', request) }
-}
+};
 
-const AdminUser = createService(admin_url + 'user')
+const AdminUser = createService(admin_url + 'user');
 AdminUser.editPassword = (request) => { return patch(admin_url + 'user', request) };
+
+const AdminSettlementOrder = createService(admin_url + 'settledOrder');
+AdminSettlementOrder.settlement = (request) => { return patch(admin_url + 'settledOrder', request) };
+AdminSettlementOrder.details = (request) => { return get(admin_url + 'paymentOrder', request) };
+
+const MerchantDevice = {
+  get: (request) => { return get(admin_url + 'devices', request) }
+};
+const Manufacturer = createService(admin_url + 'manufacturer');
 
 export default {
   SubDevice,
-  Manufacturer,
   Good,
   GoodType,
   GoodPrice,
@@ -99,4 +106,7 @@ export default {
 
   AdminAuth,
   AdminUser,
+  AdminSettlementOrder,
+  MerchantDevice,
+  Manufacturer,
 }

@@ -7,7 +7,6 @@ export const COMPONENTS = {
 
   BindingComponent: resolve => require(['@/components/User/Binding'], resolve),
 
-  AdminUserComponent: resolve => require(['@/components/User/AdminUser'], resolve),
   UserComponent: resolve => require(['@/components/User/User'], resolve),
   UserDetailsComponent: resolve => require(['@/components/User/UserDetails'], resolve),
 
@@ -20,10 +19,15 @@ export const COMPONENTS = {
   GoodTypeTreeComponent: resolve => require(['@/components/Good/GoodTypeTree'], resolve),
   GoodUpperShelfComponent: resolve => require(['@/components/Good/GoodUpperShelf'], resolve),
   ReplenishOrderComponent: resolve => require(['@/components/Good/ReplenishOrder'], resolve),
-  MerchantComponent: resolve => require(['@/components/Merchant/Merchant'], resolve),
   MerchantDetailsComponent: resolve => require(['@/components/Merchant/MerchantDetails'], resolve),
   MerchantRegionsComponent: resolve => require(['@/components/Merchant/MerchantRegions'], resolve),
   OrderComponent: resolve => require(['@/components/Order/Order'], resolve),
   OrderSettlementComponent: resolve => require(['@/components/Order/OrderSettlement'], resolve),
   OrderSettlementLogsComponent: resolve => require(['@/components/Order/OrderSettlementLogs'], resolve),
+
+
+  AdminUserComponent: resolve => require(['@/components/User/AdminUser'], resolve),
+  MerchantComponent: resolve => require(['@/components/Merchant/Merchant'], resolve),
+  AdminDeviceComponent: resolve => require(['@/components/Device/AdminDevice'], resolve),
+  AdminOrderSettlementComponent: resolve => require(['@/components/Order/AdminOrderSettlement'], resolve),
 }

@@ -309,7 +309,7 @@ export default {
       }
     },
     valuation (item) {  // 商品定价管理
-      this.$router.push('/admin/good-price?type_id=' + item.category_id + '&good_id=' + item.id)
+      this.$router.push('/merchant/good-price?type_id=' + item.category_id + '&good_id=' + item.id)
     }
   },
   created () {

@@ -43,7 +43,7 @@
             <td>{{ item.trade_status | OrderStatus }}</td>
             <td>{{ item.total_amount }}</td>
             <td>{{ item.null }}</td>
-            <td>{{ item.has_settled }}</td>
+            <td>{{ item.has_settled | OrderSettlementStatus }}</td>
             <td>{{ item.null }}</td>
             <td>{{ item.create_at }}</td>
             <td>{{ item.null }}</td>

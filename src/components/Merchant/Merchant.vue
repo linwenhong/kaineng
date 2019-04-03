@@ -39,7 +39,7 @@
             <td>{{ item.wechat_id }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <info-confirm @confirm="del" :data="item"></info-confirm>
+              <!--<info-confirm @confirm="del" :data="item"></info-confirm>-->
             </td>
           </tr>
           </tbody>

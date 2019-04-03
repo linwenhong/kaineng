@@ -28,7 +28,7 @@
           <thead>
             <tr>
               <th v-for="option of tableOptions">{{ option.title }}</th>
-              <th>操作</th>
+              <!--<th>操作</th>-->
             </tr>
           </thead>
           <tbody>
@@ -42,10 +42,10 @@
             <td>{{ item.bind_at }}</td>
             <td>{{ item.activate_at }}</td>
             <td>{{ item.is_activate == 2 ? '已激活' : '未激活' }}</td>
-            <td>
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <info-confirm @confirm="del" :data="item"></info-confirm>
-            </td>
+            <!--<td>-->
+              <!--<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>-->
+              <!--<info-confirm @confirm="del" :data="item"></info-confirm>-->
+            <!--</td>-->
           </tr>
           </tbody>
         </table>
@@ -102,7 +102,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'Device',
+  name: 'AdminDevice',
   data () {
     return {
       user: this.$store.getters.getUser,
@@ -135,7 +135,6 @@ export default {
   methods: {
     getDataTables (page = 1) {
       const condition = {
-        mch_id: this.user.mch_id,
         page_no: page,
         page_size: this.pageSize
       }
@@ -146,7 +145,7 @@ export default {
         }
       }
 
-      this.$Service.Device.get(condition).then(response => {
+      this.$Service.MerchantDevice.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {

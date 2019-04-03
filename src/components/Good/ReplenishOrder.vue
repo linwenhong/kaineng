@@ -14,10 +14,10 @@
 
             <label class="control-label">商品分类</label>
             <select class="form-control" v-model="condition['order_status']">
-              <option value="3">全部</option>
-              <option value="0">未完成</option>
-              <option value="1">已完成</option>
-              <option value="2">已取消</option>
+              <option value="4">全部</option>
+              <option value="1">未完成</option>
+              <option value="2">已完成</option>
+              <option value="3">已取消</option>
             </select>
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
@@ -38,11 +38,12 @@
             <td>{{ item.device_id }}</td>
             <td>{{ item.device_name }}</td>
             <td>{{ item.order_status | ReplenishOrderStatus }}</td>
+            <td>{{ item.order_type | ReplenishOrderType }}</td>
             <td>{{ item.create_at }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
               <!--未完成-->
-              <template v-if="item.order_status == 0">
+              <template v-if="item.order_status == 1">
                 <info-confirm @confirm="cancel"
                               :data="item"
                               text="取消"
@@ -121,6 +122,7 @@ export default {
         { key: "device_id", title: "设备sn" },
         { key: "device_name", title: "设备名" },
         { key: "order_status", title: "状态" },
+        { key: "order_type", title: "下单方式" },
         { key: "create_at", title: "创建时间" }
       ],
       items: [],
