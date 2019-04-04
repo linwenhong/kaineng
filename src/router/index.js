@@ -49,6 +49,22 @@ let routes = new Router({
       ]
     },
     {
+      path: '/',
+      component: COMPONENTS.IndexComponent,
+      children: [
+        {
+          path: 'modify-password/:id',
+          component: COMPONENTS.ModifyPasswordComponent
+          // 修改密码
+        },
+        {
+          path: 'user-details',
+          component: COMPONENTS.UserDetailsComponent
+          // 个人信息
+        }
+      ]
+    },
+    {
       path: '/admin-login',
       component: COMPONENTS.AdminLoginComponent
       // 管理员登录
@@ -62,11 +78,6 @@ let routes = new Router({
       path: '/register',
       component: COMPONENTS.RegisterComponent
       // 商户注册
-    },
-    {
-      path: '/modify-password/:id',
-      component: COMPONENTS.ModifyPasswordComponent
-      // 修改密码
     }
     // routes end
   ]

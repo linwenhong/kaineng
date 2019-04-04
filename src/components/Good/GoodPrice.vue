@@ -11,10 +11,10 @@
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
-            <label class="control-label">商品分类</label>
-            <div class="searchOption">
-              <treeselect :multiple="false" :options="TreeSelectOption" v-model="condition.category_id"/></treeselect>
-            </div>
+            <!--<label class="control-label">商品分类</label>-->
+            <!--<div class="searchOption">-->
+              <!--<treeselect :multiple="false" :options="TreeSelectOption" v-model="condition.category_id"/></treeselect>-->
+            <!--</div>-->
 
             <label class="control-label">商品名称</label>
             <div class="searchOption">
@@ -302,7 +302,7 @@ export default {
     }
   },
   created () {
-    this.getGoodType()
+//    this.getGoodType()
     this.getGoodList()
     this.getDataTables()
   },

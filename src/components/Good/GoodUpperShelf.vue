@@ -329,7 +329,7 @@ export default {
         page_no: 1,
         page_size: 10000,
         mch_id: this.user.mch_id,
-        category_id: 10008
+        category_id: 0
       }
       if (this.goodName) {
         request.name = this.goodName

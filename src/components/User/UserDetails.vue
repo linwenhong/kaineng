@@ -3,7 +3,7 @@
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>修改密码</h5>
+        <h5>修改个人信息</h5>
       </div>
 
       <div class="ibox-content">
@@ -11,30 +11,19 @@
 
           <div class="form-group">
             <div class="col-sm-6">
-              <label class="col-sm-4 control-label">原密码</label>
+              <label class="col-sm-4 control-label">姓名</label>
               <div class="col-sm-8">
-                <input type="password" class="form-control" required="" aria-required="true"
-                       oninput="NonSpecialSymbolsFormat(this)" name="old_password" v-model="form.old_password">
+                <input type="text" class="form-control" required="" aria-required="true" name="user_name" v-model.trim="form.user_name">
               </div>
             </div>
           </div>
 
           <div class="form-group">
             <div class="col-sm-6">
-              <label class="col-sm-4 control-label">新密码</label>
+              <label class="col-sm-4 control-label">手机号</label>
               <div class="col-sm-8">
-                <input type="password" class="form-control" required="" aria-required="true"
-                       oninput="NonSpecialSymbolsFormat(this)" name="new_password" v-model="form.new_password">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="col-sm-6">
-              <label class="col-sm-4 control-label">确认密码</label>
-              <div class="col-sm-8">
-                <input type="password" class="form-control" required="" aria-required="true"
-                       oninput="NonSpecialSymbolsFormat(this)" name="new_password2" v-model="form.new_password2">
+                <input type="text" class="form-control" required="" aria-required="true" maxlength="11"
+                       oninput="numberFormat(this)" name="user_phone" v-model="form.user_phone">
               </div>
             </div>
           </div>
@@ -70,28 +59,34 @@ export default {
   },
   methods: {
     submit () {
-      if (this.form.new_password != this.form.new_password2) {
-        toastr.info('两次输入的密码不一致!')
-        return
+      if (!this.form.user_name) {
+        toastr.info('请输入姓名!')
+        return false
+      }
+      if (this.form.user_phone.length != 11) {
+        toastr.info('请输入11位数的电话号码!')
+        return false
       }
       const request = {
         login_name: this.user.login_name,
-        old_password: this.form.old_password,
-        new_password: this.form.new_password
+        user_type: this.user.user_type,
+        role_id: 0,
+        user_name: this.form.user_name,
+        user_phone: this.form.user_phone
       }
       if (this.identity == 1) {
-        this.$Service.User.editPassword(request).then(response => {
+        this.$Service.User.edit(request).then(response => {
           if (response.err_code == 0) {
-            toastr.success('密码修改成功')
+            toastr.success('修改成功')
           } else {
             toastr.error(response.err_msg, response.err_code)
           }
         })
       }
       if (this.identity == 2) {
-        this.$Service.AdminUser.editPassword(request).then(response => {
+        this.$Service.AdminUser.edit(request).then(response => {
           if (response.err_code == 0) {
-            toastr.success('密码修改成功')
+            toastr.success('修改成功')
             this.form = {}
           } else {
             toastr.error(response.err_msg, response.err_code)

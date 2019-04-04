@@ -17,6 +17,9 @@
               </a>
               <ul class="dropdown-menu animated fadeInRight m-t-xs">
                 <li>
+                  <a class="J_menuItem" @click="goHref('/user-details')">修改个人信息</a>
+                </li>
+                <li>
                   <a class="J_menuItem" @click="goHref('/modify-password/' + user.login_name)">修改密码</a>
                 </li>
                 <li>
