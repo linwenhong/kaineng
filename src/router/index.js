@@ -44,6 +44,7 @@ let routes = new Router({
         { path: 'merchant', name: 'user', component: COMPONENTS.MerchantComponent },  // 商户管理
         { path: 'device', name: 'user', component: COMPONENTS.AdminDeviceComponent },  // 设备管理
         { path: 'manufacturer', name: 'user', component: COMPONENTS.ManufacturerComponent },  // 制造商管理
+        { path: 'order', name: 'user', component: COMPONENTS.AdminOrderComponent },  // 订单管理
         { path: 'order-settlement', name: 'user', component: COMPONENTS.AdminOrderSettlementComponent },  // 订单结算
       ]
     },
@@ -63,14 +64,9 @@ let routes = new Router({
       // 商户注册
     },
     {
-      path: '/modifyPassword',
+      path: '/modify-password/:id',
       component: COMPONENTS.ModifyPasswordComponent
       // 修改密码
-    },
-    {
-      path: '/editUserPassword/:id',
-      component: COMPONENTS.ModifyPasswordComponent
-      // 修改员工密码
     }
     // routes end
   ]
@@ -78,13 +74,12 @@ let routes = new Router({
 
 import store from '@/stores'
 routes.beforeEach((to, from, next) => {
-  console.log(to)
+  //console.log(to)
   const user = store.getters.getUser
-  console.log(user)
-  if (to.path == '/login' || to.path == '/register') {
+  if (to.path == '/login' || to.path == '/register' || to.path == '/admin-login') {
     next()
   } else { // 登录验证
-    if (!user) {
+    if (!user || !user.id) {
       next('/login')
     } else {
       next()

@@ -140,6 +140,7 @@ export default {
         this.isSubmit = false
         if (response.err_code == 0) {
           toastr.success('修改成功')
+          this.$H5UI.reset(this.validate)
         } else {
           toastr.error(response.err_msg, response.err_code)
         }

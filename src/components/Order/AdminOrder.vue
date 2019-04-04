@@ -7,9 +7,9 @@
       </div>
 
       <div class="ibox-content">
-        <div class="search-page">
 
-          <div class="form-group">
+        <!--<div class="search-page">-->
+          <!--<div class="form-group">-->
             <!--<label class="control-label">商户名</label>-->
             <!--<input type="text" class="form-control" v-model.trim="condition['merchant_name']">-->
 
@@ -22,22 +22,12 @@
               <!--<option value="10">支付宝</option>-->
             <!--</select>-->
 
-            <label class="control-label">结算状态</label>
-            <select class="form-control" v-model="condition['has_settled']">
-              <option value="">全部</option>
-              <option value="1">未结算</option>
-              <option value="2">已结算</option>
-            </select>
+            <!--<label class="control-label">订单号</label>-->
+            <!--<input type="text" class="form-control" v-model.trim="condition['coding']">-->
 
-            <label class="control-label">订单号</label>
-            <input type="text" class="form-control" v-model.trim="condition['out_trade_no']">
-
-            <label class="control-label">设备sn</label>
-            <input type="text" class="form-control" v-model.trim="condition['device_id']">
-
-            <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
-          </div>
-        </div>
+            <!--<button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>-->
+          <!--</div>-->
+        <!--</div>-->
 
         <table class="table table-bordered text-center">
           <thead>
@@ -54,14 +44,13 @@
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
             <td>{{ item.out_trade_no }}</td>
+            <td>{{ item.mch_name }}</td>
             <td>{{ item.trade_status | OrderStatus }}</td>
-            <td>{{ item.device_id }}</td>
             <td>{{ item.product_sum }}</td>
             <td>{{ item.total_amount }}</td>
             <td>{{ item.reality_amount }}</td>
             <td>{{ item.pay_type | PayType }}</td>
             <td>{{ item.create_at }}</td>
-            <td>{{ item.has_settled | OrderSettlementStatus }}</td>
 
             <template v-if="pageType == 2">
               <td>{{ item.refund_amount }}</td>
@@ -109,7 +98,7 @@
                 <td>{{ item.product_name }}</td>
                 <td>1</td>
                 <td>¥{{ item.price.toFixed(2) }}</td>
-                <td>{{ item.is_out | OrderGoodOutStatus }}</td>
+                <td>{{ item.status_name }}</td>
 
                 <template v-if="pageType == 2">
                   <td>{{ order.refund_status }}</td>
@@ -139,21 +128,20 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'Order',
+  name: 'AdminOrder',
   data () {
     return {
       user: this.$store.getters.getUser,
       pageType: 1, // 1: 订单查询, 2: 异常订单
       tableOptions: [
         { key: "out_trade_no", title: "订单号" },
+        { key: "mch_name", title: "商户名" },
         { key: "trade_status", title: "订单状态" },
-        { key: "device_id", title: "设备sn" },
         { key: "product_sum", title: "商品数量" },
         { key: "total_amount", title: "订单总金额" },
         { key: "reality_amount", title: "实际收款金额" },
         { key: "pay_type", title: "支付类型" },
-        { key: "create_at", title: "下单时间" },
-        { key: "has_settled", title: "结算状态" }
+        { key: "create_at", title: "下单时间" }
       ],
       tableOptions2: [
 //        { key: "refund_number", title: "退款商品数量" },
@@ -180,25 +168,20 @@ export default {
   },
   methods: {
     getDataTables (page = 1) {
-//      const startTime = $('#startTime').val()
-//      const endTime = $('#endTime').val()
-//      if (!startTime && endTime) {
-//        toastr.info('请选择开始时间!')
-//        return
-//      }
-//      if (startTime && !endTime) {
-//        toastr.info('请选择结束时间!')
-//        return
-//      }
-
-      const condition = {
-        mch_id: this.user.mch_id,
-        page_no: page,
-        page_size: this.pageSize
+      const startTime = $('#startTime').val()
+      const endTime = $('#endTime').val()
+      if (!startTime && endTime) {
+        toastr.info('请选择开始时间!')
+        return
+      }
+      if (startTime && !endTime) {
+        toastr.info('请选择结束时间!')
+        return
       }
 
-      if (this.pageType == 2) {
-        condition.trade_status = 3
+      const condition = {
+        page_no: page,
+        page_size: this.pageSize
       }
 
       for (const key in this.condition) {
@@ -207,12 +190,12 @@ export default {
         }
       }
 
-//      if (startTime && endTime) {
-//        condition['start_time'] = startTime
-//        condition['end_time'] = endTime
-//      }
+      if (startTime && endTime) {
+        condition['start_time'] = startTime
+        condition['end_time'] = endTime
+      }
 
-      this.$Service.Order.get(condition).then(response => {
+      this.$Service.AdminOrder.get(condition).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
@@ -226,10 +209,9 @@ export default {
     },
     details (item) {
       this.order = item
-      this.$Service.Order.details({
+      this.$Service.AdminOrder.details({
         page_no: 1,
         page_size: 10000,
-        mch_id: this.user.mch_id,
         out_trade_no: item.out_trade_no
       }).then(response => {
         if (response.err_code) {

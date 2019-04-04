@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper wrapper-content">
 
-    <page-header-button @add="add"></page-header-button>
+    <page-header-button @add="add" :hasAddBtn="user.user_type == 1"></page-header-button>
 
     <div class="ibox float-e-margins">
       <div class="ibox-title">
@@ -25,7 +25,7 @@
           <thead>
             <tr>
               <th v-for="option of tableOptions">{{ option.title }}</th>
-              <th>操作</th>
+              <th v-if="user.user_type == 1">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -37,9 +37,9 @@
             <td>{{ item.status }}</td>
             <td>{{ item.ip }}</td>
             <td>{{ item.last_login_time }}</td>
-            <td>
+            <td v-if="user.user_type == 1">
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <button v-if="user.user_type == 1" type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal2" @click="editPassword(item)">更改密码</button>
+              <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal2" @click="editPassword(item)">更改密码</button>
               <info-confirm @confirm="del" :data="item"></info-confirm>
             </td>
           </tr>

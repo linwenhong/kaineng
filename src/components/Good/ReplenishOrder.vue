@@ -132,7 +132,7 @@ export default {
       page: 1,
       pageSize: this.$Config.page_size,
       condition: {
-        order_status: 3
+        order_status: 4
       },
       selectOrder: {},
       validate: null,

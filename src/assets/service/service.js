@@ -1,7 +1,7 @@
 import Config from '../config.js'
 import BaseService from './base-service.js'
 
-const merchant_url = 'platform/' + Config.merchant_version + '/'
+const merchant_url = 'merchant_platform/' + Config.merchant_version + '/'
 const admin_url = 'maintenance/' + Config.admin_version + '/'
 
 function get (url, request) { return BaseService.get(url, request).then(response => { return response }) }
@@ -27,8 +27,8 @@ const GoodType = createService(merchant_url + 'categories');
 GoodType.batchEdit = (request) => { return put(merchant_url + 'categoriesList', request) }
 
 const GoodPrice = createService(merchant_url + 'productPrice');
-const GoodUpperShelf = createService(merchant_url + 'device/channel');
-GoodUpperShelf.enable = (request) => { return patch(merchant_url + 'device/channel', request) };
+const GoodUpperShelf = createService(merchant_url + 'devices/channel');
+GoodUpperShelf.enable = (request) => { return patch(merchant_url + 'devices/channel', request) };
 
 const ReplenishOrder = createService(merchant_url + 'replenishOrder');
 ReplenishOrder.details = (request) => { return get(merchant_url + 'replenishOrder/details', request) };
@@ -78,6 +78,9 @@ const AdminAuth = {
 const AdminUser = createService(admin_url + 'user');
 AdminUser.editPassword = (request) => { return patch(admin_url + 'user', request) };
 
+const AdminOrder = createService(admin_url + 'paymentOrder');
+AdminOrder.details = (request) => { return get(admin_url + 'paymentOrder/details', request) };
+
 const AdminSettlementOrder = createService(admin_url + 'settledOrder');
 AdminSettlementOrder.settlement = (request) => { return patch(admin_url + 'settledOrder', request) };
 AdminSettlementOrder.details = (request) => { return get(admin_url + 'paymentOrder', request) };
@@ -106,6 +109,7 @@ export default {
 
   AdminAuth,
   AdminUser,
+  AdminOrder,
   AdminSettlementOrder,
   MerchantDevice,
   Manufacturer,

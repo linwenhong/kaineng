@@ -29,5 +29,6 @@ export const COMPONENTS = {
   AdminUserComponent: resolve => require(['@/components/User/AdminUser'], resolve),
   MerchantComponent: resolve => require(['@/components/Merchant/Merchant'], resolve),
   AdminDeviceComponent: resolve => require(['@/components/Device/AdminDevice'], resolve),
+  AdminOrderComponent: resolve => require(['@/components/Order/AdminOrder'], resolve),
   AdminOrderSettlementComponent: resolve => require(['@/components/Order/AdminOrderSettlement'], resolve),
 }

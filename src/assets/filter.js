@@ -20,12 +20,14 @@ function ReplenishOrderType (value) {
   }
   return status
 }
-// 订单状态
+// 交易订单状态
 function OrderStatus (value) {
   let status = ''
   switch (Number(value)) {
     case 1: status = '未完成'; break;
     case 2: status = '已完成'; break;
+    case 3: status = '出货失败'; break;
+    case 4: status = '退款'; break;
     default: status = '其他';
   }
   return status

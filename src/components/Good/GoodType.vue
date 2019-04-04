@@ -9,14 +9,14 @@
       </div>
 
       <div class="ibox-content">
-        <div class="search-page">
-          <div class="form-group">
-            <label class="control-label">分类名称</label>
-            <input type="text" class="form-control" v-model.trim="condition['name']">
+        <!--<div class="search-page">-->
+          <!--<div class="form-group">-->
+            <!--<label class="control-label">分类名称</label>-->
+            <!--<input type="text" class="form-control" v-model.trim="condition['name']">-->
 
-            <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
-          </div>
-        </div>
+            <!--<button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>-->
+          <!--</div>-->
+        <!--</div>-->
 
         <table class="table table-bordered text-center">
           <thead>

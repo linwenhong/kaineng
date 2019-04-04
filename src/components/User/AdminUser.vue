@@ -213,8 +213,7 @@ export default {
     getDataTables (page = 1) {
       const condition = {
         page_no: page,
-        page_size: this.pageSize,
-        mch_id: this.user.mch_id
+        page_size: this.pageSize
       }
 
       for (const key in this.condition) {

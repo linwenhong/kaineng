@@ -22,7 +22,7 @@
           <thead>
             <tr>
               <th v-for="option of tableOptions">{{ option.title }}</th>
-              <th>操作</th>
+              <!--<th>操作</th>-->
             </tr>
           </thead>
           <tbody>
@@ -37,10 +37,10 @@
             <td>{{ item.bank_name }}</td>
             <td>{{ item.bank_no }}</td>
             <td>{{ item.wechat_id }}</td>
-            <td>
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
+            <!--<td>-->
+              <!--<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>-->
               <!--<info-confirm @confirm="del" :data="item"></info-confirm>-->
-            </td>
+            <!--</td>-->
           </tr>
           </tbody>
         </table>

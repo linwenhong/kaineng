@@ -7,10 +7,10 @@
       </div>
 
       <div class="device-list">
-        <div class="search-page device-search">
-          <input type="text" class="form-control" v-model.trim="deviceName">
-          <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
-        </div>
+        <!--<div class="search-page device-search">-->
+          <!--<input type="text" class="form-control" v-model.trim="deviceName">-->
+          <!--<button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>-->
+        <!--</div>-->
         <ul>
           <li v-for="(device, index) of MerchantDevice" @click="selectMerchantDevice(device, index)">
             <p>{{ index + 1 }}.{{ device.device_name }}</p>
@@ -94,10 +94,10 @@
                 <div class="form-group">
                   <input type="text" class="form-control search-name" placeholder="输入商品名称，回车查询" v-model.trim="goodName">
 
-                  <div class="checkbox i-checks">
-                    <label>
-                      <input name="select" type="checkbox" value="1"><i></i>包含系统商品(不选只查询自添加商品)</label>
-                  </div>
+                  <!--<div class="checkbox i-checks">-->
+                    <!--<label>-->
+                      <!--<input name="select" type="checkbox" value="1"><i></i>包含系统商品(不选只查询自添加商品)</label>-->
+                  <!--</div>-->
                 </div>
               </div>
               <button type="submit" class="btn btn-primary" style="display: none">提交</button>
@@ -108,7 +108,7 @@
                 <th>ID</th>
                 <th>商品名称</th>
                 <th>规格</th>
-                <th>商品来源</th>
+                <th>商品分类</th>
               </tr>
               </thead>
               <tbody>
@@ -116,7 +116,7 @@
                 <td>{{ good.id }}</td>
                 <td>{{ good.product_name }}</td>
                 <td>{{ good.spec }}</td>
-                <td>商户添加</td>
+                <td>{{ good.category_name }}</td>
               </tr>
               </tbody>
             </table>
@@ -170,7 +170,7 @@
                     <td>{{ passageway.spec }}</td>
                     <td>{{ passageway.residue }}</td>
                     <td style="width: 100px">
-                      <input type="text" class="form-control" required="" aria-required="true" maxlength="4"
+                      <input type="text" class="form-control" maxlength="4"
                              oninput="numberFormat(this)" name="require_sum" v-model.number="passageway.require_sum">
                     </td>
                   </tr>
@@ -334,9 +334,9 @@ export default {
       if (this.goodName) {
         request.name = this.goodName
       }
-      if (this.$H5UI.getChecked('select')[0]) {
-        request.all = 1
-      }
+//      if (this.$H5UI.getChecked('select')[0]) {
+//        request.all = 1
+//      }
       this.selectGoodId = 0
       this.$Service.Good.get(request).then(response => {
         if (response.err_code) {
@@ -405,16 +405,22 @@ export default {
       console.log(this.Passageways)
     },
     replenishConfirm () {  // 提交补货订单
+      const list = []
+      this.Passageways.map(passageway => {
+        if (passageway.require_sum && passageway.require_sum > 0) {
+          list.push(passageway)
+        }
+      })
       console.log(this.Passageways)
       this.$Service.ReplenishOrder.add({
         mch_id: this.user.mch_id,
         device_id: this.selectDevice.sn,
-        list: this.Passageways
+        list: list
       }).then(response => {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
-          $('#Modal').modal('hide')
+          $('#Modal2').modal('hide')
           this.getDataTables()
         }
       })

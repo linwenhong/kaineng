@@ -27,26 +27,27 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th></th>
+              <!--<th></th>-->
               <th v-for="option of tableOptions">{{ option.title }}</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>
-              <div class="checkbox i-checks">
-                <label>
-                  <input name="select" type="checkbox" :value="item.id"><i></i></label>
-              </div>
-            </td>
+            <!--<td>-->
+              <!--<div class="checkbox i-checks">-->
+                <!--<label>-->
+                  <!--<input name="select" type="checkbox" :value="item.id"><i></i></label>-->
+              <!--</div>-->
+            <!--</td>-->
             <td>{{ item.out_trade_no }}</td>
             <td>{{ item.mch_name }}</td>
             <td>{{ item.create_at }}</td>
             <!--<td>{{ item.trade_status | OrderStatus }}</td>-->
             <!--<td>{{ item.total_amount }}</td>-->
+            <td>¥ {{ item.amount.toFixed(2) }}</td>
+            <td>¥ {{ item.settle_amount.toFixed(2) }}</td>
             <td>{{ item.status_name }}</td>
-            <td>{{ item.settle_amount.toFixed(2) }}</td>
             <td>{{ item.is_finish == 2 ? '已完成' : '未完成' }}</td>
             <td>{{ item.finish_at }}</td>
             <td>
@@ -77,8 +78,9 @@ export default {
         { key: "create_at", title: "下单时间" },
 //        { key: "trade_status", title: "订单状态" },
 //        { key: "total_amount", title: "订单总金额" },
-        { key: "status_name", title: "审核状态" },
-        { key: "settled_amount", title: "结算金额" },
+        { key: "amount", title: "订单总金额" },
+        { key: "settle_amount", title: "结算金额" },
+        { key: "status_name", title: "结算状态" },
         { key: "is_finish", title: "是否完成" },
         { key: "finish_at", title: "完成时间" }
       ],

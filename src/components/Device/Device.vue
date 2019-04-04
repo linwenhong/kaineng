@@ -7,22 +7,26 @@
       </div>
 
       <div class="ibox-content">
-        <div class="search-page">
-          <div class="form-group">
-            <label class="control-label">设备sn</label>
-            <input type="text" class="form-control" v-model.trim="condition['sn']">
+        <!--<div class="search-page">-->
+          <!--<div class="form-group">-->
 
-            <label class="control-label">设备状态</label>
-            <select class="form-control" v-model="condition['status']">
-              <option value="">全部</option>
-              <option value="1">正常</option>
-              <option value="2">待检测</option>
-              <option value="3">损坏</option>
-            </select>
+            <!--<label class="control-label">设备sn</label>-->
+            <!--<input type="text" class="form-control" v-model.trim="condition['sn']">-->
 
-            <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
-          </div>
-        </div>
+            <!--<label class="control-label">设备sn</label>-->
+            <!--<input type="text" class="form-control" v-model.trim="condition['sn']">-->
+
+            <!--<label class="control-label">设备状态</label>-->
+            <!--<select class="form-control" v-model="condition['status']">-->
+              <!--<option value="">全部</option>-->
+              <!--<option value="1">正常</option>-->
+              <!--<option value="2">待检测</option>-->
+              <!--<option value="3">损坏</option>-->
+            <!--</select>-->
+
+            <!--<button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>-->
+          <!--</div>-->
+        <!--</div>-->
 
         <table class="table table-bordered text-center">
           <thead>
@@ -44,7 +48,7 @@
             <td>{{ item.is_activate == 2 ? '已激活' : '未激活' }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Modal" @click="edit(item)">编辑</button>
-              <info-confirm @confirm="del" :data="item"></info-confirm>
+              <!--<info-confirm @confirm="del" :data="item"></info-confirm>-->
             </td>
           </tr>
           </tbody>

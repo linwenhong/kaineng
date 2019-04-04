@@ -10,12 +10,20 @@
         <div class="search-page">
 
           <div class="form-group">
+
+            <label class="control-label">是否完成</label>
+            <select class="form-control" v-model="condition['is_finish']">
+              <option value="">全部</option>
+              <option value="1">未完成</option>
+              <option value="2">已完成</option>
+            </select>
+
             <!--<label class="control-label">商户名</label>-->
             <!--<div class="searchOption">-->
               <!--<search-select :data="merchantList"></search-select>-->
             <!--</div>-->
 
-            <date-time text="下单时间"></date-time>
+            <!--<date-time text="下单时间"></date-time>-->
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
             <!--<button type="button" class="btn btn-warning search" @click="settlement()">结算</button>-->
@@ -25,31 +33,25 @@
         <table class="table table-bordered text-center">
           <thead>
             <tr>
-              <th></th>
               <th v-for="option of tableOptions">{{ option.title }}</th>
-              <th>操作</th>
+              <!--<th>操作</th>-->
             </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
-            <td>
-              <div class="checkbox i-checks">
-                <label>
-                  <input name="select" type="checkbox" :value="item.id"><i></i></label>
-              </div>
-            </td>
             <td>{{ item.out_trade_no }}</td>
             <td>{{ item.mch_name }}</td>
-            <td>{{ item.trade_status | OrderStatus }}</td>
-            <td>{{ item.total_amount }}</td>
-            <td>{{ item.null }}</td>
-            <td>{{ item.has_settled | OrderSettlementStatus }}</td>
-            <td>{{ item.null }}</td>
             <td>{{ item.create_at }}</td>
-            <td>{{ item.null }}</td>
-            <td>
+            <!--<td>{{ item.trade_status | OrderStatus }}</td>-->
+            <!--<td>{{ item.total_amount }}</td>-->
+            <td>{{ item.status_name }}</td>
+            <td>¥ {{ item.amount.toFixed(2) }}</td>
+            <td>¥ {{ item.settle_amount.toFixed(2) }}</td>
+            <td>{{ item.is_finish == 2 ? '已完成' : '未完成' }}</td>
+            <td>{{ item.finish_at }}</td>
+            <!--<td>-->
               <!--<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#Modal" @click="details(item)">结算</button>-->
-            </td>
+            <!--</td>-->
           </tr>
           </tbody>
         </table>
@@ -117,13 +119,14 @@ export default {
       tableOptions: [
         { key: "out_trade_no", title: "订单号" },
         { key: "mch_name", title: "商户名" },
-        { key: "trade_status", title: "订单状态" },
-        { key: "total_amount", title: "订单总金额" },
-        { key: "???", title: "是否冻结" },
-        { key: "has_settled", title: "结算状态" },
-        { key: "???", title: "结算金额" },
         { key: "create_at", title: "下单时间" },
-        { key: "???", title: "结算时间" }
+//        { key: "trade_status", title: "订单状态" },
+//        { key: "total_amount", title: "订单总金额" },
+        { key: "status_name", title: "审核状态" },
+        { key: "amount", title: "订单总金额" },
+        { key: "settle_amount", title: "结算金额" },
+        { key: "is_finish", title: "是否完成" },
+        { key: "finish_at", title: "完成时间" }
       ],
       items: [],
       total: 0,

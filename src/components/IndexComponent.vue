@@ -17,7 +17,7 @@
               </a>
               <ul class="dropdown-menu animated fadeInRight m-t-xs">
                 <li>
-                  <a class="J_menuItem" @click="goHref('/merchant/user/' + user.login_name)">修改密码</a>
+                  <a class="J_menuItem" @click="goHref('/modify-password/' + user.login_name)">修改密码</a>
                 </li>
                 <li>
                   <a class="J_menuItem" @click="goHref('/merchant/binding')">绑定微信号</a>
@@ -81,6 +81,12 @@
                 <span class="fa arrow"></span>
               </a>
               <ul class="nav nav-second-level">
+                <li>
+                  <a class="J_menuItem" @click="goHref('/admin/order?pageType=1')">订单查询</a>
+                </li>
+                <li>
+                  <a class="J_menuItem" @click="goHref('/admin/order?pageType=2')">异常订单</a>
+                </li>
                 <li>
                   <a class="J_menuItem" @click="goHref('/admin/order-settlement')">结算订单</a>
                 </li>
@@ -218,7 +224,6 @@ export default {
     },
     logout () {
       this.$store.dispatch('logout')
-      this.$Service.Auth.logout()
       if (this.identity == 1) {
         this.$Service.Auth.logout()
       }

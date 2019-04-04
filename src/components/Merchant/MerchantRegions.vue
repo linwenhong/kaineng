@@ -11,8 +11,8 @@
       <div class="ibox-content">
         <div class="search-page">
           <div class="form-group">
-            <label class="control-label">商户名称</label>
-            <input type="text" class="form-control" v-model.trim="condition['mch_name']">
+            <label class="control-label">详细地址</label>
+            <input type="text" class="form-control" v-model.trim="condition['find']">
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>

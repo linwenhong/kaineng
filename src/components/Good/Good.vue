@@ -16,8 +16,8 @@
               <treeselect :multiple="false" :options="TreeSelectOption" v-model="condition.category_id"/></treeselect>
             </div>
 
-            <label class="control-label">商品名称</label>
-            <input type="text" class="form-control" v-model.trim="condition['name']">
+            <!--<label class="control-label">商品名称</label>-->
+            <!--<input type="text" class="form-control" v-model.trim="condition['name']">-->
 
             <button type="button" class="btn btn-primary search" @click="getDataTables()">查询</button>
           </div>
@@ -35,7 +35,7 @@
             <td>{{ item.id }}</td>
             <td>{{ item.code }}</td>
             <td>{{ item.product_name }}</td>
-            <td>{{ item.category_id }}</td>
+            <td>{{ item.category_name }}</td>
             <td>{{ item.spec }}</td>
             <td>{{ item.remark }}</td>
             <td>
@@ -146,7 +146,7 @@ export default {
         { key: "id", title: "ID" },
         { key: "code", title: "商品编码" },
         { key: "product_name", title: "商品名称" },
-        { key: "type", title: "商品类型" },
+        { key: "category_name", title: "商品类型" },
         { key: "spec", title: "商品规格" },
         { key: "remark", title: "备注" }
       ],
