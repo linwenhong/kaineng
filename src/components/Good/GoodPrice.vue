@@ -278,7 +278,7 @@ export default {
     getGoodList () {
       const condition = {
         mch_id: this.user.mch_id,
-        category_id: this.typeId,
+        category_id: 0,
         page_no: 1,
         page_size: 10000
       }

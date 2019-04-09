@@ -9,8 +9,10 @@
 export default {
   name: 'page-header-button',
   props: {
-    hasAddBtn: Boolean,
-    default: true
+    hasAddBtn: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {}
