@@ -1,15 +1,9 @@
-function getUser (key) {
-  if (key) {
-    return JSON.parse(localStorage.getItem('user'))[key]
-  }
-  return JSON.parse(localStorage.getItem('user'))
-}
-
-function setLocalStorage (name, data) {
+function setCache (name, data) {
+  console.log(typeof data)
   localStorage.setItem(name, JSON.stringify(data))
 }
 
-function getLocalStorage (name) {
+function getCache (name) {
   return JSON.parse(localStorage.getItem(name))
 }
 
@@ -22,9 +16,8 @@ function getSessionStorage (name) {
 }
 
 export default {
-  getUser,
-  setLocalStorage,
-  getLocalStorage,
+  setCache,
+  getCache,
   setSessionStorage,
   getSessionStorage
 }

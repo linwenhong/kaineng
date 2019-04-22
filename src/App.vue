@@ -6,11 +6,7 @@
 
 <script>
 export default {
-  name: 'App',
-  mounted () {
-    $('body').append('<script src="static/js/contabs.js"><\/script>')
-    $('body').append('<script src="static/js/hplus.js?v=4.1.0"><\/script>')
-  }
+  name: 'App'
 }
 </script>
 
@@ -26,6 +22,10 @@ export default {
 @import "../static/css/style.css";
 @import "../static/css/plugins/simditor/simditor.css";
 @import "../static/css/plugins/toastr/toastr.min.css";
+
+@import "../static/vue-treeselect/vue-treeselect.min.css";
+
+.vue-treeselect { width: 200px; }
 
 #content-main {
   height: calc(100% - 79px);
@@ -43,6 +43,9 @@ input::-webkit-inner-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+.help-block {
+  margin-top: 0;
 }
 .modal-body input {
   margin-top: 0;
@@ -119,13 +122,16 @@ ul, li {
 .text-center {
   text-align: center;
 }
+.MustFill {
+  color: red;
+}
 
 .search-page label {
   line-height: 34px;
   text-align: right;
   display: inline-block;
 }
-.search-page label, .search-page input, .search-page select {
+.search-page label, .search-page input, .search-page select, .search-page .searchOption {
   display: inline-block;
 }
 .search-page input, .search-page select {
@@ -135,9 +141,66 @@ ul, li {
   margin-left: 10px;
   margin-right: 5px;
 }
+.search-page .searchOption {
+  width: 200px;
+}
+.search-page .searchOption .searchSelect {
+  top: 16px;
+}
+.search-page .searchOption .vue-treeselect {
+  top: 12px;
+}
+.view-img img {
+  display: inline-block;
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 5px;
+  background-size: 100%;
+}
 
 .layer-date {
   width: 100px;
-  margin-bottom: 5px;
+  margin-top: -8px;
+}
+
+#nestable .dd-handle {
+  cursor: move;
+}
+#nestable .dd-item .label-primary {
+  position: absolute;
+  right: 50px;
+  top: 6px;
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+}
+#nestable .dd-item .label-danger {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+}
+
+
+#page-wrapper {
+  overflow-y: auto;
+}
+.border-bottom {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+.wrapper-content {
+  padding-top: 55px;
+}
+.ibox {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.distpicker-address-wrapper select {
+  display: inline-block;
 }
 </style>

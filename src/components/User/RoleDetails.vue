@@ -173,7 +173,7 @@ export default {
       }
     },
     cancel () {
-      this.$router.push('/admin/role')
+      this.$router.push('/merchant/role')
     }
   },
   created () {
