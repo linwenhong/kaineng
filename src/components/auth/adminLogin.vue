@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="text-center animated fadeInDown login">
+      <a class="admin" @click="merchantLogin()">商户登录</a>
       <div class="row mt">
         <h1>自动售货机<small> (后台管理系统)</small></h1>
         <div class="m-t form-horizontal middle-box">
@@ -40,6 +41,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+
 export default {
   name: 'admin_login',
   data () {
@@ -52,14 +54,14 @@ export default {
     }
   },
   created () {
-    localStorage.clear()
-    this.getLoginCode()
+    localStorage.clear();
+    this.getLoginCode();
   },
   methods: {
     getLoginCode () {
       this.$Service.AdminAuth.loginCode().then(response => {
         if (response.qr_code && response.access_token) {
-          new QRCode("qrcode", {
+          new QRCode('qrcode', {
             text: response.qr_code,
             width: 240,
             height: 240,
@@ -68,43 +70,45 @@ export default {
             correctLevel : QRCode.CorrectLevel.H
           });
         }
-        this.access_token = response.access_token
+        this.access_token = response.access_token;
         this.Interval = setInterval(() => {
           if (this.isCodeLogin) {
             this.codeLogin()
           }
-        }, 1000)
-      })
+        }, 2000)
+      });
     },
     codeLogin () {
       this.$Service.AdminAuth.codeLogin({
         access_token: this.access_token
       }).then(response => {
         if (!response.err_code) {
-          clearInterval(this.Interval)
-          this.$store.dispatch('identity', 2)
-          this.$store.dispatch('login', response)
+          clearInterval(this.Interval);
+          this.$store.dispatch('identity', 2);
+          this.$store.dispatch('login', response);
         }
-      })
+      });
     },
     login () {
       if (!this.username || !this.password) {
-        toastr.error('用户名或密码不能为空!')
+        toastr.error('用户名或密码不能为空!');
       } else {
         const request = {
           login_name: this.username,
           password: this.password
-        }
+        };
         this.$Service.AdminAuth.login(request).then(response => {
           if (response.err_code) {
-            toastr.error(response.err_msg, response.err_code)
+            toastr.error(response.err_msg, response.err_code);
           } else {
-            this.$store.dispatch('identity', 2)
-            this.$store.dispatch('login', response)
+            this.$store.dispatch('identity', 2);
+            this.$store.dispatch('login', response);
           }
-        })
-
+        });
       }
+    },
+    merchantLogin(){
+      this.$router.push('/login');
     }
   }
 }
@@ -145,5 +149,10 @@ footer {
 #qrcode {
   width: 240px;
   height: 240px;
+}
+.admin {
+  position: absolute;
+  top: 2px;
+  right: 2px;
 }
 </style>

@@ -103,10 +103,8 @@
                            oninput="moneyFormat(this)" name="selling_price" v-model="form.selling_price">
                   </div>
                 </div>
-
               </div>
             </div>
-
             <div class="modal-footer">
               <b class="btn btn-white" data-dismiss="modal">关闭</b>
               <button type="submit" class="btn btn-primary">提交</button>
@@ -152,11 +150,14 @@ export default {
       validate: null,
       value: null,
       TreeSelectOption: [],
-      isSubmit: false
+      isSubmit: false,
+      prodId:0,
+      prodName:''
     }
   },
   methods: {
     getDataTables (page = 1) {
+
       const condition = {
         mch_id: this.user.mch_id,
         product_id: $('#searchSelect').attr('data-id') || this.goodId,
@@ -176,6 +177,9 @@ export default {
         } else {
           this.items = response.list
           this.total = response.total
+          this.prodId = this.items[0].product_id
+          this.prodName = this.items[0].product_name
+
         }
       })
     },
@@ -192,6 +196,9 @@ export default {
     },
     add () {
       this.clear()
+      $('#good').attr('data-id', this.prodId)
+      toastr.success(this.prodName)
+      $('#good').val(this.prodName)
     },
     checkForm (form) {
       return true
@@ -215,7 +222,7 @@ export default {
         request.mch_id = this.user.mch_id
         this.$Service.GoodPrice.edit(request).then(response => {
           this.isSubmit = false
-          if (response.err_code == 0) {
+          if ( response.err_code === 0 ) {
             toastr.success('修改成功')
             this.getDataTables(this.page)
             $('#Modal').modal('hide')

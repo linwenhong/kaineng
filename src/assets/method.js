@@ -1,27 +1,21 @@
 'use strict'
-function formatDate(time, format) { // 日期格式化
-  var t = new Date(time);
-  var tf = function(i){return (i < 10 ? '0' : '') + i};
-  return format.replace(/yyyy|MM|dd|hh|mm|ss/g, function(a){
-    switch(a){
+function formatDate (time, format) { // 日期格式化
+  let t = new Date(time)
+  let tf = function (i) { return (i < 10 ? '0' : '') + i }
+  return format.replace(/yyyy|MM|dd|hh|mm|ss/g, function (a) {
+    switch (a) {
       case 'yyyy':
-        return tf(t.getFullYear());
-        break;
+        return tf(t.getFullYear())
       case 'MM':
-        return tf(t.getMonth() + 1);
-        break;
+        return tf(t.getMonth() + 1)
       case 'dd':
-        return tf(t.getDate());
-        break;
+        return tf(t.getDate())
       case 'hh':
-        return tf(t.getHours());
-        break;
+        return tf(t.getHours())
       case 'mm':
-        return tf(t.getMinutes());
-        break;
+        return tf(t.getMinutes())
       case 'ss':
-        return tf(t.getSeconds());
-        break;
+        return tf(t.getSeconds())
     }
   })
 }
@@ -29,43 +23,44 @@ function formatDate(time, format) { // 日期格式化
 // 一维数组转树结构
 function arrayTransformTree(data) {
   let result = []
-  if(!Array.isArray(data)) {
+  if (!Array.isArray(data)) {
     return result
   }
   data.forEach(item => {
-    delete item.children;
-  });
-  let map = {};
+    delete item.children
+  })
+  let map = {}
   data.forEach(item => {
-    map[item.id] = item;
-  });
+    map[item.id] = item
+  })
   data.forEach(item => {
-    let parent = map[item.parent_id];
-    if(parent) {
-      (parent.children || (parent.children = [])).push(item);
+    let parent = map[item.parent_id]
+    if (parent) {
+      (parent.children || (parent.children = [])).push(item)
     } else {
-      result.push(item);
+      result.push(item)
     }
-  });
-  return result;
+  })
+  return result
 }
 // 树结构转一维数组
 function treeTransformArray (nodes) {
-  var result = [];
+  let result = []
   if (Array.isArray(nodes)) {
-    for (var i=0, l=nodes.length; i<l; i++) {
-      result.push(nodes[i]); // 取每项数据放入一个新数组
-      if (Array.isArray(nodes[i]["children"])&&nodes[i]["children"].length>0)
-        nodes[i]["children"].map(item => item.parent_id = nodes[i].id)
+    for (let i = 0, l = nodes.length; i < l; i++) {
+      result.push(nodes[i]) // 取每项数据放入一个新数组
+      if (Array.isArray(nodes[i]['children']) && nodes[i]['children'].length > 0) {
+        nodes[i]['children'].map(item => item.parent_id = nodes[i].id)
+      }
       // 若存在children则递归调用，把数据拼接到新数组中，并且删除该children
-        result = result.concat(treeTransformArray(nodes[i]["children"]));
-      delete nodes[i]["children"]
+      result = result.concat(treeTransformArray(nodes[i]['children']))
+      delete nodes[i]['children']
     }
   }
-  return result;
+  return result
 }
 // 树状拉下选项
-function getTreeSelectOption(array, isSearch = false) {
+function getTreeSelectOption (array, isSearch = false) {
   let result = []
   if (!isSearch) { // 非搜索
     result.push({
@@ -73,7 +68,7 @@ function getTreeSelectOption(array, isSearch = false) {
       label: '无父级'
     })
   }
-  if(!Array.isArray(array)) {
+  if (!Array.isArray(array)) {
     return result
   }
   let data = array.map(item => {
@@ -83,19 +78,19 @@ function getTreeSelectOption(array, isSearch = false) {
       label: item.name
     }
   })
-  let map = {};
+  let map = {}
   data.forEach(item => {
-    map[item.id] = item;
-  });
+    map[item.id] = item
+  })
   data.forEach(item => {
-    let parent = map[item.parent_id];
-    if(parent) {
-      (parent.children || (parent.children = [])).push(item);
+    let parent = map[item.parent_id]
+    if (parent) {
+      (parent.children || (parent.children = [])).push(item)
     } else {
-      result.push(item);
+      result.push(item)
     }
-  });
-  return result;
+  })
+  return result
 }
 
 module.exports = {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-center animated fadeInDown login">
-      <a class="admin" @click="toAdmin()">管理员登录？</a>
+      <a class="admin" @click="toAdmin()">管理员登录</a>
       <div class="row mt">
         <h1>自动售货机<small> (商户管理系统)</small></h1>
         <div class="m-t form-horizontal middle-box">
@@ -77,7 +77,7 @@ export default {
           if (this.isCodeLogin) {
             this.codeLogin()
           }
-        }, 1000)
+        }, 2000)
       })
     },
     codeLogin () {

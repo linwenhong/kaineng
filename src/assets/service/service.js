@@ -112,5 +112,5 @@ export default {
   AdminOrder,
   AdminSettlementOrder,
   MerchantDevice,
-  Manufacturer,
+  Manufacturer
 }

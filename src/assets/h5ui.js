@@ -79,8 +79,8 @@ function setSearchSelect (data, select, keys, valueKey, textKey) {
   })
 
   $(select).bsSuggest({
-    idField: valueKey, //data.value 的数据，作为input输入框的data-id
-    keyField: textKey, //data.value 的数据，作为input输入框的text
+    idField: valueKey, // data.value 的数据，作为input输入框的data-id
+    keyField: textKey, // data.value 的数据，作为input输入框的text
     data: {
       value: items
     }

@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import router from '@/router'
 import Cache from '@/assets/cache'
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
@@ -12,39 +12,40 @@ const store = new Vuex.Store({
     identity: Cache.getCache('identity') || 1 // 1 商户, 2 管理员
   },
   mutations: {
-    setUser(state, user) {
+    setUser: function (state, user) {
       state.user = user;
-      axios.defaults.headers.common['token'] = state.user.token
+      axios.defaults.headers.common['token'] = state.user.token;
       Cache.setCache('user', user)
     },
-    setIdentity(state, identity) {
+    setIdentity: function (state, identity) {
       state.identity = identity;
       Cache.setCache('identity', identity)
     },
-    clearCache(state) {
+    clearCache: function (state) {
       state.user = {};
       state.identity = 1;
       localStorage.clear()
     }
   },
   actions: {
-    login({commit,state}, user) {
-      commit('setUser', user)
-      if (state.identity == 1) {
+    login: function ({commit, state}, user) {
+      commit('setUser', user);
+      // eslint-disable-next-line eqeqeq
+      if (state.identity === 1) {
         router.push('/merchant')
       } else {
         router.push('/admin')
       }
     },
-    logout({commit,state}) {
-      if (state.identity == 1) {
+    logout: function ({commit, state}) {
+      if (state.identity === 1) {
         router.push('/login')
       } else {
         router.push('/admin-login')
       }
       commit('clearCache', state)
     },
-    identity({commit}, identity) {
+    identity: function ({commit}, identity) {
       commit('setIdentity', identity)
     }
   },
@@ -52,5 +53,5 @@ const store = new Vuex.Store({
     getUser: (state) => state.user,
     getIdentity: (state) => state.identity
   }
-})
+});
 export default store

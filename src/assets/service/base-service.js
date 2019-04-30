@@ -3,24 +3,23 @@ import Config from '@/assets/config'
 import store from '@/stores'
 
 // 默认请求地址
-axios.defaults.baseURL = Config.api_url
+axios.defaults.baseURL = Config.api_url;
 // 超时时间
-axios.defaults.timeout = 10000
+axios.defaults.timeout = 10000;
 
-axios.defaults.headers.common['token'] = store.state.user.token
+axios.defaults.headers.common['token'] = store.state.user.token;
 
 axios.interceptors.response.use(function (response) {
-  if (response.data.err_code == 2002) {
+  if (response.data.err_code === 2002) {
     tokenExpire()
   }
-  return response;
+  return response
 }, function (error) {
   // 对响应错误做点什么
-  //console.log(error.response);
-  toastr.error(error.response.data, error.response.status)
-  return Promise.reject(error);
-});
-
+  // console.log(error.response);
+  toastr.error(error.response.data, error.response.status);
+  return Promise.reject(error)
+})
 
 function get (url, request) {
   return axios.get(url, { params: request })
@@ -60,23 +59,25 @@ function del (url, request) {
     })
 }
 
-let tokenInfo = true
+let tokenInfo = true;
 function tokenExpire () {
-  if (!tokenInfo) return
-  tokenInfo = false
+  if (!tokenInfo) {
+    return;
+  }
+  tokenInfo = false;
 
   setTimeout(() => {
-    tokenInfo = true
+    tokenInfo = true;
     window.location.href = Config.base_url
   }, 1000)
 }
 
 function getUrlQuery (request) {
-  let result = '?'
-  let isFirst = true
+  let result = '?';
+  let isFirst = true;
   for (const key in request) {
     if (isFirst) {
-      isFirst = false
+      isFirst = false;
       result += key + '=' + request[key]
     } else {
       result += '&' + key + '=' + request[key]

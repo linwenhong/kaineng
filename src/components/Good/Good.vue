@@ -213,6 +213,7 @@ export default {
       return true
     },
     submit () {
+	
       if (this.isSubmit) return;  // 防止多次提交
       if (!$('#form').valid()) return;  // 必填验证
       if (!this.checkForm(this.form)) return;  // 表单验证
@@ -233,7 +234,8 @@ export default {
 
       if (this.form.id) { // 修改
         request.id = this.form.id
-        request.mch_id = this.valuationGood.mch_id
+        //request.mch_id = this.valuationGood.mch_id
+		request.mch_id = this.user.mch_id
         this.$Service.Good.edit(request).then(response => {
           this.isSubmit = false
           if (response.err_code == 0) {

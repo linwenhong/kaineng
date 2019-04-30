@@ -54,7 +54,8 @@
           <tbody>
           <tr v-for="(item, index) of items" :key="item.id">
             <td>{{ item.out_trade_no }}</td>
-            <td>{{ item.trade_status | OrderStatus }}</td>
+            <!--<td>{{ item.trade_status | OrderStatus }}</td> 邹阳明注释，替换为下行-->
+            <td>{{ item.status_name }}</td>
             <td>{{ item.device_id }}</td>
             <td>{{ item.product_sum }}</td>
             <td>{{ item.total_amount }}</td>
@@ -63,7 +64,7 @@
             <td>{{ item.create_at }}</td>
             <td>{{ item.has_settled | OrderSettlementStatus }}</td>
 
-            <template v-if="pageType == 2">
+            <template v-if="pageType === '2'">
               <td>{{ item.refund_amount }}</td>
             </template>
 
@@ -97,8 +98,8 @@
                 <th>单价</th>
                 <th>出货状态</th>
 
-                <template v-if="pageType == 2">
-                  <th>退款状态</th>
+                <template v-if="pageType === '2' ">
+<!--                  <th>退款状态</th>邹阳明注释 -->
                   <th>操作</th>
                 </template>
               </tr>
@@ -109,16 +110,21 @@
                 <td>{{ item.product_name }}</td>
                 <td>1</td>
                 <td>¥{{ item.price.toFixed(2) }}</td>
-                <td>{{ item.is_out | OrderGoodOutStatus }}</td>
-
-                <template v-if="pageType == 2">
-                  <td>{{ order.refund_status }}</td>
+<!--                <td>{{ item.is_out | OrderGoodOutStatus }}</td>-->
+                <td>{{ item.status_name }}</td>
+                <template v-if="pageType === '2'">
+<!--                  <td>{{ order.refund_status }}</td> 邹阳明注释-->
                   <td>
-                    <info-confirm @confirm="refund" :data="item" title="确定要进行退款吗" text="退款"></info-confirm>
+                    <template v-if= "item.detail_status===3">
+                      <info-confirm @confirm="refund" :data="item"  title="确定要进行退款吗" text="退款"></info-confirm>
+                    </template>
+                    <template v-else>
+                      <info-confirm @confirm="refund" :data="item" disabled="true" title="确定要进行退款吗" text="退款"></info-confirm>
+                    </template>
                   </td>
                 </template>
               </tr>
-              <tr v-if="pageType == 1">
+              <tr v-if="pageType === '1'">
                 <td colspan="4"></td>
                 <td>合计：¥{{ order.total_amount }}</td>
               </tr>
@@ -195,12 +201,11 @@ export default {
         mch_id: this.user.mch_id,
         page_no: page,
         page_size: this.pageSize
-      }
+      };
 
-      if (this.pageType == 2) {
+      if (this.pageType === '2') {
         condition.trade_status = 3
       }
-
       for (const key in this.condition) {
         if (this.condition[key]) {
           condition[key] = this.condition[key]
@@ -216,8 +221,8 @@ export default {
         if (response.err_code) {
           toastr.error(response.err_msg, response.err_code)
         } else {
-          this.items = response.list
-          this.total = response.total
+          this.items = response.list;
+          this.total = response.total;
         }
       })
     },
@@ -225,7 +230,7 @@ export default {
       this.getDataTables(page)
     },
     details (item) {
-      this.order = item
+      this.order = item;
       this.$Service.Order.details({
         page_no: 1,
         page_size: 10000,
@@ -241,11 +246,11 @@ export default {
     },
     del (item) {
       this.$Service.Order.del(item.id).then(response => {
-        if (response.code == 200) {
-          toastr.success('删除成功')
+        if (response.code === 200) {
+          toastr.success('删除成功');
           this.getDataTables()
         } else {
-          toastr.error(response.msg)
+          this.toastr.error(response.msg)
         }
       })
     },
@@ -253,8 +258,9 @@ export default {
       console.log(item)
     },
     pageInit () {
-      this.pageType = this.$route.query['pageType'] || 1
+      this.pageType = this.$route.query['pageType'];
       this.getDataTables()
+
     }
   },
   created () {
